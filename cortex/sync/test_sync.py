@@ -55,9 +55,9 @@ cases = {
     ],
     "MERGE": [
         ".github/workflows/ci.yml",
-        "app.vigil/e2e/auth/login.spec.ts",
-        "app.vigil/src/modules/User/views/Users/UsersView.view.vue",
-        "api.vigil/tests/Feature/Auth/RoleTest.php",
+        "celer/e2e/auth/login.spec.ts",
+        "celer/src/modules/User/views/Users/UsersView.view.vue",
+        "arcus/tests/Feature/Auth/RoleTest.php",
         "codelumen/package.json",
         "Makefile",
     ],
@@ -66,16 +66,16 @@ cases = {
         "README.md",
         ".claude/settings.json",
         ".cursor/rules/celer-folder-theme.mdc",
-        "api.vigil/composer.lock",
-        "app.vigil/package-lock.json",
+        "arcus/composer.lock",
+        "celer/package-lock.json",
         # brand / visual identity — must never propagate (overwrites a project's look)
-        "app.vigil/src/styles/theme/colors.css",
-        "app.vigil/src/components/atoms/ALogo/ALogo.vue",
-        "app.vigil/src/components/atoms/ALogo/logo-full-light.png",
-        "app.vigil/src/assets/logo/logo-raw.svg",
-        "app.vigil/public/favicon/favicon.ico",
-        "app.vigil/public/favicon/manifest.json",
-        "app.vigil/index.html",
+        "celer/src/styles/theme/colors.css",
+        "celer/src/components/atoms/ALogo/ALogo.vue",
+        "celer/src/components/atoms/ALogo/logo-full-light.png",
+        "celer/src/assets/logo/logo-raw.svg",
+        "celer/public/favicon/favicon.ico",
+        "celer/public/favicon/manifest.json",
+        "celer/index.html",
     ],
 }
 for want, paths in cases.items():
@@ -96,20 +96,20 @@ check("OVERWRITE lives only in the AI layer", all(
 # ---- B2a.2: build_merge_plan — path name-mapping + content transform ----
 FIXTURE_CONF = {"PROJECT": "zion", "APP": "app.zion", "API": "api.zion"}
 
-# text file: path mapped app.vigil/ -> app.zion/, content transformed
-text_rel, text_bytes, text_bin = build_merge_plan(ROOT, ["app.vigil/README.md"], FIXTURE_CONF)[0]
+# text file: path mapped celer/ -> app.zion/, content transformed
+text_rel, text_bytes, text_bin = build_merge_plan(ROOT, ["celer/README.md"], FIXTURE_CONF)[0]
 text_body = text_bytes.decode("utf-8")
-check("text MERGE path mapped app.vigil/ -> app.zion/", text_rel == "app.zion/README.md")
+check("text MERGE path mapped celer/ -> app.zion/", text_rel == "app.zion/README.md")
 check("text MERGE not flagged binary", text_bin is False)
-check("text MERGE content: 'app.vigil' rewritten away", "app.vigil" not in text_body)
+check("text MERGE content: 'Celer' rewritten away", "Celer" not in text_body)
 check("text MERGE content: project name applied", "app.zion" in text_body)
 
-# api.vigil path mapping api.vigil/ -> api.zion/
-api_rel = build_merge_plan(ROOT, ["api.vigil/tests/Feature/Auth/RoleTest.php"], FIXTURE_CONF)[0][0]
-check("api.vigil MERGE path mapped api.vigil/ -> api.zion/", api_rel == "api.zion/tests/Feature/Auth/RoleTest.php")
+# arcus path mapping arcus/ -> api.zion/
+arcus_rel = build_merge_plan(ROOT, ["arcus/tests/Feature/Auth/RoleTest.php"], FIXTURE_CONF)[0][0]
+check("arcus MERGE path mapped arcus/ -> api.zion/", arcus_rel == "api.zion/tests/Feature/Auth/RoleTest.php")
 
 # binary file: path mapped, bytes copied verbatim (no transform)
-BIN = "app.vigil/public/favicon/android-icon-144x144.png"
+BIN = "celer/public/favicon/android-icon-144x144.png"
 bin_rel, bin_bytes, bin_is_binary = build_merge_plan(ROOT, [BIN], FIXTURE_CONF)[0]
 check("binary MERGE path mapped", bin_rel == "app.zion/public/favicon/android-icon-144x144.png")
 check("binary MERGE flagged is_binary", bin_is_binary is True)
@@ -121,13 +121,13 @@ check("parse_semver short", parse_semver("2") == (2, 0, 0))
 check("parse_semver garbage", parse_semver("x.y") == (0, 0, 0))
 check("parse_semver ordering", parse_semver("1.10.0") > parse_semver("1.9.9"))
 
-# triage_state: (vigil_version, based_on, project_version)
+# triage_state: (pendulum_version, based_on, project_version)
 check("state unchanged", triage_state("1.2.0", "1.2.0", "1.2.0") == "unchanged")
 check("state clean-update", triage_state("1.3.0", "1.2.0", "1.2.0") == "clean-update")
 check("state diverged", triage_state("1.3.0", "1.2.0", "1.4.0") == "diverged")
 check("state project-ahead", triage_state("1.2.0", "1.2.0", "1.5.0") == "project-ahead")
 
-# severity of vigil's delta over based-on
+# severity of pendulum's delta over based-on
 check("severity major", severity("1.2.0", "2.0.0") == "major")
 check("severity minor", severity("1.2.0", "1.3.0") == "minor")
 check("severity patch", severity("1.2.0", "1.2.1") == "patch")
@@ -175,14 +175,14 @@ check("gate detail names the failing check",
 
 # ---- identifier-collision guard: project token starting a code identifier ----
 hit = lambda s: bool(IDENT_COLLISION_RE.search(s))  # noqa: E731
-check("collision: celerPreset flagged", hit("import celerPreset from './theme';"))
+check("collision: CelerPreset flagged", hit("import CelerPreset from './theme';"))
 check("collision: lowercase celerConfig flagged", hit("const celerConfig = {}"))
 check("collision: ArcusClient flagged", hit("class ArcusClient {}"))
 check("collision: filename token celer-01 NOT flagged", not hit("@import './celer-01-rules'"))
 check("collision: path 'celer/src' NOT flagged", not hit("from 'celer/src/foo'"))
-check("collision: substring 'acelerate' NOT flagged", not hit("const acelerate = true"))
+check("collision: substring 'accelerate' NOT flagged", not hit("const accelerate = true"))
 check("collision: bare word celer NOT flagged", not hit("// see the celer project"))
-# live source must be clean (the celerPreset -> themePreset fix landed)
+# live source must be clean (the CelerPreset -> themePreset fix landed)
 check("source has zero identifier collisions", find_identifier_collisions(ROOT, RULES) == [])
 
 # ---- T0 union_json: upstream base + project-only deps (pure) ----

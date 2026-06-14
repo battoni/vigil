@@ -26,15 +26,15 @@ and per API module — plus file-group units like build config) carries a co-loc
 ```yaml
 ---
 version: 1.0.0        # MUST equal the top entry in this unit's CHANGELOG.md
-origin: vigil      # where this unit originated (vigil, or a project name if local)
-based-on: 1.0.0       # the vigil version this unit was last synced from
+origin: pendulum      # where this unit originated (pendulum, or a project name if local)
+based-on: 1.0.0       # the pendulum version this unit was last synced from
 ---
 ```
 
-- **origin** — `vigil` for anything that came from the bootstrap; a project name (e.g.
-  `zion`) for units a project authored itself and that vigil doesn't have.
-- **based-on** — in *vigil itself*, `based-on` == `version` (it is its own origin). In a
-  *project*, `based-on` records the vigil `version` last merged in; if the project then
+- **origin** — `pendulum` for anything that came from the bootstrap; a project name (e.g.
+  `zion`) for units a project authored itself and that pendulum doesn't have.
+- **based-on** — in *pendulum itself*, `based-on` == `version` (it is its own origin). In a
+  *project*, `based-on` records the pendulum `version` last merged in; if the project then
   edits the unit and bumps `version` above `based-on`, the gap signals local divergence —
   the propagation triage flag.
 

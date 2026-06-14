@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Produce a clean client-handoff copy of the repo.
 
-Strips every vigil AI artifact — `.claude/`, `.cursor/`, `cortex/`,
+Strips every Pendulum AI artifact — `.claude/`, `.cursor/`, `cortex/`,
 `codelumen/`, `plans/`, all `CLAUDE.md` files, and the tooling targets in the
 Makefile / CI — while KEEPING the component `RULES.md` docs (verified free of
 AI-plumbing references, so they stand alone as plain documentation).
@@ -14,11 +14,11 @@ Safety:
     recoverable from `git log`.
 
 Usage:
-  handoff.py [--out DIR] [--projects "app.vigil api.vigil"] [--force] [--verify]
+  handoff.py [--out DIR] [--projects "celer arcus"] [--force] [--verify]
 
-  --out       output directory (default: ../vigil-handoff)
+  --out       output directory (default: ../pendulum-handoff)
   --projects  space/comma list of app sub-projects to KEEP
-              (default: every app project — api.vigil app.vigil vitrum liquen)
+              (default: every app project — arcus celer vitrum liquen)
   --force     overwrite --out if it already exists
   --verify    run the kept projects' build to prove the copy stands alone
 """
@@ -33,7 +33,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[2]
 
-APP_PROJECTS = ['api.vigil', 'app.vigil', 'vitrum', 'liquen']
+APP_PROJECTS = ['arcus', 'celer', 'vitrum', 'liquen']
 REMOVE_DIRS = ['.claude', '.cursor', 'cortex', 'codelumen', 'plans']
 REMOVE_FILES = ['CLAUDE.md', 'CLAUDE.local.md', 'CLAUDE.local.md.example']
 MAKE_DROP_TARGETS = {
@@ -147,7 +147,7 @@ def run(cmd: list[str], cwd: Path) -> int:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description='Eject a clean client-handoff copy.')
-    parser.add_argument('--out', default=str(REPO.parent / 'vigil-handoff'))
+    parser.add_argument('--out', default=str(REPO.parent / 'pendulum-handoff'))
     parser.add_argument('--projects', default='')
     parser.add_argument('--force', action='store_true')
     parser.add_argument('--verify', action='store_true')
@@ -207,10 +207,10 @@ def main() -> None:
     print('  git history     : fresh (1 commit, no tooling in history)')
     print('=' * 60)
 
-    if args.verify and (out / 'app.vigil').exists():
-        print('\nVerifying app.vigil builds stand-alone...')
-        ok = run(['npm', 'ci'], out / 'app.vigil') == 0 and run(['npm', 'run', 'build'], out / 'app.vigil') == 0
-        print('  app.vigil build:', 'OK' if ok else 'FAILED — review the copy')
+    if args.verify and (out / 'celer').exists():
+        print('\nVerifying celer builds stand-alone...')
+        ok = run(['npm', 'ci'], out / 'celer') == 0 and run(['npm', 'run', 'build'], out / 'celer') == 0
+        print('  celer build:', 'OK' if ok else 'FAILED — review the copy')
 
     print('\nManual review before delivery:')
     print('  - README.md still references cortex/codelumen — trim if present.')

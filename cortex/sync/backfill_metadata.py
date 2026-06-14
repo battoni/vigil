@@ -14,8 +14,8 @@ Usage:
     python3 cortex/sync/backfill_metadata.py <root> [--version X.Y.Z] [--date YYYY-MM-DD] [--dry-run]
 
 Example:
-    python3 cortex/sync/backfill_metadata.py app.vigil/src --dry-run
-    python3 cortex/sync/backfill_metadata.py app.vigil/src
+    python3 cortex/sync/backfill_metadata.py celer/src --dry-run
+    python3 cortex/sync/backfill_metadata.py celer/src
 """
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ from pathlib import Path
 FRONTMATTER_TEMPLATE = (
     "---\n"
     "version: {version}\n"
-    "origin: vigil\n"
+    "origin: pendulum\n"
     "based-on: {version}\n"
     "---\n"
 )
@@ -63,7 +63,7 @@ def has_frontmatter(text: str) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("root", help="root dir to scan for RULES.md (e.g. app.vigil/src)")
+    parser.add_argument("root", help="root dir to scan for RULES.md (e.g. celer/src)")
     parser.add_argument("--version", default="1.0.0")
     parser.add_argument("--date", default=_dt.date.today().isoformat())
     parser.add_argument("--dry-run", action="store_true")

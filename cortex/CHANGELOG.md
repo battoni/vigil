@@ -4,6 +4,96 @@ A running history of every significant decision, change, or addition to vigil's 
 
 ---
 
+## 2026-06-14 — Fix `--init` self-mangling + realign `based-on` drift
+
+### What changed
+
+Two engine bugs, surfaced while preparing the first downstream sync (vigil):
+
+1. **The engine rewrote itself into the project's vocabulary** — on *both* transform paths.
+   `init_in_place()` and the regular sync's **OVERWRITE writer** both `specialize()`d *every*
+   file including `cortex/sync/*.py`, so the rewrite table's `("app.vigil", app)` entries became
+   `("app.<project>", app)` and doc source-names flipped (RUNBOOK's "run from vigil"). In init
+   it only bit on the *next* engine load (Python holds the pristine function in memory for the
+   pass — a self-modifying-code footgun); via OVERWRITE it shipped a broken engine downstream,
+   where `make sync-test` actually runs it. Fix: a new `is_engine_internal()` guard makes **both**
+   paths write everything under `cortex/sync/` **verbatim**, **except `manifest.tsv`** (which
+   legitimately needs the renamed `app.X/api.X` path tokens for the downstream `--audit`).
+   Regression checks in `test_init.sh` and `test_engine.sh` (engine byte-identical to source;
+   manifest still transformed; RUNBOOK keeps the vigil name).
+
+2. **`based-on` drift on 13 units.** The battoni-dev theme pass bumped `version` but left
+   `based-on` behind, violating the vigil invariant `based-on == version` (`SCHEMA.md`). The
+   sync triage then read those units as falsely **diverged** on a fresh sync (caught by
+   `make sync-test-engine`, "fresh sync: 0 diverged"). Realigned all 13. Added the invariant as
+   an explicit rule in the `cortex-sync` skill (+ Cursor mirror) so a future bump can't recreate it.
+
+### Why
+
+The engine is the one artifact that must stay pristine across the vigil→project boundary — a
+corrupted copy throws spurious merge conflicts on later syncs. And a stale `based-on` quietly
+poisons triage classification, the very signal a maintainer trusts to decide how a unit merges.
+
+### Files affected
+
+- `cortex/sync/sync.py` — `is_engine_internal()` self-exclusion in `init_in_place()`
+- `cortex/sync/test_init.sh` — engine-pristine regression checks
+- 13 `app.vigil/**/RULES.md` — `based-on` realigned to `version`
+- `.claude/skills/cortex-sync/SKILL.md` + `.cursor/rules/cortex-sync.mdc` — `based-on==version` rule
+
+---
+
+## 2026-06-14 — Sync the `celer-testing` Cursor mirror to the tier model
+
+### What changed
+
+The Claude `celer-testing` skill was refreshed to the three-tier model during the testing
+build (VTU `mountWithPlugins` for unit, Testing Library `renderWithPlugins` + MSW for the
+`.integration.spec.ts` tier, Playwright for e2e, plus the JSON-reporter gotcha), but its Cursor
+mirror (`.cursor/rules/celer-testing.mdc`) had drifted to the older, shorter version. Rebuilt
+the mirror body byte-identical to the canonical `SKILL.md` (Cursor frontmatter only differs).
+Completes `cortex/sync/SKILL-PLAN.md` §2.
+
+### Why
+
+Cursor agents were being handed pre-tier-model testing guidance — the two assistants must teach
+the same discipline. `cursor_mirror.py` only covers rules and commands, so skill mirrors are
+synced by hand.
+
+### Files affected
+
+- `.cursor/rules/celer-testing.mdc` — body resynced to `.claude/skills/celer-testing/SKILL.md`
+- `cortex/sync/SKILL-PLAN.md` — §2 marked done
+
+---
+
+## 2026-06-14 — `cortex-sync` skill: propagation discipline as an auto-loading skill
+
+### What changed
+
+Authored the `cortex-sync` skill (planned in `cortex/sync/SKILL-PLAN.md` §1). It encodes the
+metadata + propagation rules that previously lived only as prose in `cortex/sync/*.md`: triad
+discipline (source + `RULES.md` + `CHANGELOG.md`), version-on-change (CHANGELOG canonical,
+frontmatter mirrors it), tests-are-part-of-the-unit, sync MODE awareness
+(OVERWRITE/MERGE/LOCAL/SKIP), naming/transform protection, parallel-session staging (never
+`git add -A`), and one-way vigil→projects flow. Trigger-loads (not `alwaysApply`) on
+`RULES.md` / `CHANGELOG.md` / `cortex/sync/**` / `.cortex-*`. Claude + Cursor mirrors authored
+by hand (the mirror script covers rules and commands, not skills) with byte-identical bodies.
+
+### Why
+
+Written discipline only binds when an agent is pointed at it. A skill auto-loads on the right
+triggers, turning the docs into default behavior — and because it is committed markdown in the
+AI (OVERWRITE) layer, it propagates to every vigil-derived project via the sync system itself.
+
+### Files affected
+
+- `.claude/skills/cortex-sync/SKILL.md` — canonical skill
+- `.cursor/rules/cortex-sync.mdc` — Cursor mirror (identical body, trigger-load globs)
+- `cortex/sync/SKILL-PLAN.md` — §1 marked built; trigger-load scope decision recorded
+
+---
+
 ## 2026-06-04 — Codelumen becomes the internal handbook (generated from rules & commands)
 
 ### What changed

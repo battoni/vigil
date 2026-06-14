@@ -4,7 +4,7 @@
 # Exercises sync.py against a DISPOSABLE target in a temp dir: dry-run, T0
 # orphan-seed, OVERWRITE-to-worktree, the vendor branch, a baseline merge,
 # idempotency, conflict surfacing, and deletion propagation. Reads the real
-# vigil repo read-only; never touches any real project.
+# pendulum repo read-only; never touches any real project.
 #
 # Run:  make sync-test-engine   (or: bash cortex/sync/test_engine.sh)
 #
@@ -35,34 +35,40 @@ echo "== dry-run =="
 python3 "$SYNC" --to "$T" --dry-run --force > "$T/.dry.txt" 2>&1
 chk "dry-run plans orphan vendor branch" "grep -q 'create (orphan)' '$T/.dry.txt'"
 chk "dry-run shows a name-mapped path"   "grep -q 'ziontest/' '$T/.dry.txt'"
-chk "dry-run wrote no branch"            "! git show-ref --verify --quiet refs/heads/vigil-upstream"
+chk "dry-run wrote no branch"            "! git show-ref --verify --quiet refs/heads/pendulum-upstream"
 chk "dry-run wrote no .claude"           "! test -e '$T/.claude'"
 
 echo "== real T0 sync =="
 python3 "$SYNC" --to "$T" --yes --force > "$T/.t0.txt" 2>&1
-chk "vigil-upstream branch created"        "git show-ref --verify --quiet refs/heads/vigil-upstream"
+chk "pendulum-upstream branch created"        "git show-ref --verify --quiet refs/heads/pendulum-upstream"
 chk "OVERWRITE applied to worktree (.claude)" "test -d '$T/.claude'"
 chk "OVERWRITE applied to worktree (cortex)"  "test -d '$T/cortex'"
+chk "OVERWRITE engine landed VERBATIM (not specialized)" \
+  "diff -q '$PEND/cortex/sync/sync.py' '$T/cortex/sync/sync.py' >/dev/null"
+chk "OVERWRITE engine rewrite table intact in target" \
+  "grep -q '(\"celer\", app)' '$T/cortex/sync/sync.py'"
+chk "OVERWRITE manifest.tsv IS specialized (path tokens for local --audit)" \
+  "grep -q 'app.ziontest' '$T/cortex/sync/manifest.tsv'"
 chk "MERGE not on main yet"                   "! test -e '$T/app.ziontest'"
-chk "vendor branch holds mapped app.ziontest" "git ls-tree -r --name-only vigil-upstream | grep -q '^app.ziontest/'"
-chk "vendor branch holds mapped api.ziontest" "git ls-tree -r --name-only vigil-upstream | grep -q '^api.ziontest/'"
-chk "vendor branch has NO app.vigil/ path"        "! ( git ls-tree -r --name-only vigil-upstream | grep -q '^app.vigil/' )"
-chk "vendor branch excludes OVERWRITE"        "! ( git ls-tree -r --name-only vigil-upstream | grep -q '^.claude/' )"
-chk "opted-IN sub-project synced (vitrum)"    "git ls-tree -r --name-only vigil-upstream | grep -q '^vitrum/'"
-chk "opted-OUT sub-project skipped (codelumen)" "! ( git ls-tree -r --name-only vigil-upstream | grep -q '^codelumen/' )"
-chk "opted-OUT sub-project skipped (liquen)"  "! ( git ls-tree -r --name-only vigil-upstream | grep -q '^liquen/' )"
+chk "vendor branch holds mapped app.ziontest" "git ls-tree -r --name-only pendulum-upstream | grep -q '^app.ziontest/'"
+chk "vendor branch holds mapped api.ziontest" "git ls-tree -r --name-only pendulum-upstream | grep -q '^api.ziontest/'"
+chk "vendor branch has NO celer/ path"        "! ( git ls-tree -r --name-only pendulum-upstream | grep -q '^celer/' )"
+chk "vendor branch excludes OVERWRITE"        "! ( git ls-tree -r --name-only pendulum-upstream | grep -q '^.claude/' )"
+chk "opted-IN sub-project synced (vitrum)"    "git ls-tree -r --name-only pendulum-upstream | grep -q '^vitrum/'"
+chk "opted-OUT sub-project skipped (codelumen)" "! ( git ls-tree -r --name-only pendulum-upstream | grep -q '^codelumen/' )"
+chk "opted-OUT sub-project skipped (liquen)"  "! ( git ls-tree -r --name-only pendulum-upstream | grep -q '^liquen/' )"
 
 echo "== T0 baseline merge =="
 git add -A && git commit -qm "T0 overwrite layer"
-git merge --allow-unrelated-histories -q -m "T0 baseline" vigil-upstream
+git merge --allow-unrelated-histories -q -m "T0 baseline" pendulum-upstream
 chk "merge brought app.ziontest into main" "test -d '$T/app.ziontest'"
 chk "merge brought api.ziontest into main" "test -d '$T/api.ziontest'"
 chk "content transformed in README"        "grep -q 'app.ziontest' '$T/app.ziontest/README.md'"
-chk "no literal app.vigil/ dir on main"        "! test -d '$T/app.vigil'"
-chk "lock files stayed LOCAL"              "! ( git ls-tree -r --name-only vigil-upstream | grep -q 'package-lock.json' )"
+chk "no literal celer/ dir on main"        "! test -d '$T/celer'"
+chk "lock files stayed LOCAL"              "! ( git ls-tree -r --name-only pendulum-upstream | grep -q 'package-lock.json' )"
 
 echo "== triage (B2c) =="
-# Fresh sync: every unit's based-on == vigil version == project version -> all unchanged.
+# Fresh sync: every unit's based-on == pendulum version == project version -> all unchanged.
 python3 "$SYNC" --triage --to "$T" > "$T/.triage0.txt" 2>&1
 chk "fresh sync: 0 diverged"     "grep -qE 'diverged +0' '$T/.triage0.txt'"
 chk "fresh sync: 0 clean-update" "grep -qE 'clean-update +0' '$T/.triage0.txt'"
@@ -85,7 +91,7 @@ chk "drift: clean-update shows a CHANGELOG excerpt" "grep -q '##' '$T/.triage1.t
 
 echo "== idempotent re-run =="
 python3 "$SYNC" --to "$T" --yes --force > "$T/.idem.txt" 2>&1
-chk "re-run makes no new vendor commit" "grep -q 'already at vigil' '$T/.idem.txt'"
+chk "re-run makes no new vendor commit" "grep -q 'already at pendulum' '$T/.idem.txt'"
 
 echo "== B2b source-green gate blocks when CI can't be verified (no --force) =="
 # Deterministic + offline: a gh stub that fails makes the gate resolve to UNKNOWN,
@@ -100,11 +106,11 @@ chk "gate prints a refusal message"                            "grep -q 'Refusin
 echo "== conflict surfacing (simulated upstream advance vs local edit) =="
 printf '\nLOCAL PROJECT EDIT\n' >> "$T/app.ziontest/README.md"
 git commit -q -am "local: customise README"
-git worktree add -q "$WT" vigil-upstream
+git worktree add -q "$WT" pendulum-upstream
 printf '# app.ziontest UPSTREAM CHANGE\n' > "$WT/app.ziontest/README.md"
 git -C "$WT" commit -q -am "upstream: change README"
 git worktree remove --force "$WT"
-git merge vigil-upstream > "$T/.conflict.txt" 2>&1
+git merge pendulum-upstream > "$T/.conflict.txt" 2>&1
 chk "git merge reports a conflict"        "grep -qi 'conflict' '$T/.conflict.txt'"
 chk "conflict markers present in file"    "grep -q '<<<<<<<' '$T/app.ziontest/README.md'"
 
@@ -128,8 +134,8 @@ plan = build_merge_plan(pend, files_by_mode(pend, rules)["MERGE"], conf)
 reduced = [t for t in plan if t[0] != "app.ziontest/README.md"]
 generate_upstream(target, reduced, run(["git", "rev-parse", "HEAD"], pend), dry_run=False)
 PY
-chk "removed file drops off the vendor branch" "! ( git ls-tree -r --name-only vigil-upstream | grep -q '^app.ziontest/README.md$' )"
-chk "other files remain on the vendor branch"  "git ls-tree -r --name-only vigil-upstream | grep -q '^api.ziontest/'"
+chk "removed file drops off the vendor branch" "! ( git ls-tree -r --name-only pendulum-upstream | grep -q '^app.ziontest/README.md$' )"
+chk "other files remain on the vendor branch"  "git ls-tree -r --name-only pendulum-upstream | grep -q '^api.ziontest/'"
 
 echo
 if [ $fail -eq 0 ]; then echo "ENGINE PROOF PASS"; else echo "ENGINE PROOF FAIL"; fi
