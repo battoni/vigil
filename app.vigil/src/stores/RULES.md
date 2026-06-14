@@ -1,7 +1,7 @@
 ---
 version: 1.2.0
 origin: vigil
-based-on: 1.1.0
+based-on: 1.2.0
 ---
 
 # RULES — src/stores/

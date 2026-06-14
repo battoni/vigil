@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => array_filter(explode(separator: ',', string: env(key: 'CORS_ALLOWED_ORIGINS', default: 'https://app.vigil.test,https://app.vigil.test:5173'))),
+    'allowed_origins' => array_filter(explode(separator: ',', string: env(key: 'CORS_ALLOWED_ORIGINS', default: 'https://app.vigil.vigil.test,https://app.vigil.vigil.test:5173'))),
 
     'allowed_origins_patterns' => array_filter(explode(separator: ',', string: env(key: 'CORS_ALLOWED_ORIGINS_PATTERNS', default: ''))),
 

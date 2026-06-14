@@ -1,7 +1,7 @@
 ---
 version: 1.1.0
 origin: vigil
-based-on: 1.0.0
+based-on: 1.1.0
 ---
 
 # RULES — MPermissionPanel

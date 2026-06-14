@@ -1,7 +1,7 @@
 ---
 version: 3.0.0
 origin: vigil
-based-on: 2.0.0
+based-on: 3.0.0
 ---
 
 # Theme System

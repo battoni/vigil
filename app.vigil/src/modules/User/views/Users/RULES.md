@@ -1,7 +1,7 @@
 ---
 version: 1.4.0
 origin: vigil
-based-on: 1.3.0
+based-on: 1.4.0
 ---
 
 # RULES — UsersView
