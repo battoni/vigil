@@ -1,0 +1,27 @@
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line);
+}
+
+/* Chrome, Edge and Safari */
+*::-webkit-scrollbar {
+  @apply h-2 w-2;
+}
+*::-webkit-scrollbar-track {
+  border-radius: 5px;
+  background-color: var(--color-line);
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  @apply bg-line-strong;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  @apply bg-subtle;
+}
+
+*::-webkit-scrollbar-thumb:active {
+  @apply bg-primary-400;
+}

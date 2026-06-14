@@ -1,0 +1,52 @@
+---
+description: Project overview, sub-project map, and session start instructions for vigil
+alwaysApply: true
+---
+# vigil — Project Context
+
+vigil is a monorepo of independent bootstrap sub-projects. Each sub-project has its own stack, conventions, and rule set.
+
+## Sub-projects
+
+| Project | Type | Description |
+| --- | --- | --- |
+| `api.vigil/` | Laravel 13 API (PHP 8.4) | Backend API bootstrap |
+| `app.vigil/` | Vue 3 SPA (TypeScript) | Frontend web app bootstrap |
+| `codelumen/` | VitePress | Code conventions documentation |
+| `vitrum/` | Astro | Public/marketing website bootstrap |
+| `liquen/` | Design tokens | Figma integration and design token management |
+| `cortex/` | AI tooling | Source of truth for all AI rules and prompts |
+
+## Rule routing
+
+Rules are scoped to sub-projects via glob patterns. They activate automatically when you open or edit a matching file:
+
+- Files in `api.vigil/**` → api.vigil architecture rules load
+- Files in `app.vigil/**/*.vue` or `app.vigil/**/*.ts` → all 5 app.vigil Vue/TS rules load
+- Any file → `shared-conventions` (always loaded) and this file (always loaded)
+
+## Rule activation for planning sessions
+
+Glob-scoped rules only activate when a matching file is open. During planning (no files open yet), load the relevant rules manually based on the projects involved.
+
+When the user says they are working on **api.vigil**, read:
+
+- `.cursor/rules/arcus-api-architecture.mdc`
+
+When the user says they are working on **app.vigil**, read:
+
+- `.cursor/rules/celer-01-vue-checklist.mdc`
+- `.cursor/rules/celer-02-vue-imports.mdc`
+- `.cursor/rules/celer-03-vue-script.mdc`
+- `.cursor/rules/celer-04-vue-template.mdc`
+- `.cursor/rules/celer-05-module-conventions.mdc`
+
+When working on **both**, read all of the above.
+
+Do this at the start of every session before planning begins.
+
+## AI tooling
+
+- `cortex/` is the source of truth for all rules — never edit rules directly in sub-project folders; update cortex first, then sync
+- Use `/sync-cortex` command to propagate cortex changes to all targets
+- Use `cortex/start-session.md` for the planning session prompt template

@@ -1,0 +1,103 @@
+---
+description: Vitest unit + integration (Testing Library + MSW) and Playwright e2e testing patterns for the app.vigil Vue 3 project
+globs: app.vigil/**/*.spec.ts, app.vigil/e2e/**/*.ts, app.vigil/playwright.config.ts
+alwaysApply: false
+---
+# app.vigil Testing
+
+## Stack
+
+| Tier | Tool | Helper | Specs |
+|------|------|--------|-------|
+| Unit | Vitest + `@vue/test-utils` + jsdom | `mountWithPlugins` | co-located `*.spec.ts` |
+| Integration | Vitest + `@testing-library/vue` + MSW | `renderWithPlugins` | co-located `*.integration.spec.ts` |
+| E2e | Playwright (Chromium) | — | `app.vigil/e2e/` |
+
+- **Run unit + integration**: `cd app.vigil && npm run test:unit:run` (or `make unit`)
+- **Run e2e**: `cd app.vigil && npm run test:e2e` (or `make e2e`)
+- **Run everything**: `make test-all` (unit + e2e + pest)
+
+## Co-location & versioning
+
+Specs live beside the unit they test (`ALogo.spec.ts` next to `ALogo.vue`).
+Every test addition bumps the unit's `RULES.md` `version` and `CHANGELOG.md` top entry to `1.1.0` (SemVer minor).
+
+## Mount helper
+
+```typescript
+import { mountWithPlugins } from '@/test/mount';
+const wrapper = mountWithPlugins(MyComponent, { props: { ... } });
+```
+
+Boots i18n, fresh Pinia, PrimeVue, Toast, ConfirmationService — matches `main.ts`.
+
+For components using `useRoute()`, add a router plugin:
+
+```typescript
+import { createRouter, createMemoryHistory } from 'vue-router';
+const router = createRouter({ history: createMemoryHistory(), routes: [{ path: '/', component: {} }] });
+mountWithPlugins(C, { global: { plugins: [router] } });
+```
+
+## PrimeVue stubs
+
+PrimeVue components are NOT auto-imported in Vitest. Stub them in `global.stubs`:
+
+```typescript
+stubs: {
+  Select: { props: ['modelValue', 'options'], emits: ['update:modelValue'], template: '<div class="select-stub" />' },
+  Dialog: { props: ['visible'], emits: ['update:visible'], template: '<div v-if="visible"><slot name="header" /><slot /><slot name="footer" /></div>' },
+}
+```
+
+## Service / store mocks
+
+```typescript
+const getUsers = vi.fn();
+vi.mock('../../services', () => ({ GetUsersService: getUsers }));
+vi.mock('../../store', () => ({ useUserStore: () => ({ hasPermission: vi.fn() }) }));
+// import component AFTER mocks
+```
+
+## Async
+
+```typescript
+import { flushPromises } from '@vue/test-utils';
+getUsers.mockResolvedValue({ data: users });
+const wrapper = mountWithPlugins(UsersView, { global: { stubs } });
+await flushPromises();
+```
+
+## Integration tier — renderWithPlugins (Testing Library + MSW)
+
+Same plugin wiring as `mountWithPlugins` but uses TL's `render()`. Query by role/label/text — **no CSS class queries**. Layout components (`TheLayout`, `ThePageHeader`) are stubbed by default. The component mounts immediately, so set store state **before** render:
+
+```typescript
+import { createPinia, setActivePinia } from 'pinia';
+import { renderWithPlugins } from '@/test/render';
+import { server } from '@/test/msw/server';
+import { http, HttpResponse } from 'msw';
+
+const pinia = createPinia();
+setActivePinia(pinia);
+useUserStore().setUserAndPermissions(mockUser, ['users.read']);
+
+server.use(
+  http.get('http://localhost/auth/users', () => HttpResponse.json({ data: users }))
+);
+renderWithPlugins(UsersView, { pinia, global: { stubs } });
+
+await waitFor(() => expect(screen.getByText('Alice')).toBeInTheDocument());
+```
+
+- Default MSW handlers live in `src/test/msw/handlers.ts`; override per-test with `server.use(...)`.
+- MSW is wired in `setup.ts` (start before all, reset after each, close after all).
+- `vitest.config.ts` sets `VITE_API_URL = 'http://localhost'` so axios builds absolute URLs MSW can intercept.
+
+## Reporter gotcha (terminal wrapper)
+
+The terminal wrapper mangles pretty reporter output — pass counts can read low (e.g. "23" when 24 passed). For trustworthy counts: Vitest → `--reporter=json --outputFile=/tmp/x.json` and parse; Playwright → run from `app.vigil/` (not repo root) with `--reporter=dot`/`--reporter=line`.
+
+## Never-commit rule
+
+A spec is **done** only after a green run confirmed by the human. Do not commit unrun specs.

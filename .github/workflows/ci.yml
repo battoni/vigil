@@ -1,0 +1,106 @@
+name: CI
+
+# Green-gating CI for the vigil monorepo. Runs the full suite — app.vigil
+# (type-check, lint, unit + integration, e2e) and api.vigil (Pest) — on every push
+# to main and every pull request.
+#
+# This workflow is a MERGE artifact: it propagates to downstream projects via
+# the cortex sync engine (the app.vigil/api.vigil directory tokens are rewritten per
+# project). Keep it project-name-driven so the transform stays mechanical.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Cancel superseded runs on the same ref to save minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  mirror-sync:
+    name: cursor mirrors in sync with .claude
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check .claude/.cursor rule + command parity
+        run: python3 cortex/sync/cursor_mirror.py --check
+
+  app.vigil:
+    name: app.vigil — type-check, lint, unit, e2e
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app.vigil
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: app.vigil/.nvmrc
+          cache: npm
+          cache-dependency-path: app.vigil/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run type-check
+
+      - name: Lint
+        run: npx eslint .
+
+      - name: Unit + integration (Vitest)
+        run: npm run test:unit:run
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: E2e (Playwright)
+        run: npm run test:e2e
+
+      - name: Upload Playwright report on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: app.vigil/playwright-report/
+          retention-days: 7
+
+  api.vigil:
+    name: api.vigil — Pest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api.vigil
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_sqlite, sqlite3, mbstring, dom, bcmath
+          coverage: none
+
+      - name: Copy environment file
+        run: cp .env.example .env
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Test (Pest)
+        run: php artisan test
+
+# Note: vigil's own CI should additionally run the vigil-only meta-tests
+# (convention/architecture guards) once they land — see TESTING-ENHANCEMENTS.md.
+# Downstream projects inherit only the suite above.

@@ -1,0 +1,105 @@
+# Generate API RULES.md
+
+> Generates a `RULES.md` for a unit in **api.vigil/** (Laravel API). Run from the vigil monorepo root.
+>
+> Usage: `/generateApiRules` — then provide the target folder when asked.
+
+This is the backend counterpart to `/generateComponentRules`. It captures arcus-specific,
+non-obvious decisions — NOT Vue prop/emit contracts.
+
+---
+
+## Step 1 — Get the target folder
+
+If a folder path was passed as an argument, use it. Otherwise ask:
+
+> Which folder should I generate RULES.md for? (e.g. `api.vigil/app/Modules/Auth/Repositories`)
+
+Typical api.vigil units: a module root (`app/Modules/{Module}`), a request-flow layer within a
+module (`Controllers`, `DTOs`, `Requests`, `Services`, `Repositories`, `Resources`), shared
+`app/Helpers` / `app/Models`, or `database` (factories + seeders).
+
+## Step 2 — Read the global rules
+
+Read what is already covered globally and must **not** be repeated:
+
+- `.claude/rules/arcus-api-architecture.md` — request flow, module structure, repository naming, granular updates
+- The `arcus-laravel-best-practices` skill (`.claude/skills/arcus-laravel-best-practices/`)
+- For tests: the `arcus-pest-testing` skill
+
+## Step 3 — Read the target folder
+
+Read every PHP file in the target folder. Also read any parent `RULES.md` up to the module
+root — do not duplicate what they already say.
+
+## Step 4 — Analyze
+
+Extract only what is **specific, non-obvious, or intentional** about this unit. For a
+Laravel backend, ask:
+
+- What is this layer's single responsibility in the request flow?
+- What are the **contract decisions** that carry meaning beyond types? (e.g. a repository
+  re-`load()`s relations after a write so Resources don't drop keys; the `ApiResponse`
+  envelope shape; mutations return the affected entity for granular frontend updates)
+- What **must never change** without understanding the full context? (response shape,
+  permission-merge logic, seeder ordering, backend-owned slugs)
+- What is the boundary with adjacent layers? (services never query Eloquent directly;
+  controllers never touch repositories; validation only in Requests; `env()` only in config)
+- What edge cases are already handled? (partial update via null-filtering, memoization,
+  uniqueness-ignore-self on update)
+
+Do **not** write rules for:
+- Anything covered by `arcus-api-architecture` or the laravel skill
+- Things obvious from reading the code
+- Generic Laravel/PHP best practices
+
+## Step 5 — Write RULES.md (with frontmatter)
+
+Write the file inside the target folder. **Start with metadata frontmatter** (see
+`cortex/sync/SCHEMA.md`), then the body. Omit empty sections.
+
+```md
+---
+version: 1.0.0
+origin: vigil
+based-on: 1.0.0
+---
+# RULES — [Unit Name]
+
+> For AI agents. Layer/unit conventions beyond `arcus-api-architecture` and the laravel skill.
+
+## Role
+[One sentence: what this unit/layer owns in the request flow]
+
+## Intentional Decisions
+- [Decision]: [Why it exists / what breaks without it]
+
+## Contract
+- [Method/shape that carries semantic meaning beyond its signature]
+
+## Edge Cases Handled
+- [Case]: [How it's handled and why]
+
+## Do Not
+- [Specific thing to avoid and why]
+```
+
+## Step 6 — Create the sibling CHANGELOG.md
+
+Every RULES.md has a co-located CHANGELOG.md (canonical version source — RULES frontmatter
+`version` mirrors its top entry). Create it in the same folder:
+
+```md
+# Changelog — [Unit Name]
+
+All notable changes to this unit are documented here. Versioned with SemVer.
+This file is the canonical source for the unit's version (RULES.md frontmatter mirrors it).
+
+## 1.0.0 — YYYY-MM-DD
+
+### Added
+- Initial documented baseline.
+```
+
+The two files are born together and stay version-aligned. SemVer bump rules in
+`cortex/sync/SCHEMA.md`.

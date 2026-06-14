@@ -1,0 +1,88 @@
+@import 'primeicons/primeicons.css';
+
+/* Sidenav blends into the body — no panel; the page (and any theme atmosphere)
+ * flows through it. Chrome recedes, content cards stay raised. */
+.the-sidenav.p-card {
+  background: transparent;
+}
+
+/* Badge component - Ensure default badges are visible */
+/* Target badges that don't have severity data attributes */
+span.p-badge:not([data-p-severity]),
+.p-badge:not([data-pc-section*='success']):not([data-pc-section*='info']):not([data-pc-section*='warn']):not(
+    [data-pc-section*='danger']
+  ) {
+  background-color: var(--color-primary-500) !important;
+  color: #ffffff !important;
+}
+
+/* DataTable: neutral borders (PrimeVue Aura can emit dark defaults that beat Tailwind utilities) */
+.p-datatable-table thead tr > th,
+.p-datatable-thead > tr > th {
+  border-color: var(--color-line) !important;
+  border-bottom-color: var(--color-line-strong) !important;
+}
+
+.p-datatable-tbody > tr > td {
+  border-color: var(--color-line) !important;
+}
+
+.p-datatable-header {
+  border-color: var(--color-line) !important;
+  border-bottom-color: var(--color-line-strong) !important;
+}
+
+/* app.vigil semantic button classes — use with PrimeVue <Button> when props need controlled class styling (e.g. ConfirmPopup). */
+.p-button.celer-button-warning {
+  background: var(--color-warn-500) !important;
+  border-color: var(--color-warn-500) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-warning:not(:disabled):hover {
+  background: var(--color-warn-600) !important;
+  border-color: var(--color-warn-600) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-warning:not(:disabled):active {
+  background: var(--color-warn-700) !important;
+  border-color: var(--color-warn-700) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-danger {
+  background: var(--color-danger-500) !important;
+  border-color: var(--color-danger-500) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-danger:not(:disabled):hover {
+  background: var(--color-danger-600) !important;
+  border-color: var(--color-danger-600) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-danger:not(:disabled):active {
+  background: var(--color-danger-700) !important;
+  border-color: var(--color-danger-700) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-secondary {
+  background: var(--color-surface-500) !important;
+  border-color: var(--color-surface-500) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-secondary:not(:disabled):hover {
+  background: var(--color-surface-600) !important;
+  border-color: var(--color-surface-600) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-secondary:not(:disabled):active {
+  background: var(--color-surface-700) !important;
+  border-color: var(--color-surface-700) !important;
+  color: #ffffff !important;
+}

@@ -1,0 +1,59 @@
+# -----------------------------------------------------------------------------
+# MANUAL DEPLOY NOTES (REAL SERVER)
+# -----------------------------------------------------------------------------
+# 1) Copy this vhost file to nginx:
+#    sudo cp /var/www/vigil/api.vigil/.nginx /etc/nginx/sites-available/api.vigil.battoni.dev
+#
+# 2) Enable site (safe for multi-site servers):
+#    sudo ln -s /etc/nginx/sites-available/api.vigil.battoni.dev /etc/nginx/sites-enabled/api.vigil.battoni.dev
+#    sudo nginx -t
+#    sudo systemctl reload nginx
+#
+# 3) Multi-site checklist:
+#    - Keep one file per domain in /etc/nginx/sites-available
+#    - Ensure each site has unique server_name, root, access_log and error_log
+#    - Avoid duplicate server_name across enabled files
+#    - Confirm only one default_server per listen port (if used)
+#
+# 4) DNS checklist (required before Certbot):
+#    - If you only have an IP, create an A record:
+#      api.vigil.battoni.dev -> 138.197.6.208
+#    - For multiple projects on same server, point each subdomain A record to same IP:
+#      app.vigil.battoni.dev -> 138.197.6.208
+#    - Get server public IP (for validation):
+#      curl -4 ifconfig.me
+#    - Wait for propagation, then verify:
+#      dig +short api.vigil.battoni.dev
+#      nslookup api.vigil.battoni.dev
+#
+# 5) HTTPS/SSL with Certbot (Let's Encrypt):
+#    sudo apt update
+#    sudo apt install -y certbot python3-certbot-nginx
+#    sudo certbot --nginx -d api.vigil.battoni.dev
+#    sudo certbot renew --dry-run
+# -----------------------------------------------------------------------------
+
+server {
+    server_name api.vigil.battoni.dev;
+
+    root /var/www/vigil/api.vigil/public;
+    index index.php;
+
+    charset utf-8;
+
+    access_log /var/log/nginx/arcus-access.log;
+    error_log  /var/log/nginx/arcus-error.log;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}

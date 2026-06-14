@@ -1,0 +1,202 @@
+---
+description: Architecture, conventions and patterns for api.vigil (Laravel API)
+globs: api.vigil/**
+alwaysApply: false
+---
+# API Architecture Rules
+
+This document describes the request flow, module structure (DDD-style), and conventions for factories and seeders. Follow these patterns when implementing new features.
+
+## 1. Request flow pattern
+
+Canonical flow for API endpoints (e.g. login):
+
+```
+ROUTE → REQUEST → CONTROLLER → DTO → SERVICE → REPOSITORY → ApiResponse with Resource
+```
+
+```mermaid
+sequenceDiagram
+    participant R as Route
+    participant C as Controller
+    participant S as Service
+    participant Repo as Repository
+
+    R->>C: dispatch
+    C->>C: DTO::from(request)
+    C->>S: authenticate(dto, request)
+    S->>Repo: findByUsername
+    Repo-->>S: User
+    S-->>C: User
+    C->>C: ApiResponse.success + UserResource
+    C-->>R: JsonResponse
+```
+
+**Layer summary:**
+
+- **Route** (`routes/api.php`): HTTP verb + path → `[Controller::class, 'method']`. Register routes here.
+
+  ```php
+  // routes/api.php
+  Route::post('/login', [AuthController::class, 'login']);
+  ```
+
+- **Request**: FormRequest in `Modules/{Module}/Requests/`. Validation runs before the controller. Type-hint the request in the controller method.
+
+  ```php
+  // Modules/Auth/Requests/LoginRequest.php
+  public function rules(): array
+  {
+      return [
+          'username' => ['required', 'string'],
+          'password' => ['required', 'string'],
+      ];
+  }
+  ```
+
+- **Controller**: Keep thin. Build DTO from request, call service, return `ApiResponse::success(data: new XxxResource($model))` (or `ApiResponse::created`, `ApiResponse::error`, etc.). **For simple conditional returns** (e.g., null checks), prefer ternary operator syntax: `return !$value ? ApiResponse::notFound(message: '...') : ApiResponse::success(data: new XxxResource($value));`
+
+  ```php
+  // Modules/Auth/Controllers/AuthController.php
+  public function login(LoginRequest $request): JsonResponse
+  {
+      $user = $this->authService->authenticate(LoginDTO::from($request), $request);
+
+      return ApiResponse::success(data: new UserResource($user));
+  }
+  ```
+
+- **DTO**: Spatie `Data` in `Modules/{Module}/DTOs/`. Use `XxxDTO::from($request)` to map validated input. Pass DTOs into services; pass `Request` only when needed (e.g. session).
+
+  ```php
+  // Modules/Auth/DTOs/LoginDTO.php
+  class LoginDTO extends Data
+  {
+      public function __construct(
+          public string $username,
+          public string $password,
+      ) {}
+  }
+  ```
+
+- **Service**: Business logic in `Modules/{Module}/Services/`. Uses repositories (and optionally `App\Models\*`). Returns model(s) or throws (e.g. `ValidationException`).
+
+  ```php
+  // Modules/Auth/Services/AuthService.php
+  public function authenticate(LoginDTO $dto, Request $request): User
+  {
+      $user = $this->userRepository->findUserByUsername($dto->username);
+
+      if (! $user || ! Hash::check($dto->password, $user->password)) {
+          throw ValidationException::withMessages(['username' => __('auth.failed')]);
+      }
+
+      return $user;
+  }
+  ```
+
+- **Repository**: Data access in `Modules/{Module}/Repositories/`. Injected into service. Uses Eloquent models (`App\Models\*` or module-specific `Modules/{Module}/Models/*`). **Method naming**: Use semantic, descriptive names prefixed with the entity name (e.g. `findAllRoles()`, `findRoleById()`, `createRole()`, `updateRole()`, `syncRolePermissions()`, `getRolePermissions()`). This improves code searchability and clarity compared to generic names like `findAll()`, `findById()`, `create()`, `update()`.
+
+  ```php
+  // Modules/Auth/Repositories/UserRepository.php
+  public function findUserByUsername(string $username): ?User
+  {
+      return User::where('username', $username)->first();
+  }
+  ```
+
+- **ApiResponse + Resource**: Controller wraps the model in `Modules/{Module}/Resources/XxxResource` and returns `ApiResponse::success(data: new XxxResource($model))`. Use `App\Helpers\ApiResponse` and Laravel `JsonResource` for consistent JSON.
+
+  ```php
+  // Modules/Auth/Resources/UserResource.php
+  public function toArray(Request $request): array
+  {
+      return [
+          'id' => $this->id,
+          'name' => $this->name,
+          'username' => $this->username,
+      ];
+  }
+  ```
+
+**Granular updates (frontend):** Mutating endpoints (create, update, archive, delete) should **return the affected resource** in the response so the frontend can update local state without refetching the full list. For example: `destroy($id)` should return the deleted user (e.g. build `UserResource` from the model before or after delete and return it in `ApiResponse::success(data: ...)`). Same for archive/update: return the updated entity. This enables granular updates (add/replace/remove one item in a ref) instead of full reloads.
+
+**Reference:** Login flow in `AuthController::login`, `AuthService::authenticate`, `UserRepository::findUserByUsername`, `UserResource` (all under `app/Modules/Auth/`).
+
+### Repository method naming
+
+**Use semantic, descriptive method names prefixed with the entity name.** This improves code searchability and clarity compared to generic names.
+
+**Examples:**
+
+- `findAllRoles()` instead of `findAll()`
+- `findRoleById(int $id)` instead of `findById(int $id)`
+- `createRole(array $data)` instead of `create(array $data)`
+- `updateRole(int $id, array $data)` instead of `update(int $id, array $data)`
+- `syncRolePermissions(int $roleId, array $permissions)` instead of `syncPermissions(int $roleId, array $permissions)`
+- `getRolePermissions(int $roleId)` instead of `getPermissionsForRole(int $roleId)`
+
+**Pattern:** `{action}{Entity}(...)` where action is descriptive (findAll, find, create, update, sync, get, delete, etc.) and Entity is the model name (Role, User, etc.).
+
+**Reference:** `RoleRepository` methods in `app/Modules/Auth/Repositories/RoleRepository.php`.
+
+---
+
+## 2. DDD-style module structure
+
+**Shared (app-wide):**
+
+| Path | Purpose |
+|------|---------|
+| `app/Models/` | Eloquent models used across modules (e.g. `User`). |
+| `app/Enums/` | Shared enums (e.g. `StatusEnum`). |
+| `app/Helpers/` | Helpers (e.g. `ApiResponse`). |
+| `app/Http/Controllers/Controller.php` | Base controller. |
+| `app/Providers/` | Service providers. |
+
+**Modules (bounded contexts):** `app/Modules/{Module}/`
+
+| Folder | Purpose |
+|--------|---------|
+| `Controllers/` | HTTP entry points; thin, delegate to services. |
+| `Requests/` | FormRequest validation. |
+| `DTOs/` | Spatie Data DTOs; map from Request. |
+| `Services/` | Domain/business logic; use Repositories. |
+| `Repositories/` | Data access; use Models. |
+| `Resources/` | API output (JsonResource). |
+| `Models/` | Optional; module-specific Eloquent models. |
+| `Enums/` | Optional; module-specific enums. |
+| `Helpers/` | Optional; module-specific helpers (e.g. permission resolvers). |
+
+**Rule:** New features follow this structure. Reuse existing modules when the feature belongs to that bounded context; create a new module only when it represents a new context. Match existing conventions (e.g. Auth) for naming and layering.
+
+---
+
+## 3. Factories
+
+**Location:** `database/factories/`.
+
+**Conventions:**
+
+- One factory per model, named `XxxFactory`, extending `Illuminate\Database\Eloquent\Factories\Factory`.
+- Implement `definition()` returning the default attribute array; use `fake()` and relevant enums (e.g. `UserFactory` enum).
+- Model uses `HasFactory` and `@use HasFactory<\Database\Factories\XxxFactory>`.
+- Factories may use shared or module enums; keep them in `database/factories/`.
+
+**Rule:** Use factories for tests and local dev data. Do not put business logic in factories.
+
+**Reference:** `database/factories/UserFactory.php`, `app/Models/User.php` (HasFactory).
+
+---
+
+## 4. Seeders
+
+**Location:** `database/seeders/`.
+
+**Conventions:**
+
+- **DatabaseSeeder**: Orchestrator. Uses `WithoutModelEvents`. Calls domain seeders via `$this->call(XxxSeeder::class)`.
+- **Domain seeders** (e.g. `SuperAdminSeeder`): Seed specific data. Use Models, enums, `firstOrCreate` / `create` as appropriate. Use `env()` for secrets (e.g. `SUPERADMIN_PASSWORD`) with a safe default.
+- **Rule:** Seeders are for initial or reference data. Prefer seeders over one-off scripts when the data is part of app setup. Do not duplicate logic that belongs in the Service/Repository layer.
+
+**Reference:** `database/seeders/DatabaseSeeder.php`, `database/seeders/SuperAdminSeeder.php`.

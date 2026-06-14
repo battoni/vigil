@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+@import 'tailwindcss-primeui';
+@import './theme/colors.css';
+@import './theme/fonts.css';
+
+/* Dark variant aligned with the role-token selector + PrimeVue darkModeSelector.
+ * Rarely needed — role tokens (canvas/panel/heading/…) flip on their own. Use
+ * `dark:` only for one-off cases the role tokens can't express. */
+@custom-variant dark (&:where([data-theme='dark'] *));

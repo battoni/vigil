@@ -1,0 +1,363 @@
+{
+  "common": {
+    "active": "Ativo",
+    "cancel": "Cancelar",
+    "create": "Criar",
+    "details": "Detalhes",
+    "error": "Ocorreu um erro",
+    "inactive": "Inativo",
+    "orderBy": "Ordenação",
+    "save": "Salvar",
+    "search": "Pesquisar",
+    "actions": {
+      "activate": "Ativar",
+      "archive": "Arquivar",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "edit": "Editar",
+      "no": "Não",
+      "ok": "Ok",
+      "submit": "Enviar",
+      "view": "Visualizar Detalhes",
+      "yes": "Sim"
+    },
+    "multiselect": {
+      "emptyFilterMessage": "Nenhum resultado encontrado",
+      "emptyMessage": "Nenhuma opção disponível",
+      "filterPlaceholder": "Filtrar"
+    },
+    "password": {
+      "mediumLabel": "Média",
+      "promptLabel": "Digite uma senha",
+      "strongLabel": "Forte",
+      "weakLabel": "Fraca"
+    },
+    "select": {
+      "emptyMessage": "Nenhuma opção disponível"
+    }
+  },
+  "errors": {
+    "refreshAndContactAdmin": "Atualize a página e tente novamente. Se o problema continuar, copie a mensagem de erro e entre em contato com o administrador do sistema.",
+    "somethingWentWrong": "Algo deu errado.",
+    "unexpected": "Um erro inesperado aconteceu. Copie o erro abaixo e por favor informe ao administrador do sistema: {error}"
+  },
+  "navigation": {
+    "finances": "Finanças",
+    "home": "Início",
+    "logout": "Sair",
+    "roles": "Permissões",
+    "settings": "Configurações",
+    "users": "Usuários"
+  },
+  "auth": {
+    "seeYouSoon": "Até logo!",
+    "flow": {
+      "back": "Voltar",
+      "continue": "Continuar",
+      "continueWith": "Continuar com",
+      "needHelp": "Precisa de ajuda?",
+      "or": "ou",
+      "login": {
+        "codeInvalid": "Código inválido",
+        "codeRequired": "Código é obrigatório",
+        "codeSuccess": "Código verificado com sucesso",
+        "codeSuccessDetail": "Bem-vindo de volta, {name}!",
+        "codeTitle": "Entrar com código",
+        "email": "E-mail",
+        "emailInvalid": "E-mail inválido",
+        "emailPlaceholder": "Digite seu melhor e-mail",
+        "emailRequired": "E-mail é obrigatório",
+        "emailTitle": "Entrar com e-mail",
+        "enterCode": "Digite o código abaixo",
+        "forgotPasswordLink": "Esqueceu a senha?",
+        "identifierAriaEmail": "E-mail",
+        "identifierAriaWhatsapp": "Telefone (WhatsApp)",
+        "identifierInvalid": "Digite um celular ou e-mail válido",
+        "identifierLabel": "Celular ou e-mail",
+        "identifierPlaceholder": "Digite seu celular ou e-mail",
+        "identifierRequired": "Celular ou e-mail é obrigatório",
+        "passwordTitle": "Entrar",
+        "phoneNumber": "Número de Telefone",
+        "phoneRequired": "Telefone é obrigatório",
+        "phoneTitle": "Entrar",
+        "resendCode": "Reenviar código",
+        "resendCodeMissingPhone": "Telefone não encontrado para reenviar.",
+        "resendCodeSuccess": "Código reenviado",
+        "resendCodeWaitDetail": "Você pode reenviar o código quando o tempo terminar.",
+        "resendCodeWaitTitle": "Aguarde",
+        "useEmailInstead": "Usar e-mail",
+        "usePhoneInstead": "Usar celular",
+        "welcome": "Bem-vindo",
+        "whatsappPlaceholder": "Insira seu número de WhatsApp"
+      },
+      "recover": {
+        "atLeastOne": "Informe o celular ou o e-mail",
+        "confirmLink": "Confirmar",
+        "description": "Enviamos uma mensagem de Whatsapp ou um e-mail para ajudar você a resetar sua senha.",
+        "enterCode": "Digite o código abaixo",
+        "fillAtLeastOneField": "Preencha pelo menos um campo",
+        "phone": "Número de celular",
+        "phoneInvalid": "Digite um celular válido com DDD (10 ou 11 dígitos)",
+        "successMessage": "Verifique seu e-mail e/ou SMS para concluir o processo de recuperação de acesso",
+        "successTitle": "E-mail e/ou SMS enviado com sucesso",
+        "title": "Recuperar acesso"
+      },
+      "resetCode": {
+        "codeLabel": "Código de verificação",
+        "codePlaceholder": "Digite o código que você recebeu",
+        "codeRequired": "Código é obrigatório",
+        "confirm": "Confirmar",
+        "newPassword": "Nova senha",
+        "resend": "Reenviar código",
+        "resendSuccess": "Código reenviado",
+        "success": "Senha atualizada",
+        "title": "Definir nova senha"
+      },
+      "setPassword": {
+        "confirmLabel": "Confirmar senha",
+        "confirmPlaceholder": "Digite a senha novamente",
+        "confirmRequired": "Confirme sua senha",
+        "minLength": "A senha deve ter pelo menos 8 caracteres",
+        "mismatch": "As senhas devem ser iguais",
+        "title": "Defina sua senha"
+      },
+      "signUp": {
+        "birthDate": "Data de nascimento",
+        "birthDatePlaceholder": "Insira sua data de nascimento",
+        "birthDateRequired": "Data de nascimento é obrigatória",
+        "cpf": "CPF",
+        "cpfDescription": "Seu CPF nos ajudará a proteger seus dados e garantir que você tem mais de 18 anos.",
+        "cpfPlaceholder": "Insira seu CPF",
+        "cpfRequired": "CPF é obrigatório",
+        "iAcceptThe": "Aceito os",
+        "lastName": "Sobrenome",
+        "lastNamePlaceholder": "Digite seu sobrenome",
+        "lastNameRequired": "Sobrenome é obrigatório",
+        "name": "Nome",
+        "namePlaceholder": "Digite seu nome",
+        "nameRequired": "Nome é obrigatório",
+        "termsAndConditionsOfUse": "termos e condições de uso",
+        "termsRequired": "Você precisa aceitar os termos e condições",
+        "title": "Complete seu cadastro"
+      },
+      "social": {
+        "email": "Email",
+        "facebook": "Facebook",
+        "google": "Google"
+      },
+      "support": {
+        "contactAdmins": "Entre em contato com um dos administradores:",
+        "pageTitle": "Suporte",
+        "viewTitle": "Support View"
+      },
+      "terms": {
+        "description": "Este ambiente e seus recursos destinam-se ao uso interno autorizado. Ao continuar, você concorda com as regras de uso, privacidade e segurança da plataforma.",
+        "title": "Termos e condições de uso",
+        "warning": "O descumprimento das políticas pode resultar em bloqueio de acesso e demais medidas administrativas cabíveis."
+      }
+    },
+    "forgotPassword": {
+      "back": "Voltar",
+      "description": "Entre em contato com um dos administradores abaixo para recuperar seu acesso:",
+      "title": "Esqueceu sua senha?"
+    },
+    "login": {
+      "forgotPassword": "Esqueceu sua senha?",
+      "password": "Senha",
+      "passwordIncorrect": "A senha fornecida está incorreta",
+      "passwordPlaceholder": "Insira sua senha",
+      "passwordRequired": "Senha é obrigatória",
+      "submit": "Entrar",
+      "username": "Usuário",
+      "usernameNotFound": "O nome de usuário não existe",
+      "usernamePlaceholder": "Insira seu nome de usuário",
+      "usernameRequired": "Usuário é obrigatório",
+      "welcome": "Bem-vindo(a), {name}!"
+    }
+  },
+  "finance": {
+    "title": "Finanças",
+    "actions": {
+      "deposit": "Depositar",
+      "withdraw": "Sacar"
+    },
+    "cards": {
+      "available": {
+        "description": "Valores disponíveis para saque",
+        "title": "Disponível"
+      },
+      "inUse": {
+        "description": "Valores em trânsito ou em uso",
+        "title": "Em uso"
+      },
+      "total": {
+        "description": "Valores disponíveis somados aos valores em uso",
+        "title": "Total"
+      }
+    },
+    "modal": {
+      "defaults": {
+        "entity": "Entidade não informada"
+      },
+      "fields": {
+        "amount": "Valor",
+        "entity": "Entidade",
+        "status": "Status"
+      },
+      "placeholders": {
+        "amount": "Ex: 1000",
+        "entity": "Ex: Battoni Dev"
+      },
+      "title": {
+        "deposit": "Depositar valor",
+        "withdraw": "Sacar valor"
+      }
+    },
+    "transactions": {
+      "empty": "Nenhuma transação encontrada.",
+      "title": "Últimas transações",
+      "viewAll": "Ver todas as transações",
+      "columns": {
+        "amount": "Valor",
+        "date": "Data",
+        "entity": "Entidade",
+        "status": "Status",
+        "type": "Tipo"
+      },
+      "status": {
+        "canceled": "CANCELADO",
+        "done": "REALIZADO",
+        "scheduled": "AGENDADO"
+      },
+      "type": {
+        "deposit": "Depósito",
+        "payment": "Pagamento",
+        "refund": "Estorno",
+        "withdraw": "Saque"
+      }
+    }
+  },
+  "rolesAndPermissions": {
+    "activateAll": "Ativar todos",
+    "cannotDeleteAdministratorRole": "O perfil de administrador não pode ser excluído",
+    "cannotDeleteRole": "Não é possível excluir este perfil",
+    "collapseAll": "Minimizar todos",
+    "deactivateAll": "Desativar todos",
+    "deleteConfirmHeader": "Esta ação não pode ser desfeita.",
+    "deleteConfirmMessage": "Tem certeza que deseja excluir o perfil {name}?",
+    "expandAll": "Expandir todos",
+    "newProfile": "Novo Perfil",
+    "roleCreatedSuccess": "Perfil {name} criado com sucesso!",
+    "roleDeletedSuccess": "Perfil excluído com sucesso!",
+    "roleUpdatedSuccess": "Perfil {name} atualizado com sucesso!",
+    "title": "Perfis e Permissões",
+    "toggleAllPanels": "Expandir/Recolher Todos",
+    "update": "Atualizar",
+    "usersUsingRole": "{count} usuário(s) está(ão) usando este perfil. Por favor, remova-os do perfil antes de excluí-lo.",
+    "form": {
+      "description": "Descrição",
+      "descriptionPlaceholder": "Digite uma descrição para o perfil (opcional)",
+      "editProfileHeader": "Editar Perfil",
+      "name": "Nome",
+      "namePlaceholder": "Digite o nome do perfil",
+      "nameRequired": "Nome é obrigatório",
+      "newProfileHeader": "Novo Perfil",
+      "permissionGroups": "Grupos de Permissões",
+      "permissionGroupsPlaceholder": "Selecione os grupos de permissões",
+      "permissionGroupsRequired": "Selecione pelo menos um grupo de permissões"
+    },
+    "groups": {
+      "home": "Início",
+      "permissions": "Permissões",
+      "roles": "Perfis",
+      "users": "Usuários"
+    },
+    "permissions": {
+      "archive": "Arquivar",
+      "create": "Criar",
+      "delete": "Excluir",
+      "read": "Ler",
+      "resetPassword": "Redefinir senha",
+      "search": "Pesquisar",
+      "update": "Atualizar"
+    },
+    "tabs": {
+      "admin": "Admin",
+      "manager": "Gerente"
+    }
+  },
+  "theme": {
+    "switchToDark": "Modo escuro",
+    "switchToLight": "Modo claro"
+  },
+  "users": {
+    "activateConfirmMessage": "Tem certeza que deseja ativar {name}?",
+    "add": "Novo Usuário",
+    "archiveConfirmMessage": "Tem certeza que deseja arquivar {name}?",
+    "companyRole": "Cargo",
+    "deleteConfirmMessage": "Tem certeza que deseja excluir {name}? Esta ação não pode ser desfeita.",
+    "noAccess": "Você não tem permissão para visualizar esta página.",
+    "status": "Status",
+    "systemRole": "Perfil",
+    "title": "Usuários",
+    "userActivatedSuccess": "Usuário {name} ativado com sucesso!",
+    "userArchivedSuccess": "Usuário {name} arquivado com sucesso!",
+    "userCreatedSuccess": "Usuário {name} criado com sucesso!",
+    "userDeletedSuccess": "Usuário excluído com sucesso!",
+    "userUpdatedSuccess": "Usuário {name} atualizado com sucesso!",
+    "confirmActions": {
+      "yesActivate": "Sim, ativar",
+      "yesArchive": "Sim, arquivar",
+      "yesDelete": "Sim, excluir"
+    },
+    "empty": {
+      "description": "Adicione o primeiro membro da equipe para começar.",
+      "title": "Nenhum usuário ainda"
+    },
+    "form": {
+      "cancel": "Cancelar",
+      "companyRolePlaceholder": "Digite o cargo",
+      "companyRoleRequired": "Cargo é obrigatório",
+      "create": "Criar",
+      "createHeader": "Criar novo usuário",
+      "edit": "Editar",
+      "editHeader": "Editar usuário",
+      "lastName": "Sobrenome",
+      "lastNamePlaceholder": "Digite o sobrenome",
+      "lastNameRequired": "Sobrenome é obrigatório",
+      "name": "Nome",
+      "namePlaceholder": "Digite o nome",
+      "nameRequired": "Nome é obrigatório",
+      "optional": "opcional",
+      "password": "Senha",
+      "passwordConfirmation": "Confirmar senha",
+      "passwordConfirmationPlaceholder": "Confirme a senha",
+      "passwordConfirmationRequired": "Confirmação de senha é obrigatória",
+      "passwordMatch": "As senhas devem coincidir",
+      "passwordMin": "A senha deve ter pelo menos 8 caracteres",
+      "passwordPlaceholder": "Digite a senha",
+      "passwordRequired": "Senha é obrigatória",
+      "passwordResetPermissionRequired": "Você não tem permissão para redefinir senhas.",
+      "permissions": "Permissões",
+      "role": "Perfil",
+      "rolePlaceholder": "Selecione o perfil",
+      "roleRequired": "Perfil é obrigatório",
+      "statusPlaceholder": "Selecione o status",
+      "statusRequired": "Status é obrigatório",
+      "systemRolePlaceholder": "Digite o perfil",
+      "systemRoleRequired": "Perfil é obrigatório",
+      "username": "Usuário",
+      "usernamePlaceholder": "Digite o nome de usuário",
+      "usernameRequired": "Nome de usuário é obrigatório",
+      "usernameTaken": "Este nome de usuário já está em uso"
+    },
+    "sort": {
+      "nameAsc": "Nome (A–Z)",
+      "nameDesc": "Nome (Z–A)",
+      "roleAsc": "Perfil (A–Z)",
+      "roleDesc": "Perfil (Z–A)",
+      "statusAsc": "Status (A–Z)",
+      "statusDesc": "Status (Z–A)"
+    }
+  }
+}

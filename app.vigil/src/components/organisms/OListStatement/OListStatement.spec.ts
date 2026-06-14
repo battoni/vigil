@@ -1,0 +1,90 @@
+import { h } from 'vue';
+import { describe, expect, it } from 'vitest';
+import type { ComponentMountingOptions } from '@vue/test-utils';
+import { mountWithPlugins } from '@/test/mount';
+import OListStatement from './OListStatement.vue';
+
+type Slots = ComponentMountingOptions<typeof OListStatement>['slots'];
+
+const primevueStubs = {
+  Tag: { props: ['value', 'class', 'rounded', 'icon'], template: '<span class="tag-stub">{{ value }}</span>' },
+  Button: {
+    props: ['icon', 'severity', 'text', 'rounded', 'class', 'label'],
+    emits: ['click'],
+    template: '<button class="button-stub" :data-icon="icon" @click="$emit(\'click\', $event)">{{ label }}</button>',
+  },
+  MMainDialog: {
+    props: ['visible', 'isFooterless', 'title'],
+    template: '<div v-if="visible" class="dialog-stub"><slot /><slot name="footer" /></div>',
+  },
+};
+
+const titleConfig = { valueKey: 'name' };
+
+const items = [
+  { id: '1', name: 'Alice', amount: '$100' },
+  { id: '2', name: 'Bob', amount: '$200' },
+];
+
+function mount(props: Record<string, unknown> = {}, slots: Slots = {}) {
+  return mountWithPlugins(OListStatement, {
+    props: { items, amount: { valueKey: 'amount' }, title: titleConfig, ...props },
+    slots,
+    global: { stubs: primevueStubs },
+  });
+}
+
+describe('OListStatement', () => {
+  it('shows the empty state when items is empty', () => {
+    expect(mount({ items: [] }).text()).toContain('No items');
+  });
+
+  it('renders a row per item with the amount', () => {
+    const wrapper = mount();
+    expect(wrapper.text()).toContain('Alice');
+    expect(wrapper.text()).toContain('$100');
+  });
+
+  it('renders without an amount config', () => {
+    const wrapper = mountWithPlugins(OListStatement, {
+      props: { items, title: titleConfig },
+      global: { stubs: primevueStubs },
+    });
+    expect(wrapper.text()).toContain('Alice');
+    expect(wrapper.text()).not.toContain('$100');
+  });
+
+  it('applies valueFormatter to the amount', () => {
+    const wrapper = mount({ amount: { valueKey: 'amount', valueFormatter: (raw: unknown) => `fmt-${raw}` } });
+    expect(wrapper.text()).toContain('fmt-$100');
+  });
+
+  it('renders only gated inline actions and emits with the item', async () => {
+    const wrapper = mount({ canEdit: true });
+    expect(wrapper.find('[data-icon="pi pi-trash"]').exists()).toBe(false);
+
+    await wrapper.find('[data-icon="pi pi-pencil"]').trigger('click');
+
+    expect(wrapper.emitted('onEdit')?.[0]?.[0]).toMatchObject({ id: '1', name: 'Alice' });
+  });
+
+  it('renders the custom #actions slot per row', () => {
+    const wrapper = mount({}, { actions: ({ item }) => h('button', { class: 'custom-action', 'data-id': item.id }) });
+    expect(wrapper.findAll('.custom-action').length).toBe(items.length);
+  });
+
+  it('opens the dialog with the item, mirrors actions, and closes after acting', async () => {
+    const wrapper = mount(
+      { showDetails: true, canDelete: true },
+      { details: ({ item }) => h('span', { class: 'detail-content' }, String(item.name)) }
+    );
+
+    await wrapper.find('[data-icon="pi pi-eye"]').trigger('click');
+    expect(wrapper.find('.detail-content').text()).toBe('Alice');
+
+    await wrapper.find('.dialog-stub [data-icon="pi pi-trash"]').trigger('click');
+
+    expect(wrapper.emitted('onDelete')?.[0]?.[0]).toMatchObject({ id: '1' });
+    expect(wrapper.find('.dialog-stub').exists()).toBe(false);
+  });
+});

@@ -1,0 +1,53 @@
+/* Reserve space for the vertical scrollbar so overflow locks (e.g. PrimeVue modals) do not shift layout */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Base font styles */
+html,
+body {
+  font-family:
+    'Space Grotesk',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-canvas);
+  color: var(--color-body);
+  height: 100%;
+  width: 100%;
+}
+
+#app {
+  height: 100%;
+  position: relative;
+  width: 100%;
+  margin: auto;
+}
+
+/* Monospace for paragraphs and specific elements */
+p {
+  font-family:
+    'Sometype Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Monaco, 'Courier New', monospace;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family:
+    'Sometype Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Monaco, 'Courier New', monospace;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  font-size: 14px;
+  -webkit-text-fill-color: var(--color-body);
+  -webkit-box-shadow: 0 0 0px 40rem var(--color-canvas) inset;
+}

@@ -1,0 +1,89 @@
+---
+description: Push the current branch and create a draft pull request on GitHub. Invoke with /publish-pr.
+alwaysApply: false
+---
+# Publish PR
+
+Push the current branch and create a draft pull request on GitHub using the output from `/create-pr`.
+
+---
+
+## Step 1 — Pre-flight checks
+
+Run the following in parallel:
+
+- `git status` — confirm working tree is clean (all changes committed)
+- `git log main...HEAD --oneline` — confirm there are commits to push
+- `git branch --show-current` — get the current branch name
+
+If the working tree is dirty, **stop** and tell the user to commit first (or run `/commit`).
+
+If there are no commits ahead of main, **stop** and tell the user there is nothing to publish.
+
+## Step 2 — Run `/create-pr`
+
+Execute the full `/create-pr` command flow to generate the PR title and description. Read `.claude/commands/create-pr.md` and follow it. Use the developer-approved output directly — `/create-pr` does not save a file.
+
+## Step 3 — Push the branch
+
+```bash
+git push -u origin HEAD
+```
+
+If the push fails (e.g. no remote, auth issue), **stop** and report the error.
+
+## Step 4 — Create the draft PR
+
+Use `gh` to create a **draft** pull request against `development`, with Guilherme as reviewer:
+
+```bash
+gh pr create --draft --base development --reviewer battoni --title "<title>" --body "<description>"
+```
+
+Use the title and description generated in Step 2. Pass the body via a HEREDOC to preserve formatting:
+
+```bash
+gh pr create --draft --base development --reviewer battoni --title "Title here" --body "$(cat <<'EOF'
+# PR description here
+...
+EOF
+)"
+```
+
+If the `development` base branch doesn't exist on the remote, **stop** and tell the user — do not silently fall back to `main`.
+
+## Step 5 — Set Vercel preview alias
+
+Derive the deployment slug from the branch name:
+
+1. Lowercase the branch name
+2. Replace `/` and `.` with empty string (e.g. `TASK-4.5` → `task-45`, `feature/login-flow` → `featurelogin-flow`)
+
+Then run:
+
+```bash
+vercel alias set vigil-git-<slug>-battonis-projects.vercel.app <slug>.preview.battoni.dev
+```
+
+If the alias command fails (e.g. deployment not ready yet), report the error but do not block — the PR is already created.
+
+## Step 6 — Report
+
+Output:
+
+- The PR URL
+- The branch name and base (`development`)
+- Number of commits included
+- The reviewer requested (`battoni`)
+- The preview URL (`<slug>.preview.battoni.dev`)
+- Reminder of the final manual step: review the PR one last time on GitHub, leave a `Reviewed 🏁` comment, then mark it **Ready for review**.
+
+---
+
+## Rules
+
+- NEVER force push (`--force`, `--force-with-lease`) unless the user explicitly asks
+- NEVER push to `main` or `master` directly
+- Always create the PR as a **draft** — the user marks it ready after testing
+- If `gh` is not installed or not authenticated, **stop** and tell the user
+- Do not modify any files — this command is read-only + git operations only

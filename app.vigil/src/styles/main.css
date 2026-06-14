@@ -1,0 +1,7 @@
+/* @import 'variables.css'; */
+@import './tailwind.css';
+@import './reset.css';
+
+@import './libraries/primevue.css';
+
+@import './components/index.css';

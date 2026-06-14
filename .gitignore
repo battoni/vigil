@@ -1,0 +1,41 @@
+# Personal AI tooling overrides — not for team sharing
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Claude Code harness runtime files
+.claude/scheduled_tasks.lock
+**/.claude/scheduled_tasks.lock
+
+# GitHub tokens and secrets
+github-token
+*.token
+*.secret
+.env
+.env.local
+
+# Tokens Studio sync files (if stored locally)
+figma-tokens/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if you add any)
+node_modules/
+
+# Python tooling (cortex/sync)
+__pycache__/
+*.pyc
+
+# Build outputs
+dist/
+build/
+
+plans/prs/*.md
+

@@ -1,0 +1,63 @@
+# Cortex sync manifest — how each path propagates from vigil to downstream projects.
+#
+# Columns (tab-separated):  MODE <TAB> PATH-OR-GLOB
+#
+# MODE:
+#   OVERWRITE  — never edited downstream; the transform writes straight to the project
+#                worktree (the AI-tooling layer: rules, commands, hooks, cortex knowledge).
+#   MERGE      — editable downstream; the transform lands on the `vigil-upstream` vendor
+#                branch and git 3-way-merges into main (all sub-project code + tests + config).
+#   LOCAL      — the project owns it; sync NEVER touches it (identity, brand, roster).
+#   SKIP       — never synced at all (sync metadata, local-only files).
+#
+# Matching: FIRST MATCH WINS — list specific LOCAL/SKIP/OVERWRITE exceptions ABOVE the broad
+# catch-alls. A path matches if it equals the entry, the entry ends with '/' and is a path
+# prefix, or the entry contains '*' (fnmatch glob; '*' spans '/'). Every tracked file MUST
+# resolve to a mode — there is NO implicit default; the final `*` catch-all guarantees it.
+# Validate coverage with:  python3 cortex/sync/sync.py --audit
+#
+# Classification scans git-tracked files only — build artifacts (node_modules/, vendor/,
+# dist/, playwright-report/, test-results/) are gitignored and never seen.
+
+# ---- SKIP: never synced (sync metadata, local-only) ----
+SKIP	.claude/settings.local.json
+SKIP	.cortex-version
+SKIP	.cortex-sync.conf
+
+# ---- LOCAL: project identity / brand / roster — never overwritten ----
+# Dependency lock files: each project regenerates its own (npm/composer install) and
+# pins its own versions — vigil must never overwrite or merge them.
+LOCAL	*composer.lock
+LOCAL	*package-lock.json
+LOCAL	*pnpm-lock.yaml
+LOCAL	*yarn.lock
+
+LOCAL	CLAUDE.md
+LOCAL	README.md
+LOCAL	.claude/settings.json
+LOCAL	.claude/commands/start-session.md
+LOCAL	.cursor/rules/project-context.mdc
+LOCAL	.cursor/rules/start-session.mdc
+LOCAL	.cursor/rules/celer-folder-theme.mdc
+LOCAL	cortex/README.md
+LOCAL	cortex/logo/
+
+# Visual identity / brand — each project keeps its own; vigil must NEVER overwrite it.
+# colors.css is the declared "brand contract"; logo + favicons + the page title are identity.
+LOCAL	app.vigil/src/styles/theme/colors.css
+LOCAL	app.vigil/src/components/atoms/ALogo/
+LOCAL	app.vigil/src/assets/logo/
+LOCAL	app.vigil/public/favicon/
+LOCAL	app.vigil/index.html
+
+# ---- OVERWRITE: AI-tooling layer — safe to overwrite (not edited downstream) ----
+OVERWRITE	.claude/
+OVERWRITE	.cursor/
+OVERWRITE	cortex/
+
+# ---- MERGE: everything else — all sub-project code, tests, config, root tooling ----
+# Covers app.vigil, api.vigil, codelumen, liquen, vitrum + Makefile, .github/ (CI), .gitignore,
+# .nvmrc, .vscode/, CLAUDE.local.md.example. Conservative by design: MERGE never silently
+# overwrites — it surfaces a git conflict only where BOTH sides changed the same lines.
+# Retune specific brand/identity files up to LOCAL as churn reveals them.
+MERGE	*

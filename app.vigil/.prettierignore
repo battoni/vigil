@@ -1,0 +1,11 @@
+# Ignore HTML files
+*.html
+
+# Common files to ignore
+node_modules/
+dist/
+build/
+coverage/
+.git/
+.DS_Store
+*.log 
