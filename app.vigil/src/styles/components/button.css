@@ -1,0 +1,182 @@
+/* app.vigil semantic button classes — use with PrimeVue <Button> when props need controlled class styling (e.g. ConfirmPopup). */
+.p-button.celer-button-warning {
+  background: var(--color-warn-500) !important;
+  border-color: var(--color-warn-500) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-warning:not(:disabled):hover {
+  background: var(--color-warn-600) !important;
+  border-color: var(--color-warn-600) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-warning:not(:disabled):active {
+  background: var(--color-warn-700) !important;
+  border-color: var(--color-warn-700) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-danger {
+  background: var(--color-danger-500) !important;
+  border-color: var(--color-danger-500) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-danger:not(:disabled):hover {
+  background: var(--color-danger-600) !important;
+  border-color: var(--color-danger-600) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-danger:not(:disabled):active {
+  background: var(--color-danger-700) !important;
+  border-color: var(--color-danger-700) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-secondary {
+  background: var(--color-surface-500) !important;
+  border-color: var(--color-surface-500) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-secondary:not(:disabled):hover {
+  background: var(--color-surface-600) !important;
+  border-color: var(--color-surface-600) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-secondary:not(:disabled):active {
+  background: var(--color-surface-700) !important;
+  border-color: var(--color-surface-700) !important;
+  color: #ffffff !important;
+}
+
+.p-button.celer-button-primary {
+  background: var(--color-primary-500) !important;
+  border-color: var(--color-primary-500) !important;
+  box-shadow: none !important;
+  color: var(--color-ink-900) !important;
+}
+
+.p-button.celer-button-primary:not(:disabled):hover {
+  background: var(--color-primary-600) !important;
+  border-color: var(--color-primary-600) !important;
+  color: var(--color-ink-900) !important;
+}
+
+.p-button.celer-button-primary:not(:disabled):active {
+  background: var(--color-primary-700) !important;
+  border-color: var(--color-primary-700) !important;
+  color: var(--color-ink-900) !important;
+}
+
+.p-button.celer-button-soft-primary {
+  background: var(--color-primary-100) !important;
+  border-color: var(--color-primary-100) !important;
+  color: var(--color-ink-900) !important;
+}
+
+.p-button.celer-button-soft-primary:not(:disabled):hover {
+  background: var(--color-primary-200) !important;
+  border-color: var(--color-primary-200) !important;
+  color: var(--color-ink-900) !important;
+}
+
+.p-button.celer-button-soft-primary:not(:disabled):active {
+  background: var(--color-primary-300) !important;
+  border-color: var(--color-primary-300) !important;
+  color: var(--color-ink-900) !important;
+}
+
+.p-button.celer-button-outlined-secondary {
+  background: transparent !important;
+  border-color: var(--color-surface-800) !important;
+  color: var(--color-surface-800) !important;
+}
+
+.p-button.celer-button-outlined-secondary:not(:disabled):hover {
+  background: var(--color-surface-100) !important;
+}
+
+.p-button.celer-button-text-info,
+.p-button.celer-button-text-info .p-button-label,
+.p-button.celer-button-text-info .p-button-icon {
+  color: var(--color-info-700) !important;
+}
+
+.p-button.celer-button-text-warn,
+.p-button.celer-button-text-warn .p-button-label,
+.p-button.celer-button-text-warn .p-button-icon {
+  color: var(--color-warn-700) !important;
+}
+
+.p-button.celer-button-text-danger,
+.p-button.celer-button-text-danger .p-button-label,
+.p-button.celer-button-text-danger .p-button-icon {
+  color: var(--color-danger-700) !important;
+}
+
+.p-button.celer-button-text-secondary,
+.p-button.celer-button-text-secondary .p-button-label,
+.p-button.celer-button-text-secondary .p-button-icon {
+  color: var(--color-surface-600) !important;
+}
+
+.p-button.celer-button-link-primary,
+.p-button.celer-button-link-primary .p-button-label,
+.p-button.celer-button-link-primary .p-button-icon {
+  color: var(--color-primary-700) !important;
+}
+
+.p-button.celer-button-link-secondary,
+.p-button.celer-button-link-secondary .p-button-label,
+.p-button.celer-button-link-secondary .p-button-icon {
+  color: var(--color-surface-600) !important;
+}
+
+/* Dark scheme: these helper classes use light-tuned fixed shades (surface-800,
+ * *-700) that lose contrast on a dark canvas. Override only the colors that
+ * would otherwise read poorly; filled severities (white on saturated) are fine. */
+[data-theme='dark'] .p-button.celer-button-outlined-secondary {
+  border-color: var(--color-line-strong) !important;
+  color: var(--color-body) !important;
+}
+
+[data-theme='dark'] .p-button.celer-button-outlined-secondary:not(:disabled):hover {
+  background: var(--color-panel-muted) !important;
+}
+
+[data-theme='dark'] .p-button.celer-button-text-secondary,
+[data-theme='dark'] .p-button.celer-button-text-secondary .p-button-label,
+[data-theme='dark'] .p-button.celer-button-text-secondary .p-button-icon,
+[data-theme='dark'] .p-button.celer-button-link-secondary,
+[data-theme='dark'] .p-button.celer-button-link-secondary .p-button-label,
+[data-theme='dark'] .p-button.celer-button-link-secondary .p-button-icon {
+  color: var(--color-muted) !important;
+}
+
+[data-theme='dark'] .p-button.celer-button-text-info,
+[data-theme='dark'] .p-button.celer-button-text-info .p-button-label,
+[data-theme='dark'] .p-button.celer-button-text-info .p-button-icon {
+  color: var(--color-info-400) !important;
+}
+
+[data-theme='dark'] .p-button.celer-button-text-warn,
+[data-theme='dark'] .p-button.celer-button-text-warn .p-button-label,
+[data-theme='dark'] .p-button.celer-button-text-warn .p-button-icon {
+  color: var(--color-warn-400) !important;
+}
+
+[data-theme='dark'] .p-button.celer-button-text-danger,
+[data-theme='dark'] .p-button.celer-button-text-danger .p-button-label,
+[data-theme='dark'] .p-button.celer-button-text-danger .p-button-icon {
+  color: var(--color-danger-400) !important;
+}
+
+[data-theme='dark'] .p-button.celer-button-link-primary,
+[data-theme='dark'] .p-button.celer-button-link-primary .p-button-label,
+[data-theme='dark'] .p-button.celer-button-link-primary .p-button-icon {
+  color: var(--color-primary-400) !important;
+}

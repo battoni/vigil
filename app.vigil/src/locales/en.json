@@ -1,0 +1,362 @@
+{
+  "common": {
+    "active": "Active",
+    "cancel": "Cancel",
+    "create": "Create",
+    "details": "Details",
+    "error": "An error occurred",
+    "inactive": "Inactive",
+    "orderBy": "Sort by",
+    "save": "Save",
+    "search": "Search",
+    "actions": {
+      "activate": "Activate",
+      "archive": "Archive",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "no": "No",
+      "ok": "Ok",
+      "submit": "Submit",
+      "view": "View Details",
+      "yes": "Yes"
+    },
+    "multiselect": {
+      "emptyFilterMessage": "No results found",
+      "emptyMessage": "No available options",
+      "filterPlaceholder": "Filter"
+    },
+    "password": {
+      "mediumLabel": "Medium",
+      "promptLabel": "Enter a password",
+      "strongLabel": "Strong",
+      "weakLabel": "Weak"
+    },
+    "select": {
+      "emptyMessage": "No available options"
+    }
+  },
+  "errors": {
+    "refreshAndContactAdmin": "Refresh the page and try again. If the problem persists, copy the error message and contact the system administrator.",
+    "somethingWentWrong": "Something went wrong.",
+    "unexpected": "An unexpected error occurred. Copy the error bellow and please inform the system administrator: {error}"
+  },
+  "navigation": {
+    "finances": "Finances",
+    "home": "Home",
+    "logout": "Log out",
+    "roles": "Roles",
+    "settings": "Settings",
+    "users": "Users"
+  },
+  "auth": {
+    "seeYouSoon": "See you soon!",
+    "flow": {
+      "back": "Back",
+      "continue": "Continue",
+      "continueWith": "Continue with",
+      "needHelp": "Need help?",
+      "or": "or",
+      "login": {
+        "codeInvalid": "Invalid code",
+        "codeRequired": "Code is required",
+        "codeSuccess": "Code verified successfully",
+        "codeSuccessDetail": "Welcome back, {name}!",
+        "codeTitle": "Sign in with code",
+        "email": "Email",
+        "emailInvalid": "Invalid email",
+        "emailPlaceholder": "Enter your best email",
+        "emailRequired": "Email is required",
+        "emailTitle": "Sign in with email",
+        "enterCode": "Enter the code below",
+        "forgotPasswordLink": "Forgot password?",
+        "identifierAriaEmail": "Email",
+        "identifierAriaWhatsapp": "Phone (WhatsApp)",
+        "identifierInvalid": "Enter a valid mobile number or email",
+        "identifierLabel": "Mobile number or email",
+        "identifierPlaceholder": "Enter your mobile number or email",
+        "identifierRequired": "Mobile number or email is required",
+        "passwordTitle": "Sign in",
+        "phoneNumber": "Phone Number",
+        "phoneRequired": "Phone number is required",
+        "phoneTitle": "Sign in",
+        "resendCode": "Resend code",
+        "resendCodeMissingPhone": "Phone number not found for resend.",
+        "resendCodeSuccess": "Code Resended",
+        "resendCodeWaitDetail": "You can resend the code when the timer is over.",
+        "resendCodeWaitTitle": "Please wait",
+        "useEmailInstead": "Use email",
+        "usePhoneInstead": "Use phone",
+        "welcome": "Welcome",
+        "whatsappPlaceholder": "Enter your WhatsApp number"
+      },
+      "recover": {
+        "atLeastOne": "Enter your phone number or email",
+        "confirmLink": "Confirm",
+        "description": "We will send a WhatsApp message or email to help you reset your password.",
+        "enterCode": "Enter the code below",
+        "fillAtLeastOneField": "Fill at least one field",
+        "phone": "Phone number",
+        "phoneInvalid": "Enter a valid mobile number with area code (10 or 11 digits)",
+        "successMessage": "Verify your Email and/or SMS to conclude your recover access process",
+        "successTitle": "Email and/or SMS sent successfully",
+        "title": "Recover access"
+      },
+      "resetCode": {
+        "codeLabel": "Verification code",
+        "codePlaceholder": "Enter the code you received",
+        "codeRequired": "Code is required",
+        "confirm": "Confirm",
+        "newPassword": "New password",
+        "resend": "Resend code",
+        "resendSuccess": "Code sent again",
+        "success": "Your password was updated",
+        "title": "Set a new password"
+      },
+      "setPassword": {
+        "confirmLabel": "Confirm password",
+        "confirmPlaceholder": "Enter your password again",
+        "confirmRequired": "Confirm your password",
+        "minLength": "Password must be at least 8 characters",
+        "mismatch": "Passwords must match",
+        "title": "Set your password"
+      },
+      "signUp": {
+        "birthDate": "Birth date",
+        "birthDatePlaceholder": "Enter your birth date",
+        "birthDateRequired": "Birth date is required",
+        "cpf": "CPF",
+        "cpfDescription": "Your CPF will help us protect your data and ensure you are over 18 years old.",
+        "cpfPlaceholder": "Enter your CPF",
+        "cpfRequired": "CPF is required",
+        "iAcceptThe": "I accept the",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter your last name",
+        "lastNameRequired": "Last Name is required",
+        "name": "Name",
+        "namePlaceholder": "Enter your name",
+        "nameRequired": "Name is required",
+        "termsAndConditionsOfUse": "terms and conditions of use",
+        "termsRequired": "You need to accept the terms and conditions",
+        "title": "Complete your registration"
+      },
+      "social": {
+        "email": "Email",
+        "facebook": "Facebook",
+        "google": "Google"
+      },
+      "support": {
+        "contactAdmins": "Contact one of the administrators:",
+        "pageTitle": "Support",
+        "viewTitle": "Support View"
+      },
+      "terms": {
+        "description": "This environment and its resources are intended for authorized internal use. By continuing, you agree to the platform usage, privacy, and security policies.",
+        "title": "Terms and conditions of use",
+        "warning": "Non-compliance with these policies may result in access blocking and other applicable administrative measures."
+      }
+    },
+    "forgotPassword": {
+      "back": "Back",
+      "description": "Contact one of the administrators below to recover your access:",
+      "title": "Forgot your password?"
+    },
+    "login": {
+      "forgotPassword": "Forgot your password?",
+      "password": "Password",
+      "passwordIncorrect": "The provided password is incorrect",
+      "passwordPlaceholder": "Enter your password",
+      "passwordRequired": "Password is required",
+      "submit": "Login",
+      "username": "Username",
+      "usernameNotFound": "The provided username does not exist",
+      "usernamePlaceholder": "Enter your username",
+      "usernameRequired": "Username is required",
+      "welcome": "Welcome {name}!"
+    }
+  },
+  "finance": {
+    "title": "Finances",
+    "actions": {
+      "deposit": "Deposit",
+      "withdraw": "Withdraw"
+    },
+    "cards": {
+      "available": {
+        "description": "Balances available for withdrawal",
+        "title": "Available"
+      },
+      "inUse": {
+        "description": "Balances in transit or in use",
+        "title": "In use"
+      },
+      "total": {
+        "description": "Available balances added to balances in use",
+        "title": "Total"
+      }
+    },
+    "modal": {
+      "defaults": {
+        "entity": "Entity not provided"
+      },
+      "fields": {
+        "amount": "Amount",
+        "entity": "Entity",
+        "status": "Status"
+      },
+      "placeholders": {
+        "amount": "Ex: 1000",
+        "entity": "Ex: Battoni Dev"
+      },
+      "title": {
+        "deposit": "Deposit amount",
+        "withdraw": "Withdraw amount"
+      }
+    },
+    "transactions": {
+      "empty": "No transactions found.",
+      "title": "Latest transactions",
+      "viewAll": "View all transactions",
+      "columns": {
+        "amount": "Amount",
+        "date": "Date",
+        "entity": "Entity",
+        "status": "Status",
+        "type": "Type"
+      },
+      "status": {
+        "canceled": "CANCELED",
+        "done": "DONE",
+        "scheduled": "SCHEDULED"
+      },
+      "type": {
+        "deposit": "Deposit",
+        "payment": "Payment",
+        "refund": "Refund",
+        "withdraw": "Withdraw"
+      }
+    }
+  },
+  "rolesAndPermissions": {
+    "activateAll": "Activate all",
+    "cannotDeleteAdministratorRole": "The administrator role cannot be deleted",
+    "cannotDeleteRole": "Cannot delete this role",
+    "collapseAll": "Collapse all",
+    "deactivateAll": "Deactivate all",
+    "deleteConfirmHeader": "This action cannot be undone.",
+    "deleteConfirmMessage": "Are you sure you want to delete the role {name}?",
+    "expandAll": "Expand all",
+    "newProfile": "New Profile",
+    "roleCreatedSuccess": "Role {name} created successfully!",
+    "roleDeletedSuccess": "Role deleted successfully!",
+    "roleUpdatedSuccess": "Role {name} updated successfully!",
+    "title": "Roles and Permissions",
+    "toggleAllPanels": "Toggle All Panels",
+    "usersUsingRole": "{count} user(s) are using this role. Please remove them from the role before deleting it.",
+    "form": {
+      "description": "Description",
+      "descriptionPlaceholder": "Enter a description for the profile (optional)",
+      "editProfileHeader": "Edit Profile",
+      "name": "Name",
+      "namePlaceholder": "Enter profile name",
+      "nameRequired": "Name is required",
+      "newProfileHeader": "New Profile",
+      "permissionGroups": "Permission Groups",
+      "permissionGroupsPlaceholder": "Select permission groups",
+      "permissionGroupsRequired": "Select at least one permission group"
+    },
+    "groups": {
+      "home": "Home",
+      "permissions": "Permissions",
+      "roles": "Roles",
+      "users": "Users"
+    },
+    "permissions": {
+      "archive": "Archive",
+      "create": "Create",
+      "delete": "Delete",
+      "read": "Read",
+      "resetPassword": "Reset password",
+      "search": "Search",
+      "update": "Update"
+    },
+    "tabs": {
+      "admin": "Admin",
+      "manager": "Manager"
+    }
+  },
+  "theme": {
+    "switchToDark": "Dark mode",
+    "switchToLight": "Light mode"
+  },
+  "users": {
+    "activateConfirmMessage": "Are you sure you want to activate {name}?",
+    "add": "Add User",
+    "archiveConfirmMessage": "Are you sure you want to archive {name}?",
+    "companyRole": "Company Role",
+    "deleteConfirmMessage": "Are you sure you want to delete {name}? This action cannot be undone.",
+    "noAccess": "You don't have permission to view this page.",
+    "status": "Status",
+    "systemRole": "System Role",
+    "title": "Users",
+    "userActivatedSuccess": "User {name} activated successfully!",
+    "userArchivedSuccess": "User {name} archived successfully!",
+    "userCreatedSuccess": "User {name} created successfully!",
+    "userDeletedSuccess": "User deleted successfully!",
+    "userUpdatedSuccess": "User {name} updated successfully!",
+    "confirmActions": {
+      "yesActivate": "Yes, activate",
+      "yesArchive": "Yes, archive",
+      "yesDelete": "Yes, delete"
+    },
+    "empty": {
+      "description": "Add your first team member to get started.",
+      "title": "No users yet"
+    },
+    "form": {
+      "cancel": "Cancel",
+      "companyRolePlaceholder": "Enter company role",
+      "companyRoleRequired": "Company role is required",
+      "create": "Create",
+      "createHeader": "Create new user",
+      "edit": "Edit",
+      "editHeader": "Edit user",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter last name",
+      "lastNameRequired": "Last name is required",
+      "name": "First Name",
+      "namePlaceholder": "Enter first name",
+      "nameRequired": "First name is required",
+      "optional": "optional",
+      "password": "Password",
+      "passwordConfirmation": "Confirm password",
+      "passwordConfirmationPlaceholder": "Confirm password",
+      "passwordConfirmationRequired": "Password confirmation is required",
+      "passwordMatch": "Passwords must match",
+      "passwordMin": "Password must be at least 8 characters",
+      "passwordPlaceholder": "Enter password",
+      "passwordRequired": "Password is required",
+      "passwordResetPermissionRequired": "You don't have permission to reset passwords.",
+      "permissions": "Permissions",
+      "role": "Role",
+      "rolePlaceholder": "Select role",
+      "roleRequired": "Role is required",
+      "statusPlaceholder": "Select status",
+      "statusRequired": "Status is required",
+      "systemRolePlaceholder": "Enter system role",
+      "systemRoleRequired": "System role is required",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "usernameRequired": "Username is required",
+      "usernameTaken": "This username is already in use"
+    },
+    "sort": {
+      "nameAsc": "Name (A–Z)",
+      "nameDesc": "Name (Z–A)",
+      "roleAsc": "Role (A–Z)",
+      "roleDesc": "Role (Z–A)",
+      "statusAsc": "Status (A–Z)",
+      "statusDesc": "Status (Z–A)"
+    }
+  }
+}

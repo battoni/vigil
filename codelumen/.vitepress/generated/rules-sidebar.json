@@ -1,0 +1,48 @@
+{
+  "api.vigil": [
+    {
+      "text": "API Architecture",
+      "link": "/rules/api.vigil/api-architecture"
+    }
+  ],
+  "app.vigil": [
+    {
+      "text": "Vue Checklist",
+      "link": "/rules/app.vigil/01-vue-checklist"
+    },
+    {
+      "text": "Vue Imports",
+      "link": "/rules/app.vigil/02-vue-imports"
+    },
+    {
+      "text": "Vue Script",
+      "link": "/rules/app.vigil/03-vue-script"
+    },
+    {
+      "text": "Vue Template",
+      "link": "/rules/app.vigil/04-vue-template"
+    },
+    {
+      "text": "Module Conventions",
+      "link": "/rules/app.vigil/05-module-conventions"
+    },
+    {
+      "text": "Design System",
+      "link": "/rules/app.vigil/06-design-system"
+    },
+    {
+      "text": "View Patterns",
+      "link": "/rules/app.vigil/07-view-patterns"
+    },
+    {
+      "text": "Rules Auto Injection",
+      "link": "/rules/app.vigil/08-rules-auto-injection"
+    }
+  ],
+  "shared": [
+    {
+      "text": "Conventions",
+      "link": "/rules/shared/conventions"
+    }
+  ]
+}

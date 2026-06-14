@@ -1,0 +1,85 @@
+---
+title: app.vigil view layout patterns — TheLayout, dialogs, form molecules, list CRUD
+outline: deep
+---
+
+::: info Generated page
+This page is generated from `.claude/rules/celer-07-view-patterns.md` — **edit the source rule, not this page.** Activates for: `app.vigil/**/*.vue`, `app.vigil/**/*.ts`.
+:::
+
+# View Patterns
+
+Reference implementation: `app.vigil/src/modules/User/views/Users/UsersView.view.vue` and its `RULES.md`.
+
+These patterns apply to authenticated list/detail views in app.vigil. Auth flows (`Login`, `SignUp`, etc.) use `TheCenteredLayout` instead — do not force this structure there.
+
+## Page structure
+
+```vue
+<TheLayout>
+  <template #pageHeader>
+    <ThePageHeader icon="pi pi-user" title="users.title">
+      <template v-if="!dialogVisible" #actions>
+        <!-- CTA buttons -->
+      </template>
+    </ThePageHeader>
+  </template>
+
+  <!-- filters, grids, main content -->
+
+  <aside>
+    <!-- ConfirmPopup + MMainDialog only -->
+  </aside>
+</TheLayout>
+```
+
+- **`TheLayout` + `#pageHeader` + `ThePageHeader`** — never put page headers in the default slot (see `TheLayout/RULES.md`).
+- **`<aside>` at the end** — holds all overlays; keeps dialog mask scoping with `MMainDialog`'s `appendTo="self"`.
+- **Hide header actions while a dialog is open**: `v-if="!dialogVisible"` on `#actions`.
+
+## MMainDialog (create/edit)
+
+- **Always `MMainDialog`** — never raw PrimeVue `<Dialog>`.
+- **`isFooterless`** for create/edit flows — the form molecule owns submit/cancel (sticky footer via `form="…-form"`).
+- **`title` is an i18n key** — `MMainDialog` calls `$t()` internally; never pass a pre-translated string.
+- **`:key` on the form molecule**: `:key="editingEntity?.id ?? 'new'"` — mandatory so PrimeVue Forms resets between create and edit.
+
+See `MMainDialog/RULES.md` for mask scoping, animation, and scroll-lock contracts.
+
+## Form molecule contract
+
+Extract inline forms to `MAddEdit{Entity}Form` under the module's `components/molecules/`.
+
+| Responsibility | Owner |
+| --- | --- |
+| Form fields, Yup validation, API call | Form molecule |
+| Dialog visibility, list state | Parent view |
+| Submit/cancel buttons (footerless dialog) | Form molecule |
+
+- **Prop**: entity prop (`user`, `profile`, etc.) — `null`/`undefined` = create, object = edit.
+- **Emits**: `@onClose` and `@onSuccess(entity)` where `entity` is the API response body.
+- **Do not** refetch the full list from inside the molecule — parent updates local refs.
+
+## List mutations (granular)
+
+Use the entity returned by the API — no full refetch when the response includes the saved record.
+
+- **Create**: prepend to local ref (see `onDialogSuccess` in `UsersView.view.vue`).
+- **Update**: replace by ID in local ref.
+- **Delete/archive**: map or filter by ID using the API response.
+
+## Permissions
+
+Define `canCreate`, `canRead`, `canUpdate`, `canDelete`, etc. as computed properties from `userStore.hasPermission('resource.action')` in the view — not inside card/list child components.
+
+## Destructive actions
+
+- **`useConfirm()` + `<ConfirmPopup>`** with distinct `group` values per action type.
+- **Never `<ConfirmDialog>`** for row-level archive/delete.
+- Views may inline `confirm.require({ ... })` with custom `acceptProps`/`rejectProps` (see `UsersView.view.vue`) instead of `MConfirmPopup` when action-specific styling is needed.
+
+## Do not
+
+- Put `MMainDialog` or `ConfirmPopup` outside `<aside>`.
+- Inline a form inside `MMainDialog` — extract to `MAddEdit{Entity}Form`.
+- Refetch the entire list after a single create/update/delete when the API returns the entity.

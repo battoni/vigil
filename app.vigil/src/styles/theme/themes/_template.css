@@ -1,0 +1,95 @@
+/**
+ * ============================================================
+ * THEME TEMPLATE — copy me to add a new theme
+ *
+ * Steps:
+ *   1. Copy this file to themes/<your-theme>.css
+ *   2. Fill the PRIMARY / INK / SURFACE ramps with your brand scales (50→950).
+ *      Tip: generate 11-step ramps around your main hex (set as the 500, or 900 for ink).
+ *   3. Adjust fonts if the brand differs (and add @font-face in ../fonts.css +
+ *      WOFF2 files in public/fonts/).
+ *   4. (Usually no change needed) tune the role-token mappings / dark overrides.
+ *   5. Point ../colors.css at your file:  @import './themes/<your-theme>.css';
+ *
+ * Components never change — they consume role tokens (canvas/panel/heading/…)
+ * and the state palettes (success/info/warn/danger/help/contrast), not raw ramps.
+ *
+ * Keep the SEMANTIC STATE PALETTES identical across themes unless the brand
+ * explicitly requires different state colors.
+ * ============================================================
+ */
+
+@theme {
+  /* 1. FONT FAMILIES */
+  --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Sometype Mono', ui-monospace, monospace;
+
+  /* 2. BRAND PALETTE RAMPS — replace all hexes */
+
+  /* PRIMARY — brand action color (Main = 500) */
+  --color-primary-50: #__;
+  --color-primary-100: #__;
+  --color-primary-200: #__;
+  --color-primary-300: #__;
+  --color-primary-400: #__;
+  --color-primary-500: #__; /* MAIN */
+  --color-primary-600: #__;
+  --color-primary-700: #__;
+  --color-primary-800: #__;
+  --color-primary-900: #__;
+  --color-primary-950: #__;
+
+  /* INK — dark text / headings (Main = 900) */
+  --color-ink-50: #__;
+  --color-ink-100: #__;
+  --color-ink-200: #__;
+  --color-ink-300: #__;
+  --color-ink-400: #__;
+  --color-ink-500: #__;
+  --color-ink-600: #__;
+  --color-ink-700: #__;
+  --color-ink-800: #__;
+  --color-ink-900: #__; /* MAIN */
+  --color-ink-950: #__;
+
+  /* SURFACE — neutral bg / borders / secondary text (Main = 500) */
+  --color-surface-50: #__;
+  --color-surface-100: #__;
+  --color-surface-200: #__;
+  --color-surface-300: #__;
+  --color-surface-400: #__;
+  --color-surface-500: #__; /* MAIN */
+  --color-surface-600: #__;
+  --color-surface-700: #__;
+  --color-surface-800: #__;
+  --color-surface-900: #__;
+  --color-surface-950: #__;
+
+  /* 3. SEMANTIC STATE PALETTES — copy verbatim from themes/battoni-dev.css
+   *    (success / info / warn / danger / help / contrast, 50→950).
+   *    Change only if the brand mandates different state colors. */
+
+  /* 4. ROLE TOKENS — LIGHT (defaults map onto the ramps above; usually unchanged) */
+  --color-canvas: #ffffff;
+  --color-panel: var(--color-surface-50);
+  --color-panel-muted: var(--color-surface-100);
+  --color-heading: var(--color-ink-900);
+  --color-body: var(--color-ink-900);
+  --color-muted: var(--color-surface-600);
+  --color-subtle: var(--color-surface-400);
+  --color-line: var(--color-surface-200);
+  --color-line-strong: var(--color-surface-300);
+}
+
+/* 5. ROLE TOKENS — DARK overrides (usually unchanged) */
+[data-theme='dark'] {
+  --color-canvas: var(--color-ink-900);
+  --color-panel: var(--color-surface-950);
+  --color-panel-muted: var(--color-surface-900);
+  --color-heading: var(--color-surface-50);
+  --color-body: var(--color-surface-100);
+  --color-muted: var(--color-surface-400);
+  --color-subtle: var(--color-surface-500);
+  --color-line: var(--color-surface-800);
+  --color-line-strong: var(--color-surface-700);
+}

@@ -1,0 +1,137 @@
+/**
+ * Toast severity styles – semantic palette per theme RULE.md
+ * (Success → success | Info → info | Warn → warn | Error → danger)
+ */
+
+.p-toast {
+  box-sizing: border-box;
+  max-width: min(400px, calc(100vw - 2rem));
+  width: auto;
+}
+
+.p-toast.p-toast-top-right {
+  right: 2rem !important;
+  top: 2rem !important;
+}
+
+@media (min-width: 640px) {
+  .p-toast.p-toast-top-right {
+    right: calc((100vw - 640px) / 2 + 2rem) !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .p-toast.p-toast-top-right {
+    right: calc((100vw - 768px) / 2 + 2rem) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .p-toast.p-toast-top-right {
+    right: calc((100vw - 1024px) / 2 + 2rem) !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .p-toast.p-toast-top-right {
+    right: calc((100vw - 1280px) / 2 + 2rem) !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .p-toast.p-toast-top-right {
+    right: calc((100vw - 1536px) / 2 + 2rem) !important;
+  }
+}
+
+/* Success – success palette */
+.p-toast-message-success .p-toast-message-content {
+  background: var(--color-success-50);
+  border-color: var(--color-success-200);
+}
+.p-toast-message-success .p-toast-message-icon,
+.p-toast-message-success .p-toast-message-icon svg,
+.p-toast-message-success .p-toast-summary,
+.p-toast-message-success .p-toast-detail {
+  color: var(--color-success-700);
+}
+.p-toast-message-success .p-toast-message-icon svg {
+  fill: var(--color-success-700);
+}
+.p-toast-message-success .p-toast-close-button,
+.p-toast-message-success .p-toast-close-icon,
+.p-toast-message-success .p-toast-close-icon svg {
+  color: var(--color-success-700);
+}
+.p-toast-message-success .p-toast-close-icon svg {
+  fill: var(--color-success-700);
+}
+
+/* Info – info palette (RULE.md: info-500) */
+.p-toast-message-info .p-toast-message-content {
+  background: var(--color-info-50);
+  border-color: var(--color-info-200);
+}
+.p-toast-message-info .p-toast-message-icon,
+.p-toast-message-info .p-toast-message-icon svg,
+.p-toast-message-info .p-toast-summary,
+.p-toast-message-info .p-toast-detail {
+  color: var(--color-info-700);
+}
+.p-toast-message-info .p-toast-message-icon svg {
+  fill: var(--color-info-700);
+}
+.p-toast-message-info .p-toast-close-button,
+.p-toast-message-info .p-toast-close-icon,
+.p-toast-message-info .p-toast-close-icon svg {
+  color: var(--color-info-700);
+}
+.p-toast-message-info .p-toast-close-icon svg {
+  fill: var(--color-info-700);
+}
+
+/* Warn – warn palette */
+.p-toast-message-warn .p-toast-message-content {
+  background: var(--color-warn-50);
+  border-color: var(--color-warn-200);
+}
+.p-toast-message-warn .p-toast-message-icon,
+.p-toast-message-warn .p-toast-message-icon svg,
+.p-toast-message-warn .p-toast-summary,
+.p-toast-message-warn .p-toast-detail {
+  color: var(--color-warn-700);
+}
+.p-toast-message-warn .p-toast-message-icon svg {
+  fill: var(--color-warn-700);
+}
+.p-toast-message-warn .p-toast-close-button,
+.p-toast-message-warn .p-toast-close-icon,
+.p-toast-message-warn .p-toast-close-icon svg {
+  color: var(--color-warn-700);
+}
+.p-toast-message-warn .p-toast-close-icon svg {
+  fill: var(--color-warn-700);
+}
+
+/* Error – danger palette */
+.p-toast-message-error .p-toast-message-content {
+  background: var(--color-danger-50);
+  border-color: var(--color-danger-200);
+}
+.p-toast-message-error .p-toast-message-icon,
+.p-toast-message-error .p-toast-message-icon svg,
+.p-toast-message-error .p-toast-summary,
+.p-toast-message-error .p-toast-detail {
+  color: var(--color-danger-700);
+}
+.p-toast-message-error .p-toast-message-icon svg {
+  fill: var(--color-danger-700);
+}
+.p-toast-message-error .p-toast-close-button,
+.p-toast-message-error .p-toast-close-icon,
+.p-toast-message-error .p-toast-close-icon svg {
+  color: var(--color-danger-700);
+}
+.p-toast-message-error .p-toast-close-icon svg {
+  fill: var(--color-danger-700);
+}
