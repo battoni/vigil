@@ -6,6 +6,37 @@
     },
     "empty": "No projects yet"
   },
+  "monitors": {
+    "title": "Monitors",
+    "empty": "No monitors yet",
+    "lastChecked": "Last checked",
+    "never": "Never",
+    "uptime24h": "Uptime (24h)",
+    "type": {
+      "http": "HTTP",
+      "tcp": "TCP",
+      "ssl": "SSL",
+      "keyword": "Keyword",
+      "heartbeat": "Heartbeat",
+      "ping": "Ping",
+      "dns": "DNS"
+    },
+    "status": {
+      "up": "Up",
+      "down": "Down",
+      "pending": "Pending",
+      "paused": "Paused",
+      "maintenance": "Maintenance"
+    },
+    "actions": {
+      "create": "New monitor",
+      "edit": "Edit",
+      "pause": "Pause",
+      "resume": "Resume",
+      "delete": "Delete",
+      "copyUrl": "Copy ping URL"
+    }
+  },
   "common": {
     "active": "Active",
     "cancel": "Cancel",

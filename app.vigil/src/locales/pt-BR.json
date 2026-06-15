@@ -6,6 +6,37 @@
     },
     "empty": "Nenhum projeto ainda"
   },
+  "monitors": {
+    "title": "Monitores",
+    "empty": "Nenhum monitor ainda",
+    "lastChecked": "Última verificação",
+    "never": "Nunca",
+    "uptime24h": "Disponibilidade (24h)",
+    "type": {
+      "http": "HTTP",
+      "tcp": "TCP",
+      "ssl": "SSL",
+      "keyword": "Palavra-chave",
+      "heartbeat": "Heartbeat",
+      "ping": "Ping",
+      "dns": "DNS"
+    },
+    "status": {
+      "up": "No ar",
+      "down": "Fora do ar",
+      "pending": "Pendente",
+      "paused": "Pausado",
+      "maintenance": "Manutenção"
+    },
+    "actions": {
+      "create": "Novo monitor",
+      "edit": "Editar",
+      "pause": "Pausar",
+      "resume": "Retomar",
+      "delete": "Excluir",
+      "copyUrl": "Copiar URL de ping"
+    }
+  },
   "common": {
     "active": "Ativo",
     "cancel": "Cancelar",
