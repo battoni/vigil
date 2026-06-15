@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
@@ -22,7 +22,11 @@ const toast = useToast();
 const { loading, monitors } = storeToRefs(monitorStore);
 const { activeProjectId } = storeToRefs(projectStore);
 
+const dialogVisible = ref(false);
+const editingMonitor = ref<Monitor | null>(null);
+
 const canManage = computed(() => userStore.permissions.length === 0 || userStore.hasPermission('monitors.update'));
+const canCreate = computed(() => canManage.value && !!activeProjectId.value);
 
 watch(activeProjectId, onActiveProjectChange);
 
@@ -64,6 +68,30 @@ function onCopyUrl() {
   toast.add({ severity: 'success', summary: t('monitors.urlCopied'), life: 3000 });
 }
 
+function onCreateRequest() {
+  editingMonitor.value = null;
+  dialogVisible.value = true;
+}
+
+function onDialogSuccess(monitor: Monitor) {
+  dialogVisible.value = false;
+  editingMonitor.value = null;
+
+  const exists = monitors.value.some((current) => current.id === monitor.id);
+
+  if (exists) {
+    monitorStore.replaceMonitor(monitor);
+    return;
+  }
+
+  monitorStore.addMonitor(monitor);
+}
+
+function onEditRequest(monitor: Monitor) {
+  editingMonitor.value = monitor;
+  dialogVisible.value = true;
+}
+
 function onDeleteRequest(event: Event, monitor: Monitor) {
   confirm.require({
     accept: onDeleteAccept,
@@ -100,7 +128,21 @@ function onPauseRequest(monitor: Monitor) {
 <template>
   <TheLayout>
     <template #pageHeader>
-      <ThePageHeader title="monitors.title" />
+      <ThePageHeader title="monitors.title">
+        <template
+          v-if="!dialogVisible"
+          #actions
+        >
+          <Button
+            v-if="canCreate"
+            class="celer-button-soft-primary w-fit shadow transition-all duration-300 active:scale-95"
+            data-testid="add-monitor"
+            icon="pi pi-plus"
+            :label="$t('monitors.actions.create')"
+            @click="onCreateRequest"
+          />
+        </template>
+      </ThePageHeader>
     </template>
 
     <main>
@@ -139,10 +181,11 @@ function onPauseRequest(monitor: Monitor) {
           :key="monitor.id"
           :canDelete="canManage"
           :canPause="canManage"
-          :canUpdate="false"
+          :canUpdate="canManage"
           :monitor
           @onCopyUrl="onCopyUrl"
           @onDeleteRequest="(event: Event) => onDeleteRequest(event, monitor)"
+          @onEditRequest="onEditRequest(monitor)"
           @onPauseRequest="onPauseRequest(monitor)"
         />
       </div>
@@ -160,6 +203,21 @@ function onPauseRequest(monitor: Monitor) {
         group="delete-monitor"
         pt:footer="justify-between pt-2"
       />
+
+      <MMainDialog
+        v-model:visible="dialogVisible"
+        isFooterless
+        :title="editingMonitor ? 'monitors.form.editHeader' : 'monitors.form.createHeader'"
+      >
+        <MAddEditMonitorForm
+          v-if="activeProjectId"
+          :key="editingMonitor?.id ?? 'new'"
+          :monitor="editingMonitor"
+          :projectId="activeProjectId"
+          @onClose="dialogVisible = false"
+          @onSuccess="onDialogSuccess"
+        />
+      </MMainDialog>
     </aside>
   </TheLayout>
 </template>

@@ -40,6 +40,29 @@
       "resume": "Retomar",
       "delete": "Excluir",
       "copyUrl": "Copiar URL de ping"
+    },
+    "form": {
+      "createHeader": "Novo monitor",
+      "editHeader": "Editar monitor",
+      "create": "Criar",
+      "edit": "Salvar",
+      "cancel": "Cancelar",
+      "name": "Nome",
+      "namePlaceholder": "Minha API",
+      "nameRequired": "O nome é obrigatório",
+      "type": "Tipo",
+      "target": "Alvo",
+      "targetPlaceholder": "https://exemplo.com",
+      "targetRequired": "O alvo é obrigatório",
+      "interval": "Intervalo de verificação",
+      "intervalRequired": "O intervalo é obrigatório",
+      "intervalMin": "O intervalo mínimo é de 60 segundos",
+      "expectedStatus": "Código de status esperado",
+      "keyword": "Palavra-chave",
+      "keywordPlaceholder": "operacional",
+      "sslWarnDays": "Avisar dias antes do vencimento do SSL",
+      "created": "Monitor \"{name}\" criado",
+      "updated": "Monitor \"{name}\" atualizado"
     }
   },
   "common": {
@@ -88,6 +111,7 @@
     "finances": "Finanças",
     "home": "Início",
     "logout": "Sair",
+    "monitors": "Monitores",
     "roles": "Permissões",
     "settings": "Configurações",
     "users": "Usuários"

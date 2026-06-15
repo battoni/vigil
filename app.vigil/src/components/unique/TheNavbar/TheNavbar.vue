@@ -26,6 +26,7 @@ const toast = useToast();
 const isMobileView = ref(false);
 const items = ref<NavItem[]>([
   { icon: 'pi pi-home', label: 'navigation.home', routeName: 'home' },
+  { icon: 'pi pi-desktop', label: 'navigation.monitors', routeName: 'monitors' },
   { icon: 'pi pi-wallet', label: 'navigation.finances', routeName: 'finance' },
 ]);
 const settings = ref<NavItem[]>([
@@ -49,7 +50,7 @@ const itemsWithRoutes = computed(() => {
 });
 
 const mobileItems = computed(() => {
-  const routes = ['finance', 'home', 'users', 'roles-and-permissions'];
+  const routes = ['finance', 'home', 'monitors', 'users', 'roles-and-permissions'];
 
   return itemsWithRoutes.value.filter((item) => routes.includes(item.routeName));
 });

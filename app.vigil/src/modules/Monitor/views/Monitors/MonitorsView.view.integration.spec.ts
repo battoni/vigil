@@ -17,15 +17,29 @@ vi.mock('primevue/useconfirm', () => ({
 const stubs = {
   MMonitorCard: {
     props: ['monitor', 'canPause', 'canDelete', 'canUpdate', 'uptime24h'],
-    emits: ['onPauseRequest', 'onDeleteRequest', 'onCopyUrl'],
+    emits: ['onPauseRequest', 'onDeleteRequest', 'onCopyUrl', 'onEditRequest'],
     template: `<div class="monitor-card-stub" :data-id="monitor.id">
       <span>{{ monitor.name }}</span>
       <span class="status">{{ monitor.status }}</span>
+      <button v-if="canUpdate" class="edit-btn" @click="$emit('onEditRequest')">edit</button>
       <button v-if="canPause" class="pause-btn" @click="$emit('onPauseRequest')">pause</button>
       <button v-if="canDelete" class="delete-btn" @click="$emit('onDeleteRequest', $event)">delete</button>
     </div>`,
   },
+  MMainDialog: {
+    props: ['visible', 'isFooterless', 'title'],
+    emits: ['update:visible'],
+    template: '<div v-if="visible" class="dialog-stub"><slot /></div>',
+  },
+  MAddEditMonitorForm: {
+    props: ['monitor', 'projectId'],
+    emits: ['onClose', 'onSuccess'],
+    template: `<div class="monitor-form-stub">
+      <button class="form-submit" @click="$emit('onSuccess', monitor ? { ...monitor, name: 'Renamed' } : { id: '99', name: 'New Monitor', status: 'pending', type: 'http' })">submit</button>
+    </div>`,
+  },
   AEmptyState: { props: ['title', 'description'], template: '<div class="empty-stub">{{ title }} {{ description }}</div>' },
+  Button: { props: ['label'], template: '<button v-bind="$attrs"><slot />{{ label }}</button>' },
   ConfirmPopup: true,
   Skeleton: true,
 };
@@ -90,5 +104,40 @@ describe('MonitorsView — integration (MSW)', () => {
     screen.getByRole('button', { name: 'delete' }).click();
 
     await waitFor(() => expect(screen.queryByText('Homepage')).not.toBeInTheDocument());
+  });
+
+  it('prepends a created monitor without refetching', async () => {
+    server.use(http.get('http://localhost/monitors', () => HttpResponse.json({ data: [mockMonitor] })));
+
+    const pinia = setupWithActiveProject();
+    renderWithPlugins(MonitorsView, { pinia, global: { stubs } });
+
+    await waitFor(() => expect(screen.getByText('Homepage')).toBeInTheDocument());
+
+    (document.querySelector('[data-testid="add-monitor"]') as HTMLButtonElement).click();
+
+    await waitFor(() => expect(document.querySelector('.form-submit')).toBeInTheDocument());
+    (document.querySelector('.form-submit') as HTMLButtonElement).click();
+
+    await waitFor(() => expect(screen.getByText('New Monitor')).toBeInTheDocument());
+  });
+
+  it('replaces an edited monitor in place', async () => {
+    server.use(http.get('http://localhost/monitors', () => HttpResponse.json({ data: [mockMonitor] })));
+
+    const pinia = setupWithActiveProject();
+    renderWithPlugins(MonitorsView, { pinia, global: { stubs } });
+
+    await waitFor(() => expect(screen.getByText('Homepage')).toBeInTheDocument());
+
+    screen.getByRole('button', { name: 'edit' }).click();
+
+    await waitFor(() => expect(document.querySelector('.form-submit')).toBeInTheDocument());
+    (document.querySelector('.form-submit') as HTMLButtonElement).click();
+
+    await waitFor(() => {
+      expect(screen.queryByText('Homepage')).not.toBeInTheDocument();
+      expect(screen.getByText('Renamed')).toBeInTheDocument();
+    });
   });
 });

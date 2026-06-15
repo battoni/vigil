@@ -40,6 +40,29 @@
       "resume": "Resume",
       "delete": "Delete",
       "copyUrl": "Copy ping URL"
+    },
+    "form": {
+      "createHeader": "New monitor",
+      "editHeader": "Edit monitor",
+      "create": "Create",
+      "edit": "Save",
+      "cancel": "Cancel",
+      "name": "Name",
+      "namePlaceholder": "My API",
+      "nameRequired": "Name is required",
+      "type": "Type",
+      "target": "Target",
+      "targetPlaceholder": "https://example.com",
+      "targetRequired": "Target is required",
+      "interval": "Check interval",
+      "intervalRequired": "Interval is required",
+      "intervalMin": "Minimum interval is 60 seconds",
+      "expectedStatus": "Expected status code",
+      "keyword": "Keyword",
+      "keywordPlaceholder": "operational",
+      "sslWarnDays": "Warn days before SSL expiry",
+      "created": "Monitor \"{name}\" created",
+      "updated": "Monitor \"{name}\" updated"
     }
   },
   "common": {
@@ -88,6 +111,7 @@
     "finances": "Finances",
     "home": "Home",
     "logout": "Log out",
+    "monitors": "Monitors",
     "roles": "Roles",
     "settings": "Settings",
     "users": "Users"
