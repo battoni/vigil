@@ -12,7 +12,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 - [x] 3. Monitor module (arcus CRUD + tests) — 13 tests green
 - [~] 4. Check engine — IN PROGRESS
   - [x] 4a. ProbeResult VO + SsrfGuard (IP pinning, redirect re-check) + create-time SSRF wired into Monitor — 23 tests green
-  - [ ] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface
+  - [x] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface — 15 tests green
   - [ ] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand
 - [ ] 5. Incident module
 - [ ] 6. Notification module (fallback chain + dedup + quiet hours)
@@ -23,6 +23,12 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 4b DONE. ProbeInterface + HttpProbe (manual redirect following with
+  per-hop SsrfGuard re-vet + IP pinning via CURLOPT_RESOLVE, expected_status/keyword/json_path
+  checks, basic auth/headers/body), TcpProbe (overridable openSocket), SslProbe (overridable
+  fetchCertificate, expiry vs ssl_warn_days), ProbeFactory (container-resolved per type). 15
+  probe tests via Http::fake + stubbed socket/cert. Full suite 156 green. Next: 4c (state
+  machine + RunCheckJob + dispatch/sweep commands).
 - 2026-06-14 — Item 4a DONE. SsrfGuard built: explicit IPv4/IPv6 private/reserved/CGNAT/
   metadata/link-local range blocking, hermetic create-time assertSafe (no DNS), authoritative
   resolveAndPin (strict — rejects if ANY resolved IP is blocked), assertIpSafe for redirect
@@ -63,6 +69,12 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   service) when SsrfGuard is built in item 4, so http/tcp/etc. targets are rejected at
   create-time too — not just at run-time. Tracking so it isn't forgotten.
 - Monitor `index` accepts `?project_id=` to scope the list (frontend monitor list per project).
+- **ProbeInterface signature** is `run(Monitor, int $timeoutMs)` — each probe owns its
+  `SsrfGuard.resolveAndPin` (the HTTP probe must re-vet each redirect hop anyway). Slight
+  deviation from PLAN §5's `probe.run(monitor, pinnedIp, timeout)` but functionally identical
+  and keeps SSRF enforcement co-located with the redirect-following network code.
+- **TCP/SSL probes expose protected `openSocket`/`fetchCertificate`** so tests stub the
+  network without real sockets; HTTP uses the fakeable Http facade.
 
 ## BLOCKED / needs your review
 (none yet)
