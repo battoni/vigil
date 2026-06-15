@@ -100,7 +100,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [x] P3b. Per-monitor channel routing (Notifications section on MonitorDetail: attach/detach) — detail spec extended
 - [~] P4. Status pages — IN PROGRESS
   - [x] P4a. StatusPage module + StatusPagesView admin CRUD + nav — 10 tests green
-  - [ ] P4b. Attach monitors to a status page
+  - [x] P4b. Attach monitors to a status page (manage-monitors dialog) — view spec extended
   - [ ] P4c. Public unauthenticated status page (/status/:slug) + guard allowAnonymous
 
 Frontend conventions: celer-01..08; mirror `modules/User`; tests via celer-testing
@@ -109,6 +109,11 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P4b DONE. StatusPagesView manage-monitors dialog (add/remove via
+  Attach/DetachMonitorToStatusPageService, hydrates attached set from GetStatusPageService.monitors).
+  statusPages.monitors.* i18n. Test gotcha fixed: integration Column stub must render the #body
+  named slot (not default) for action buttons to appear. lint/type-check/unit(254) green. Commit
+  1dd14b6. Next: P4c (public status page + guard allowAnonymous) → STOP + morning report.
 - 2026-06-15 — P4a DONE. StatusPage module (interfaces incl PublicStatus, services[CRUD +
   attach/detach + public], store + @StatusPageModule alias x3). StatusPagesView at /status-pages
   (nav, DataTable) with create/edit via MAddEditStatusPageForm (name/customDomain/isPublic/headline)
