@@ -14,7 +14,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   - [x] 4a. ProbeResult VO + SsrfGuard (IP pinning, redirect re-check) + create-time SSRF wired into Monitor — 23 tests green
   - [x] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface — 15 tests green
   - [x] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand + scheduler — 14 tests green
-- [ ] 5. Incident module
+- [x] 5. Incident module + event listeners — 9 tests green
 - [ ] 6. Notification module (fallback chain + dedup + quiet hours)
 - [ ] 7. Rollups + retention + scheduler wiring
 - [ ] 8. Status pages + heartbeat ingress + tls-allowed ask endpoint
@@ -23,6 +23,12 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 5 DONE. Incident module: repository (open idempotent, resolve computes
+  duration, acknowledge, filtered list), service, resource, controller + 3 auth routes
+  (index/show/acknowledge). Listeners OpenIncidentOnMonitorWentDown / ResolveIncidentOnMonitor
+  Recovered wired via Event::listen in AppServiceProvider. Integration test proves a down monitor
+  opens exactly one incident (dedup) and recovery resolves it with duration. Full suite 179 green.
+  Next: item 6 (Notification module — fallback chain, the other big one).
 - 2026-06-14 — Item 4c DONE → item 4 COMPLETE. StateMachineService (counter/threshold
   transitions, maintenance suppression), RunCheckJob (per-monitor WithoutOverlapping lock,
   probe→record→state→single state write committing real next_check_at, fires MonitorWentDown/
