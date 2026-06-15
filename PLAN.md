@@ -434,6 +434,7 @@ AlertDispatchService.send(monitor, event):
 - **One-time setup:** create an instance, fetch QR, **scan once** with a **dedicated WhatsApp number** (⚠️ never your personal line — isolates the unofficial-API ban risk).
 - **Phone keepalive:** WhatsApp multi-device does **not** need the phone online 24/7 to send, **but** logs out linked devices if the phone hasn't connected in **~14 days**. Keep a cheap dedicated phone powered + on Wi-Fi anywhere with internet.
 - **Session health probe:** an internal monitor checks the Evolution instance connection state. **This monitor's channel policy must explicitly exclude WhatsApp** (Slack + Email only) — a dead WhatsApp session obviously can't alert you that WhatsApp is dead. Enforce it: `AlertDispatchService` skips the WhatsApp channel for the Evolution-health monitor so the page always routes around the broken transport.
+  - **Implemented** via `VigilSeeder`: a heartbeat monitor "Evolution WhatsApp Session" under the `system` project with `config.exclude_channels = ['whatsapp']`. Modelled as a **heartbeat** (not an http probe) on purpose: an http probe against the internal `evolution-api` host would be blocked by `SsrfGuard` at run time. In production a tiny sidecar/cron polls Evolution's `connectionState` and pings this monitor's heartbeat URL while healthy; if it stops, `heartbeats:sweep` flags it down and pages you via Slack/Email.
 - Config (env): `EVOLUTION_BASE_URL`, `EVOLUTION_API_KEY`, `EVOLUTION_INSTANCE`, recipient numbers.
 
 ---
@@ -490,6 +491,11 @@ Vigil cannot alert about its own death. The scheduler emits a heartbeat to an
 **external** free service every minute (healthchecks.io free / Better Stack
 heartbeat / the existing GitHub Actions cron). If Vigil stops beating, that
 external service pages you. One small external dependency, on purpose.
+
+**Implemented:** the `monitoring:deadman-ping` command (scheduled `everyMinute` in
+`routes/console.php`) GETs `config('vigil.deadman_url')` (env `VIGIL_DEADMAN_URL`).
+It no-ops cleanly when unset and never throws into the scheduler tick, so a failed
+external ping cannot stall the per-minute dispatcher.
 
 ---
 

@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureUserPermission;
 use App\Modules\Check\Console\Commands\DispatchDueChecksCommand;
+use App\Modules\Check\Console\Commands\PingDeadManSwitchCommand;
 use App\Modules\Check\Console\Commands\SweepHeartbeatsCommand;
 use App\Modules\Monitor\Console\Commands\MaintainCheckPartitionsCommand;
 use App\Modules\Monitor\Console\Commands\RollupDailyCommand;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         DispatchDueChecksCommand::class,
         SweepHeartbeatsCommand::class,
+        PingDeadManSwitchCommand::class,
         RollupHourlyCommand::class,
         RollupDailyCommand::class,
         MaintainCheckPartitionsCommand::class,

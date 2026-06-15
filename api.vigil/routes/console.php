@@ -13,6 +13,9 @@ Artisan::command('inspire', function () {
 Schedule::command('checks:dispatch')->everyMinute()->withoutOverlapping();
 Schedule::command('heartbeats:sweep')->everyMinute()->withoutOverlapping();
 
+// The watcher is watched: emit an external dead-man heartbeat every tick. §12.
+Schedule::command('monitoring:deadman-ping')->everyMinute();
+
 // Rollups (status pages read these, never raw) + monthly partition pre-create. §11.
 Schedule::command('rollup:hourly')->hourlyAt(5)->withoutOverlapping();
 Schedule::command('rollup:daily')->dailyAt('00:30')->withoutOverlapping();

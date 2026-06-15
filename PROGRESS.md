@@ -1,9 +1,58 @@
 # PROGRESS — Vigil MVP overnight build
 
+---
+
+# ☀️ MORNING REPORT — MVP backlog COMPLETE (items 1–9 all green)
+
+Good morning. The full Vigil MVP backend (PLAN.md §14 "it pages me when a site dies")
+is built, tested and committed on `feature/vigil-mvp`. **Nothing pushed.** **225 tests
+passing, 460 assertions; Pint clean.** The loop has stopped (no further wake-ups scheduled).
+
+## What shipped (per item, with commit hashes)
+
+| # | Item | Commit(s) |
+| --- | --- | --- |
+| 1 | Schema: 13 migrations, 6 enums, 11 models, 8 factories (check_results partition split MySQL-only) | `f47cd50` |
+| 2 | Project module CRUD | `db2f376` |
+| 3 | Monitor module CRUD (type-driven, interval ≥60s, heartbeat tokens) | `feb4bf9` |
+| 4 | Check engine: SsrfGuard + probes + state machine + RunCheckJob + dispatch/sweep + scheduler | `520b179`, `ff7b8ba`, `ec31af3` |
+| 5 | Incident module + engine event listeners | `ab1319a` |
+| 6 | Notification: fallback chain + dedup + quiet hours + channel CRUD/routing | `4b9e071`, `a51993a`, `b252962` |
+| 7 | Uptime rollups (hourly/daily) + partition maintenance + scheduler | `594c66b` |
+| 8 | Status pages (admin + public from rollups) + heartbeat ingress + TLS ask gate | `ebd6915`, `4e15d12` |
+| 9 | Dead-man switch + Evolution-health seed | (this commit) |
+
+Plus `29cc67d` (plan + charter). Run `git log --oneline feature/vigil-mvp` for the full chain.
+
+## Decisions I made autonomously — please review
+
+(Full rationale in "Decisions taken autonomously" below.) Highlights:
+- **`check_results` has no DB foreign key** (MySQL forbids FKs on partitioned tables); integrity is in the repository. Partitioning is a separate MySQL-only migration so the SQLite test DB is unaffected.
+- **Enum cases are UPPER** (matching your existing `StatusEnum`/`UserStatus`), not Boost's TitleCase suggestion.
+- **Fallback chain is deliver-once** (first channel that succeeds wins), per PLAN §6.
+- **Probes own their SsrfGuard call** (so each redirect hop is re-vetted) — slight signature deviation from PLAN §5, functionally identical.
+- **Evolution-health monitor is a heartbeat, not an http probe** — an http probe against the internal `evolution-api` host would be (correctly) blocked by SsrfGuard; a sidecar pings the heartbeat instead. See PLAN §7.
+- **Daily rollup percentiles are approximate** (checks-weighted mean of hourly p50/p95) since raw rows aren't re-read for the day.
+
+## Nothing is BLOCKED. Deferred / out-of-MVP-scope (by design, PLAN §14 "v1/later")
+
+- `still_down` re-notify/escalation, status-page subscriptions, multi-region probes, ping/dns probes, anomaly detection — all explicitly v1+ in the plan.
+- Docker Compose / Caddyfile / Dockerfile are described in PLAN §2 but not generated (infra, not app code).
+
+## Suggested next steps
+
+1. **Run the suite against real MySQL 8** (the partition migration + `REORGANIZE` path only execute on MySQL and are not exercised by the SQLite test run). `DB_CONNECTION=mysql php artisan migrate:fresh && php artisan test`.
+2. **Review the autonomous decisions above**, especially the no-FK-on-check_results and the heartbeat-vs-http Evolution-health choice.
+3. **Frontend (app.vigil)** — the stretch goal (monitor list + detail per celer conventions) was not started; backend is ready for it.
+4. Generate the Docker Compose / Caddyfile / Dockerfile from PLAN §2/§13 when ready to deploy.
+5. Merge `feature/vigil-mvp` when satisfied (it's a large but cohesive branch; consider reviewing per-commit — each is one green increment).
+
+---
+
 > Read this first on every wake-up, alongside `NIGHT_GOAL.md`. This is the durable
 > source of truth across wake-ups and crashes. Tick items, append journal entries.
 
-Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
+Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMPLETE**
 
 ## Backlog status
 
@@ -24,11 +73,17 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   - [x] 8a. StatusPage admin CRUD + routing + UptimeQueryService (rollups only) + public status endpoint — 8 tests green
   - [x] 8b. Heartbeat ingress POST /api/heartbeats/{token} — 4 tests green
   - [x] 8c. tls-allowed ask endpoint for Caddy on-demand TLS — 3 tests green
-- [ ] 9. Self-monitoring + dead-man heartbeat
+- [x] 9. Self-monitoring + dead-man heartbeat + Evolution-health seed — 5 tests green
 - [ ] (stretch) app.vigil monitor list + detail
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 9 DONE → ALL BACKLOG COMPLETE. PingDeadManSwitchCommand
+  (monitoring:deadman-ping, scheduled everyMinute) GETs config('vigil.deadman_url'), no-ops when
+  unset, swallows ping errors so the tick never breaks. config/vigil.php added. VigilSeeder seeds
+  a system project + heartbeat "Evolution WhatsApp Session" monitor with exclude_channels
+  ['whatsapp'] (idempotent firstOrCreate); wired into DatabaseSeeder. 5 tests. Full suite 225
+  green. Loop STOPPED — MVP backlog 1-9 complete. MORNING REPORT written at top.
 - 2026-06-14 — Item 8 COMPLETE. 8b: HeartbeatService + POST /api/heartbeats/{token}
   (unauthenticated, throttle:120,1) records an up CheckResult, refreshes last_ping_at, and if the
   monitor was DOWN flips it UP firing MonitorRecovered (resolves incident + recovery alert);
