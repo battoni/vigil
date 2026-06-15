@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { AuthRoutes } from '@AuthModule';
+import { ChannelsRoutes } from '@ChannelModule';
 import { FinanceRoutes, HomeRoutes } from '@HomeModule';
 import { IncidentsRoutes } from '@IncidentModule';
 import { MonitorDetailRoutes, MonitorsRoutes } from '@MonitorModule';
@@ -17,4 +18,5 @@ export default <RouteRecordRaw[]>[
   ...MonitorsRoutes,
   ...MonitorDetailRoutes,
   ...IncidentsRoutes,
+  ...ChannelsRoutes,
 ];

@@ -146,6 +146,8 @@ export default defineConfig(({ mode }) => {
         '@MonitorModule/*': getPath('./src/modules/Monitor/*'),
         '@IncidentModule': getPath('./src/modules/Incident'),
         '@IncidentModule/*': getPath('./src/modules/Incident/*'),
+        '@ChannelModule': getPath('./src/modules/Channel'),
+        '@ChannelModule/*': getPath('./src/modules/Channel/*'),
       },
     },
     build: {

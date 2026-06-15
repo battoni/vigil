@@ -6,6 +6,46 @@
     },
     "empty": "Nenhum projeto ainda"
   },
+  "channels": {
+    "title": "Canais de notificação",
+    "add": "Novo canal",
+    "empty": "Nenhum canal ainda",
+    "name": "Nome",
+    "active": "Ativo",
+    "actions": "Ações",
+    "statusActive": "Ativo",
+    "statusInactive": "Inativo",
+    "delete": "Excluir",
+    "deleted": "Canal \"{name}\" excluído",
+    "deleteConfirm": "Excluir o canal \"{name}\"?",
+    "type": {
+      "label": "Tipo",
+      "slack": "Slack",
+      "email": "E-mail",
+      "whatsapp": "WhatsApp"
+    },
+    "form": {
+      "createHeader": "Novo canal",
+      "editHeader": "Editar canal",
+      "create": "Criar",
+      "edit": "Salvar",
+      "cancel": "Cancelar",
+      "name": "Nome",
+      "namePlaceholder": "Slack de operações",
+      "nameRequired": "O nome é obrigatório",
+      "type": "Tipo",
+      "webhookUrl": "URL do webhook",
+      "recipients": "Destinatários",
+      "recipientsPlaceholder": "Separados por vírgula",
+      "from": "Remetente",
+      "resendApiKey": "Chave da API Resend",
+      "baseUrl": "URL base do Evolution",
+      "instance": "Instância",
+      "apiKey": "Chave de API",
+      "created": "Canal \"{name}\" criado",
+      "updated": "Canal \"{name}\" atualizado"
+    }
+  },
   "incidents": {
     "title": "Incidentes",
     "empty": "Nenhum incidente",
@@ -142,6 +182,7 @@
     "unexpected": "Um erro inesperado aconteceu. Copie o erro abaixo e por favor informe ao administrador do sistema: {error}"
   },
   "navigation": {
+    "channels": "Canais",
     "finances": "Finanças",
     "home": "Início",
     "incidents": "Incidentes",

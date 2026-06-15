@@ -6,6 +6,46 @@
     },
     "empty": "No projects yet"
   },
+  "channels": {
+    "title": "Notification channels",
+    "add": "New channel",
+    "empty": "No channels yet",
+    "name": "Name",
+    "active": "Active",
+    "actions": "Actions",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "delete": "Delete",
+    "deleted": "Channel \"{name}\" deleted",
+    "deleteConfirm": "Delete channel \"{name}\"?",
+    "type": {
+      "label": "Type",
+      "slack": "Slack",
+      "email": "Email",
+      "whatsapp": "WhatsApp"
+    },
+    "form": {
+      "createHeader": "New channel",
+      "editHeader": "Edit channel",
+      "create": "Create",
+      "edit": "Save",
+      "cancel": "Cancel",
+      "name": "Name",
+      "namePlaceholder": "Ops Slack",
+      "nameRequired": "Name is required",
+      "type": "Type",
+      "webhookUrl": "Webhook URL",
+      "recipients": "Recipients",
+      "recipientsPlaceholder": "Comma-separated",
+      "from": "From address",
+      "resendApiKey": "Resend API key",
+      "baseUrl": "Evolution base URL",
+      "instance": "Instance",
+      "apiKey": "API key",
+      "created": "Channel \"{name}\" created",
+      "updated": "Channel \"{name}\" updated"
+    }
+  },
   "incidents": {
     "title": "Incidents",
     "empty": "No incidents",
@@ -142,6 +182,7 @@
     "unexpected": "An unexpected error occurred. Copy the error bellow and please inform the system administrator: {error}"
   },
   "navigation": {
+    "channels": "Channels",
     "finances": "Finances",
     "home": "Home",
     "incidents": "Incidents",

@@ -57,6 +57,14 @@ export const mockMonitor = {
   lastCheckedAt: '2026-06-15T10:00:00+00:00',
 };
 
+export const mockChannel = {
+  id: '1',
+  name: 'Ops Slack',
+  type: 'slack',
+  config: { webhook_url: 'https://hooks.slack.com/services/x' },
+  isActive: true,
+};
+
 export const mockIncident = {
   id: '1',
   monitorId: '1',
@@ -113,6 +121,35 @@ export const handlers = [
 
   http.delete(`${BASE}/monitors/:id`, ({ params }) =>
     HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
+  ),
+
+  // ---- Channels ----
+  http.get(`${BASE}/channels`, () => HttpResponse.json({ data: [mockChannel] })),
+
+  http.get(`${BASE}/channels/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/channels`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockChannel, id: '99', ...body } }, { status: 201 });
+  }),
+
+  http.patch(`${BASE}/channels/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockChannel, id: String(params.id), ...body } });
+  }),
+
+  http.delete(`${BASE}/channels/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/channels/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  http.delete(`${BASE}/channels/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
   ),
 
   // ---- Incidents ----
