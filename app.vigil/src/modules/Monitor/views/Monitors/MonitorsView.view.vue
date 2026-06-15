@@ -4,7 +4,9 @@ import { storeToRefs } from 'pinia';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 import type { Monitor } from '../../interfaces';
+import { getI18nRouteName } from '@Helpers';
 import { useProjectStore } from '@ProjectModule';
 import { useUserStore } from '@UserModule';
 import { MONITOR_STATUS } from '../../enums';
@@ -16,6 +18,7 @@ const projectStore = useProjectStore();
 const userStore = useUserStore();
 
 const confirm = useConfirm();
+const router = useRouter();
 const { t } = useI18n();
 const toast = useToast();
 
@@ -90,6 +93,10 @@ function onDialogSuccess(monitor: Monitor) {
 function onEditRequest(monitor: Monitor) {
   editingMonitor.value = monitor;
   dialogVisible.value = true;
+}
+
+function onViewRequest(monitor: Monitor) {
+  router.push({ name: getI18nRouteName('monitor-detail'), params: { id: monitor.id } });
 }
 
 function onDeleteRequest(event: Event, monitor: Monitor) {
@@ -187,6 +194,7 @@ function onPauseRequest(monitor: Monitor) {
           @onDeleteRequest="(event: Event) => onDeleteRequest(event, monitor)"
           @onEditRequest="onEditRequest(monitor)"
           @onPauseRequest="onPauseRequest(monitor)"
+          @onViewRequest="onViewRequest(monitor)"
         />
       </div>
 

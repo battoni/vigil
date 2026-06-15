@@ -69,15 +69,21 @@ describe('MMonitorCard', () => {
     expect(wrapper.text()).toContain('https://vigil.test/api/heartbeats/tok');
   });
 
-  it('emits onEditRequest when the edit button is clicked', async () => {
+  it('emits onViewRequest when the view button is clicked', async () => {
     const wrapper = mountCard();
     await wrapper.findAll('.btn-stub')[0]?.trigger('click');
+    expect(wrapper.emitted('onViewRequest')).toBeTruthy();
+  });
+
+  it('emits onEditRequest when the edit button is clicked', async () => {
+    const wrapper = mountCard();
+    await wrapper.findAll('.btn-stub')[1]?.trigger('click');
     expect(wrapper.emitted('onEditRequest')).toBeTruthy();
   });
 
   it('emits onPauseRequest when the pause button is clicked', async () => {
     const wrapper = mountCard();
-    await wrapper.findAll('.btn-stub')[1]?.trigger('click');
+    await wrapper.findAll('.btn-stub')[2]?.trigger('click');
     expect(wrapper.emitted('onPauseRequest')).toBeTruthy();
   });
 });

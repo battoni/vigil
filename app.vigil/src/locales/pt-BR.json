@@ -39,7 +39,14 @@
       "pause": "Pausar",
       "resume": "Retomar",
       "delete": "Excluir",
+      "view": "Ver detalhes",
       "copyUrl": "Copiar URL de ping"
+    },
+    "detail": {
+      "back": "Voltar aos monitores",
+      "uptime": "Disponibilidade",
+      "notFound": "Monitor não encontrado",
+      "pingUrl": "URL de ping do heartbeat"
     },
     "form": {
       "createHeader": "Novo monitor",

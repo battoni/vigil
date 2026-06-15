@@ -68,6 +68,10 @@ export const handlers = [
     HttpResponse.json({ data: { '24h': 99.9, '7d': 99, '30d': 98, '90d': 97 } })
   ),
 
+  http.get(`${BASE}/monitors/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
+  ),
+
   http.post(`${BASE}/monitors`, async ({ request }) => {
     const body = (await request.json()) as Record<string, unknown>;
     return HttpResponse.json({ data: { ...mockMonitor, id: '99', ...body } }, { status: 201 });

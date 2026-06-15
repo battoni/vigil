@@ -9,6 +9,7 @@ const emit = defineEmits<{
   onDeleteRequest: [event: Event];
   onEditRequest: [];
   onPauseRequest: [];
+  onViewRequest: [];
 }>();
 
 const props = withDefaults(
@@ -56,6 +57,10 @@ function onEditRequestClick() {
 
 function onPauseRequestClick() {
   emit('onPauseRequest');
+}
+
+function onViewRequestClick() {
+  emit('onViewRequest');
 }
 </script>
 
@@ -119,6 +124,15 @@ function onPauseRequestClick() {
       <Divider type="dashed" />
 
       <div class="flex w-full items-center justify-end gap-2">
+        <Button
+          v-tooltip.top="$t('monitors.actions.view')"
+          rounded
+          text
+          icon="pi pi-eye"
+          severity="secondary"
+          @click="onViewRequestClick"
+        />
+
         <Button
           v-if="canUpdate"
           v-tooltip.top="$t('monitors.actions.edit')"
