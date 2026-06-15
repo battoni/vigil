@@ -2,6 +2,8 @@
 
 namespace App\Modules\Monitor\Services;
 
+use App\Modules\Check\Support\SsrfException;
+use App\Modules\Check\Support\SsrfGuard;
 use App\Modules\Monitor\DTOs\MonitorStoreDTO;
 use App\Modules\Monitor\DTOs\MonitorUpdateDTO;
 use App\Modules\Monitor\Enums\MonitorStatus;
@@ -10,12 +12,24 @@ use App\Modules\Monitor\Models\Monitor;
 use App\Modules\Monitor\Repositories\MonitorRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Spatie\LaravelData\Optional;
 
 class MonitorService
 {
+    /** Monitor types that reach out over the network and need SSRF vetting. */
+    private const NETWORK_TYPES = [
+        MonitorType::HTTP->value,
+        MonitorType::TCP->value,
+        MonitorType::SSL->value,
+        MonitorType::KEYWORD->value,
+        MonitorType::DNS->value,
+        MonitorType::PING->value,
+    ];
+
     public function __construct(
         private MonitorRepository $monitorRepository,
+        private SsrfGuard $ssrfGuard,
     ) {}
 
     /**
@@ -33,6 +47,8 @@ class MonitorService
 
     public function create(MonitorStoreDTO $dto): Monitor
     {
+        $this->assertTargetSafe($dto->type, $dto->target);
+
         $isHeartbeat = $dto->type === MonitorType::HEARTBEAT->value;
 
         $data = [
@@ -60,6 +76,10 @@ class MonitorService
     {
         $monitor = $this->findOrFail($id);
         $data = $this->provided($dto);
+
+        if (array_key_exists('target', $data)) {
+            $this->assertTargetSafe($monitor->type->value, $data['target']);
+        }
 
         if (array_key_exists('status', $data)) {
             $data = array_merge($data, $this->nextCheckForStatus($monitor, $data['status']));
@@ -117,6 +137,19 @@ class MonitorService
         }
 
         return [];
+    }
+
+    private function assertTargetSafe(string $type, string $target): void
+    {
+        if (! in_array($type, self::NETWORK_TYPES, true)) {
+            return;
+        }
+
+        try {
+            $this->ssrfGuard->assertSafe($target);
+        } catch (SsrfException $exception) {
+            throw ValidationException::withMessages(['target' => [$exception->getMessage()]]);
+        }
     }
 
     private function generateHeartbeatToken(): string

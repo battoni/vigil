@@ -10,7 +10,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 - [x] 1. Schema + domain models (migrations, models, enums, factories) — 8 tests green
 - [x] 2. Project module (arcus CRUD + tests) — 12 tests green
 - [x] 3. Monitor module (arcus CRUD + tests) — 13 tests green
-- [ ] 4. Check engine (probes, SsrfGuard, state machine, RunCheckJob, dispatch cmd)
+- [~] 4. Check engine — IN PROGRESS
+  - [x] 4a. ProbeResult VO + SsrfGuard (IP pinning, redirect re-check) + create-time SSRF wired into Monitor — 23 tests green
+  - [ ] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface
+  - [ ] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand
 - [ ] 5. Incident module
 - [ ] 6. Notification module (fallback chain + dedup + quiet hours)
 - [ ] 7. Rollups + retention + scheduler wiring
@@ -20,6 +23,12 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 4a DONE. SsrfGuard built: explicit IPv4/IPv6 private/reserved/CGNAT/
+  metadata/link-local range blocking, hermetic create-time assertSafe (no DNS), authoritative
+  resolveAndPin (strict — rejects if ANY resolved IP is blocked), assertIpSafe for redirect
+  hops. ProbeResult VO + SsrfException + PinnedTarget. Create-time SSRF wired into MonitorService
+  (network types only) → 422 on target. 11 SsrfGuard unit + create-time feature tests. Full suite
+  141 green. Next: 4b (probes).
 - 2026-06-14 — Item 3 DONE. Monitor module full arcus slice + 5 auth-guarded routes + 13
   feature tests. Type-driven config validation, interval min 60s, thresholds. Heartbeat
   monitors get a generated unique token + heartbeatUrl and null next_check_at; pause clears

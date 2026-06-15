@@ -116,6 +116,39 @@ it('requires an existing project', function () {
     $response->assertUnprocessable()->assertJsonValidationErrors(['project_id']);
 });
 
+it('rejects an http monitor targeting a blocked address at create-time', function (string $target) {
+    $project = Project::factory()->create();
+
+    $response = $this->actingAs(actingUser())->postJson('/api/monitors', [
+        'project_id' => $project->id,
+        'name' => 'SSRF attempt',
+        'type' => 'http',
+        'target' => $target,
+        'interval_seconds' => 60,
+    ]);
+
+    $response->assertUnprocessable()->assertJsonValidationErrors(['target']);
+})->with([
+    'http://127.0.0.1',
+    'http://169.254.169.254/latest/meta-data',
+    'http://localhost:8080',
+    'https://10.0.0.5',
+]);
+
+it('allows a heartbeat monitor with a non-network target', function () {
+    $project = Project::factory()->create();
+
+    $response = $this->actingAs(actingUser())->postJson('/api/monitors', [
+        'project_id' => $project->id,
+        'name' => 'Cron heartbeat',
+        'type' => 'heartbeat',
+        'target' => 'localhost-cron',
+        'interval_seconds' => 60,
+    ]);
+
+    $response->assertCreated();
+});
+
 it('pauses a monitor and clears its next check', function () {
     $monitor = Monitor::factory()->up()->create();
 
