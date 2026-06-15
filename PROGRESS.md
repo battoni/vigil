@@ -93,7 +93,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [ ] P1e. Playwright e2e for the core monitor flow
 - [~] P2. MonitorDetail + Incidents — IN PROGRESS
   - [x] P2a. MonitorDetail view (header + uptime cards + route + card view-nav) — 4 tests green
-  - [ ] P2b. Recent checks table + OMonitorChart (latency/uptime via PrimeVue Chart) + range selector
+  - [x] P2b. OMonitorChart (latency/uptime via PrimeVue Chart) + range selector + recent-checks table — 5 tests green; installed chart.js
   - [ ] P2c. Incident module + incident history on detail + Incidents list view/route/nav
 - [ ] P3. Channels CRUD + per-monitor routing UI
 - [ ] P4. Status-page builder + public status page
@@ -104,6 +104,13 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P2b DONE. Installed chart.js (4.5.1, peer dep of PrimeVue Chart — added to
+  package.json deps). OMonitorChart organism (line chart, latency p50/p95 + uptime variants).
+  MonitorDetail gained a range selector (24h/7d/30d/90d refetching series), both charts, and a
+  recent-checks DataTable. monitors.detail.* chart/table i18n + MSW checks/series handlers. 4 chart
+  unit + 1 detail integration test. Renamed an uptime-card v-for var to avoid shadowing the range
+  ref. lint/type-check/unit(227) green. Commit 00c1297. DECISION: added chart.js dependency (needed
+  for the approved PrimeVue Chart choice). Next: P2c (Incident module + history + Incidents view).
 - 2026-06-15 — P2a DONE. MonitorDetailView at /monitors/:id (localized, registered): header
   (name/target/status + heartbeat URL copy), 4 uptime cards from rollups, loading/not-found, back
   link. MMonitorCard gained a view button (onViewRequest); MonitorsView pushes to detail via
