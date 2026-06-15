@@ -4,6 +4,7 @@ namespace App\Modules\Monitor\Repositories;
 
 use App\Modules\Monitor\Models\MonitorUptimeDaily;
 use App\Modules\Monitor\Models\MonitorUptimeHourly;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 
 class RollupRepository
@@ -42,5 +43,35 @@ class RollupRepository
             ->where('bucket_start', '<', $to)
             ->get()
             ->all();
+    }
+
+    /**
+     * @return array{total: int, up: int}
+     */
+    public function aggregateHourlySince(int $monitorId, Carbon $since): array
+    {
+        return $this->aggregate(MonitorUptimeHourly::query(), $monitorId, $since);
+    }
+
+    /**
+     * @return array{total: int, up: int}
+     */
+    public function aggregateDailySince(int $monitorId, Carbon $since): array
+    {
+        return $this->aggregate(MonitorUptimeDaily::query(), $monitorId, $since);
+    }
+
+    /**
+     * @return array{total: int, up: int}
+     */
+    private function aggregate(Builder $query, int $monitorId, Carbon $since): array
+    {
+        $row = $query
+            ->where('monitor_id', $monitorId)
+            ->where('bucket_start', '>=', $since)
+            ->selectRaw('COALESCE(SUM(checks_total), 0) AS total, COALESCE(SUM(checks_up), 0) AS up')
+            ->first();
+
+        return ['total' => (int) $row->total, 'up' => (int) $row->up];
     }
 }

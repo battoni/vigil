@@ -7,6 +7,8 @@ use App\Modules\Incident\Controllers\IncidentController;
 use App\Modules\Monitor\Controllers\MonitorController;
 use App\Modules\Notification\Controllers\ChannelController;
 use App\Modules\Project\Controllers\ProjectController;
+use App\Modules\StatusPage\Controllers\PublicStatusController;
+use App\Modules\StatusPage\Controllers\StatusPageController;
 use Illuminate\Support\Facades\Route;
 
 // AUTH
@@ -37,6 +39,18 @@ Route::get('monitors/{id}', [MonitorController::class, 'show'])->middleware('aut
 Route::post('monitors', [MonitorController::class, 'store'])->middleware('auth');
 Route::patch('monitors/{id}', [MonitorController::class, 'update'])->middleware('auth');
 Route::delete('monitors/{id}', [MonitorController::class, 'destroy'])->middleware('auth');
+
+// PUBLIC STATUS PAGE (unauthenticated, rate-limited)
+Route::get('status/{slug}', [PublicStatusController::class, 'show'])->middleware('throttle:60,1');
+
+// STATUS PAGES (admin)
+Route::get('status-pages', [StatusPageController::class, 'index'])->middleware('auth');
+Route::get('status-pages/{id}', [StatusPageController::class, 'show'])->middleware('auth');
+Route::post('status-pages', [StatusPageController::class, 'store'])->middleware('auth');
+Route::patch('status-pages/{id}', [StatusPageController::class, 'update'])->middleware('auth');
+Route::delete('status-pages/{id}', [StatusPageController::class, 'destroy'])->middleware('auth');
+Route::post('status-pages/{id}/monitors/{monitorId}', [StatusPageController::class, 'attachMonitor'])->middleware('auth');
+Route::delete('status-pages/{id}/monitors/{monitorId}', [StatusPageController::class, 'detachMonitor'])->middleware('auth');
 
 // NOTIFICATION CHANNELS
 Route::get('channels', [ChannelController::class, 'index'])->middleware('auth');
