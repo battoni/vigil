@@ -91,7 +91,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [x] P1d. MAddEditMonitorForm + create/edit dialog + edit wiring + TheNavbar Monitors entry — form 4 + view create/edit tests green
   - [x] P1e. Playwright e2e — critical path (auth → /monitors → project-scoped load), 3 tests green
   - [ ] P1e. Playwright e2e for the core monitor flow
-- [ ] P2. MonitorDetail (charts, uptime cards, recent checks) + Incidents view + acknowledge
+- [~] P2. MonitorDetail + Incidents — IN PROGRESS
+  - [x] P2a. MonitorDetail view (header + uptime cards + route + card view-nav) — 4 tests green
+  - [ ] P2b. Recent checks table + OMonitorChart (latency/uptime via PrimeVue Chart) + range selector
+  - [ ] P2c. Incident module + incident history on detail + Incidents list view/route/nav
 - [ ] P3. Channels CRUD + per-monitor routing UI
 - [ ] P4. Status-page builder + public status page
 
@@ -101,6 +104,12 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P2a DONE. MonitorDetailView at /monitors/:id (localized, registered): header
+  (name/target/status + heartbeat URL copy), 4 uptime cards from rollups, loading/not-found, back
+  link. MMonitorCard gained a view button (onViewRequest); MonitorsView pushes to detail via
+  getI18nRouteName('monitor-detail'). Single-monitor MSW handler + monitors.detail.* i18n. 4-case
+  detail integration spec (own memory router). lint/type-check/unit(222) green. Commit 728022b.
+  Next: P2b (recent checks table + OMonitorChart latency/uptime via PrimeVue Chart, stubbed in specs).
 - 2026-06-15 — P1e DONE → P1 COMPLETE. Playwright e2e works in this env (chromium installed,
   route-intercept + own vite dev server, no real backend). monitors.e2e covers auth→/monitors→
   project-scoped load (3 tests, ~6s). Trimmed the add-button/create-dialog e2e: in headless the
