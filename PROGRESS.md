@@ -84,7 +84,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [x] P1a. Project module (interfaces, CRUD services, store with persisted active project + granular ops) + @ProjectModule/@MonitorModule aliases (vite/tsconfig/vitest) — 7 tests green
   - [x] P1b. Project switcher in TheLayout (MProjectSwitcher) — 5 tests green
   - [ ] P1b-ii. Minimal Project create/rename/delete dialog (deferred; a seeded `system` project exists, so not blocking Monitors)
-  - [ ] P1c. Monitor module (interfaces/enums/store/services) + MonitorsView list (OListCardGrid + MMonitorCard)
+  - [~] P1c. Monitor module + MonitorsView list — IN PROGRESS
+    - [x] P1c-1. Monitor data layer (interfaces/enums/types/constants/services/store) — 5 tests green
+    - [ ] P1c-2. MMonitorCard molecule (status badge, 24h uptime %, last-checked)
+    - [ ] P1c-3. MonitorsView (list/empty/loading) + routes + nav + monitors.* i18n + MSW view spec
   - [ ] P1d. MAddEditMonitorForm (create/edit via MMainDialog) + pause/resume + delete
   - [ ] P1e. Playwright e2e for the core monitor flow
 - [ ] P2. MonitorDetail (charts, uptime cards, recent checks) + Incidents view + acknowledge
@@ -97,6 +100,10 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P1c-1 DONE. Monitor module data layer (interfaces with camelCase resources +
+  snake_case payloads, MONITOR_TYPE/MONITOR_STATUS enums, constants incl status→severity map,
+  8 services, useMonitorStore with fetchForProject + granular ops). 5 store tests; lint/type-check/
+  unit(199) green. Commit e75d0c4. Next: P1c-2 (MMonitorCard) then P1c-3 (MonitorsView + routes/nav).
 - 2026-06-15 — P1b DONE (switcher). MProjectSwitcher molecule (Select bound to active project,
   fetchProjects on mount when empty, setActiveProject on change, hidden when no projects) placed
   globally in TheLayout. projects.* i18n keys added to en + pt-BR. 5 component tests (mockable
