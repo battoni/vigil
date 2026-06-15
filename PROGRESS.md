@@ -95,9 +95,9 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [x] P2a. MonitorDetail view (header + uptime cards + route + card view-nav) — 4 tests green
   - [x] P2b. OMonitorChart (latency/uptime via PrimeVue Chart) + range selector + recent-checks table — 5 tests green; installed chart.js
   - [x] P2c. Incident module + incident history on detail + Incidents list view/route/nav — 5 tests green
-- [~] P3. Channels — IN PROGRESS
+- [x] P3. Channels — DONE
   - [x] P3a. Channel module + ChannelsView CRUD (type-driven form) + nav — 10 tests green
-  - [ ] P3b. Per-monitor channel routing UI (Notifications section on MonitorDetail: attach/detach)
+  - [x] P3b. Per-monitor channel routing (Notifications section on MonitorDetail: attach/detach) — detail spec extended
 - [ ] P4. Status-page builder + public status page
 
 Frontend conventions: celer-01..08; mirror `modules/User`; tests via celer-testing
@@ -106,6 +106,13 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P3b DONE → P3 COMPLETE. MonitorDetail Notifications section: lists all channels
+  with attach/detach (AttachChannelToMonitorService/DetachChannelFromMonitorService),
+  monitors.detail.notifications.* i18n. lint/type-check/unit(243) green. Commit 5236bfe.
+  DECISION/LIMITATION: attachment state is session-local — the monitor resource doesn't return its
+  current channel attachments, so on reload the UI can't show pre-existing attachments. FOLLOW-UP:
+  add monitor.channels (ids + pivot) to the backend MonitorResource and hydrate attachedChannelIds
+  from it. Next: P4 (StatusPage admin + public status page — LAST phase).
 - 2026-06-15 — P3a DONE. Channel module (interfaces/enums/types/constants/services[CRUD +
   attach/detach]/store + @ChannelModule alias in all 3 configs). ChannelsView at /channels (nav
   entry, DataTable) with create/edit via MAddEditChannelForm (type-driven config for slack/email/
