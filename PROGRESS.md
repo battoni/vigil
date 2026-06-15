@@ -95,7 +95,9 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [x] P2a. MonitorDetail view (header + uptime cards + route + card view-nav) — 4 tests green
   - [x] P2b. OMonitorChart (latency/uptime via PrimeVue Chart) + range selector + recent-checks table — 5 tests green; installed chart.js
   - [x] P2c. Incident module + incident history on detail + Incidents list view/route/nav — 5 tests green
-- [ ] P3. Channels CRUD + per-monitor routing UI
+- [~] P3. Channels — IN PROGRESS
+  - [x] P3a. Channel module + ChannelsView CRUD (type-driven form) + nav — 10 tests green
+  - [ ] P3b. Per-monitor channel routing UI (Notifications section on MonitorDetail: attach/detach)
 - [ ] P4. Status-page builder + public status page
 
 Frontend conventions: celer-01..08; mirror `modules/User`; tests via celer-testing
@@ -104,6 +106,12 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P3a DONE. Channel module (interfaces/enums/types/constants/services[CRUD +
+  attach/detach]/store + @ChannelModule alias in all 3 configs). ChannelsView at /channels (nav
+  entry, DataTable) with create/edit via MAddEditChannelForm (type-driven config for slack/email/
+  whatsapp) + delete; granular store updates. channels.*/navigation.channels i18n + MSW handlers.
+  10 tests (store + form unit + view integration). lint/type-check/unit(242) green. Commit 0310aa3.
+  Next: P3b (per-monitor channel routing — attach/detach Notifications section on MonitorDetail).
 - 2026-06-15 — P2c DONE → P2 COMPLETE. Incident module (interfaces/services[list+ack]/store +
   @IncidentModule alias in all 3 configs). MonitorDetail incident-history table w/ inline
   acknowledge (granular). Incidents list view at /incidents (open/all filter, acknowledge) + nav
