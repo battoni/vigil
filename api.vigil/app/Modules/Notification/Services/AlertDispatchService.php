@@ -8,10 +8,12 @@ use App\Modules\Monitor\Models\Monitor;
 use App\Modules\Notification\Channels\NotifierFactory;
 use App\Modules\Notification\Enums\ChannelType;
 use App\Modules\Notification\Enums\NotificationStatus;
+use App\Modules\Notification\Jobs\SendDeferredAlertJob;
 use App\Modules\Notification\Models\NotificationChannel;
 use App\Modules\Notification\Repositories\ChannelRepository;
 use App\Modules\Notification\Repositories\NotificationLogRepository;
 use App\Modules\Notification\Support\AlertMessage;
+use App\Modules\Notification\Support\QuietHoursWindow;
 use Throwable;
 
 /**
@@ -37,9 +39,21 @@ class AlertDispatchService
         private NotifierFactory $notifierFactory,
     ) {}
 
-    public function send(Monitor $monitor, IncidentEvent $event, ?Incident $incident = null, ?string $cause = null): bool
-    {
+    public function send(
+        Monitor $monitor,
+        IncidentEvent $event,
+        ?Incident $incident = null,
+        ?string $cause = null,
+        bool $bypassQuietHours = false,
+    ): bool {
         if ($incident !== null && $this->notificationLogRepository->hasDelivered($incident->id, $event)) {
+            return true;
+        }
+
+        // Quiet hours DEFER non-critical alerts (never drop); critical bypasses.
+        if (! $bypassQuietHours && $this->shouldDefer($monitor, $event)) {
+            $this->defer($monitor, $event, $incident, $cause);
+
             return true;
         }
 
@@ -122,6 +136,34 @@ class AlertDispatchService
     private function severityRank(IncidentEvent $event): int
     {
         return $event === IncidentEvent::RECOVERED ? self::SEVERITY_RANK['info'] : self::SEVERITY_RANK['critical'];
+    }
+
+    /**
+     * Critical = DOWN / STILL_DOWN (always pages). RECOVERED is non-critical and
+     * is deferred during a quiet-hours window.
+     */
+    private function isCritical(IncidentEvent $event): bool
+    {
+        return $event !== IncidentEvent::RECOVERED;
+    }
+
+    private function shouldDefer(Monitor $monitor, IncidentEvent $event): bool
+    {
+        if ($this->isCritical($event)) {
+            return false;
+        }
+
+        $window = QuietHoursWindow::fromConfig($monitor->config);
+
+        return $window !== null && $window->isActive(now());
+    }
+
+    private function defer(Monitor $monitor, IncidentEvent $event, ?Incident $incident, ?string $cause): void
+    {
+        $window = QuietHoursWindow::fromConfig($monitor->config);
+
+        SendDeferredAlertJob::dispatch($monitor->id, $event->value, $incident?->id, $cause)
+            ->delay($window->endsAt(now()));
     }
 
     private function priority(NotificationChannel $channel): int
