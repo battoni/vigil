@@ -10,10 +10,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 - [x] 1. Schema + domain models (migrations, models, enums, factories) — 8 tests green
 - [x] 2. Project module (arcus CRUD + tests) — 12 tests green
 - [x] 3. Monitor module (arcus CRUD + tests) — 13 tests green
-- [~] 4. Check engine — IN PROGRESS
+- [x] 4. Check engine — DONE
   - [x] 4a. ProbeResult VO + SsrfGuard (IP pinning, redirect re-check) + create-time SSRF wired into Monitor — 23 tests green
   - [x] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface — 15 tests green
-  - [ ] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand
+  - [x] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand + scheduler — 14 tests green
 - [ ] 5. Incident module
 - [ ] 6. Notification module (fallback chain + dedup + quiet hours)
 - [ ] 7. Rollups + retention + scheduler wiring
@@ -23,6 +23,15 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 4c DONE → item 4 COMPLETE. StateMachineService (counter/threshold
+  transitions, maintenance suppression), RunCheckJob (per-monitor WithoutOverlapping lock,
+  probe→record→state→single state write committing real next_check_at, fires MonitorWentDown/
+  MonitorRecovered events on non-suppressed transitions), CheckResultRepository,
+  MaintenanceWindowRepository, MonitorRepository engine methods (findDueMonitors, findDueHeartbeats,
+  leaseForCheck, updateMonitorState), DispatchDueChecksCommand (90s lease, not blind-bump),
+  SweepHeartbeatsCommand. Commands registered in bootstrap/app.php; both scheduled everyMinute
+  withoutOverlapping in routes/console.php (verified via schedule:list). 14 tests. Full suite
+  170 green. Next: item 5 (Incident module + listener for MonitorWentDown/Recovered).
 - 2026-06-14 — Item 4b DONE. ProbeInterface + HttpProbe (manual redirect following with
   per-hop SsrfGuard re-vet + IP pinning via CURLOPT_RESOLVE, expected_status/keyword/json_path
   checks, basic auth/headers/body), TcpProbe (overridable openSocket), SslProbe (overridable
@@ -75,6 +84,16 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   and keeps SSRF enforcement co-located with the redirect-following network code.
 - **TCP/SSL probes expose protected `openSocket`/`fetchCertificate`** so tests stub the
   network without real sockets; HTTP uses the fakeable Http facade.
+- **Engine decoupled via domain events.** RunCheckJob/SweepHeartbeats fire `MonitorWentDown`
+  / `MonitorRecovered` instead of calling Incident/Alert services directly. Items 5 (incidents)
+  and 6 (alerting) register listeners. Clean seam; tests assert with Event::fake.
+- **StateMachine does not persist** — it mutates the monitor in memory and returns a
+  StateTransition; RunCheckJob does a single `updateMonitorState` write (status + counters +
+  last_checked_at + committed next_check_at + cleared lease). One write per check.
+- **Maintenance windows suppress alerts but still flip status + record** (per PLAN §5):
+  transition happens, `alertSuppressed=true`, so no event fires.
+- **Dispatch lease = 90s** (const in DispatchDueChecksCommand). A lost RunCheckJob makes the
+  monitor due again after the lease instead of silently skipping a cycle.
 
 ## BLOCKED / needs your review
 (none yet)
