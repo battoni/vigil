@@ -6,6 +6,23 @@
     },
     "empty": "No projects yet"
   },
+  "incidents": {
+    "title": "Incidents",
+    "empty": "No incidents",
+    "all": "All",
+    "open": "Open",
+    "monitor": "Monitor",
+    "status": "Status",
+    "statusOpen": "Open",
+    "statusResolved": "Resolved",
+    "startedAt": "Started",
+    "cause": "Cause",
+    "duration": "Duration",
+    "ongoing": "Ongoing",
+    "acknowledge": "Acknowledge",
+    "acknowledged": "Acknowledged",
+    "acknowledgedSuccess": "Incident acknowledged"
+  },
   "monitors": {
     "title": "Monitors",
     "empty": "No monitors yet",
@@ -127,6 +144,7 @@
   "navigation": {
     "finances": "Finances",
     "home": "Home",
+    "incidents": "Incidents",
     "logout": "Log out",
     "monitors": "Monitors",
     "roles": "Roles",

@@ -5,7 +5,9 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import type { Monitor, MonitorCheck, MonitorSeriesPoint, MonitorUptime } from '../../interfaces';
 import type { UptimeRange } from '../../types';
+import type { Incident } from '@IncidentModule';
 import { getI18nRouteName } from '@Helpers';
+import { AcknowledgeIncidentService, GetIncidentsService } from '@IncidentModule';
 import { MONITOR_STATUS_SEVERITY } from '../../constants';
 import { MONITOR_TYPE } from '../../enums';
 import {
@@ -23,6 +25,7 @@ const toast = useToast();
 const range = ref<UptimeRange>('7d');
 
 const checks = ref<MonitorCheck[]>([]);
+const incidents = ref<Incident[]>([]);
 const monitor = ref<Monitor | null>(null);
 const series = ref<MonitorSeriesPoint[]>([]);
 const uptime = ref<MonitorUptime | null>(null);
@@ -71,7 +74,20 @@ function onComponentMount() {
     .then(({ data }) => (checks.value = data))
     .catch(() => (checks.value = []));
 
+  GetIncidentsService({ monitorId: monitorId.value })
+    .then(({ data }) => (incidents.value = data))
+    .catch(() => (incidents.value = []));
+
   loadSeries();
+}
+
+function onAcknowledgeIncident(incident: Incident) {
+  AcknowledgeIncidentService(incident.id)
+    .then(({ data }) => {
+      incidents.value = incidents.value.map((existing) => (existing.id === data.id ? data : existing));
+      toast.add({ severity: 'success', summary: t('incidents.acknowledgedSuccess'), life: 5000 });
+    })
+    .catch(() => toast.add({ severity: 'error', summary: t('errors.somethingWentWrong'), life: 5000 }));
 }
 
 function onRangeChange(value: UptimeRange) {
@@ -266,6 +282,55 @@ function onCopyUrl() {
               field="error"
               :header="$t('monitors.detail.error')"
             />
+          </DataTable>
+        </section>
+
+        <section class="flex flex-col gap-2">
+          <h3 class="text-heading text-lg font-semibold">{{ $t('incidents.title') }}</h3>
+
+          <DataTable
+            data-testid="incident-history"
+            :value="incidents"
+          >
+            <template #empty>
+              <span class="text-subtle text-sm">{{ $t('incidents.empty') }}</span>
+            </template>
+
+            <Column
+              field="startedAt"
+              :header="$t('incidents.startedAt')"
+            />
+
+            <Column :header="$t('incidents.status')">
+              <template #body="{ data }">
+                <Tag
+                  rounded
+                  :severity="data.isOpen ? 'danger' : 'success'"
+                  :value="data.isOpen ? $t('incidents.statusOpen') : $t('incidents.statusResolved')"
+                />
+              </template>
+            </Column>
+
+            <Column
+              field="cause"
+              :header="$t('incidents.cause')"
+            />
+
+            <Column :header="$t('incidents.acknowledge')">
+              <template #body="{ data }">
+                <Tag
+                  v-if="data.acknowledgedAt"
+                  :value="$t('incidents.acknowledged')"
+                />
+
+                <Button
+                  v-else
+                  size="small"
+                  :label="$t('incidents.acknowledge')"
+                  @click="onAcknowledgeIncident(data)"
+                />
+              </template>
+            </Column>
           </DataTable>
         </section>
       </template>

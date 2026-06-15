@@ -43,7 +43,9 @@
       "@ProjectModule": ["./src/modules/Project"],
       "@ProjectModule/*": ["./src/modules/Project/*"],
       "@MonitorModule": ["./src/modules/Monitor"],
-      "@MonitorModule/*": ["./src/modules/Monitor/*"]
+      "@MonitorModule/*": ["./src/modules/Monitor/*"],
+      "@IncidentModule": ["./src/modules/Incident"],
+      "@IncidentModule/*": ["./src/modules/Incident/*"]
     }
   }
 }

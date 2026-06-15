@@ -57,6 +57,19 @@ export const mockMonitor = {
   lastCheckedAt: '2026-06-15T10:00:00+00:00',
 };
 
+export const mockIncident = {
+  id: '1',
+  monitorId: '1',
+  monitorName: 'Homepage',
+  startedAt: '2026-06-15T09:00:00+00:00',
+  resolvedAt: null,
+  isOpen: true,
+  cause: 'unexpected_status: 500',
+  durationSeconds: null,
+  acknowledgedBy: null,
+  acknowledgedAt: null,
+};
+
 export const handlers = [
   // ---- Projects ----
   http.get(`${BASE}/projects`, () => HttpResponse.json({ data: [mockProject] })),
@@ -100,6 +113,17 @@ export const handlers = [
 
   http.delete(`${BASE}/monitors/:id`, ({ params }) =>
     HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
+  ),
+
+  // ---- Incidents ----
+  http.get(`${BASE}/incidents`, () => HttpResponse.json({ data: [mockIncident] })),
+
+  http.get(`${BASE}/incidents/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockIncident, id: String(params.id) } })
+  ),
+
+  http.patch(`${BASE}/incidents/:id/acknowledge`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockIncident, id: String(params.id), acknowledgedAt: '2026-06-15T11:00:00+00:00', acknowledgedBy: '1' } })
   ),
 
   // ---- Auth ----

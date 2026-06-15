@@ -6,6 +6,23 @@
     },
     "empty": "Nenhum projeto ainda"
   },
+  "incidents": {
+    "title": "Incidentes",
+    "empty": "Nenhum incidente",
+    "all": "Todos",
+    "open": "Abertos",
+    "monitor": "Monitor",
+    "status": "Status",
+    "statusOpen": "Aberto",
+    "statusResolved": "Resolvido",
+    "startedAt": "Início",
+    "cause": "Causa",
+    "duration": "Duração",
+    "ongoing": "Em andamento",
+    "acknowledge": "Reconhecer",
+    "acknowledged": "Reconhecido",
+    "acknowledgedSuccess": "Incidente reconhecido"
+  },
   "monitors": {
     "title": "Monitores",
     "empty": "Nenhum monitor ainda",
@@ -127,6 +144,7 @@
   "navigation": {
     "finances": "Finanças",
     "home": "Início",
+    "incidents": "Incidentes",
     "logout": "Sair",
     "monitors": "Monitores",
     "roles": "Permissões",

@@ -144,6 +144,8 @@ export default defineConfig(({ mode }) => {
         '@ProjectModule/*': getPath('./src/modules/Project/*'),
         '@MonitorModule': getPath('./src/modules/Monitor'),
         '@MonitorModule/*': getPath('./src/modules/Monitor/*'),
+        '@IncidentModule': getPath('./src/modules/Incident'),
+        '@IncidentModule/*': getPath('./src/modules/Incident/*'),
       },
     },
     build: {
