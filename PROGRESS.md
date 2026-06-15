@@ -87,7 +87,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [~] P1c. Monitor module + MonitorsView list — IN PROGRESS
     - [x] P1c-1. Monitor data layer (interfaces/enums/types/constants/services/store) — 5 tests green
     - [x] P1c-2. MMonitorCard molecule (status badge, 24h uptime %, last-checked, heartbeat URL) — 8 tests green
-    - [ ] P1c-3. MonitorsView (list/empty/loading) + routes + nav + monitors.* i18n + MSW view spec
+    - [x] P1c-3. MonitorsView (list/empty/loading) + pause/delete + routes + monitors.* i18n + MSW view spec — 4 tests green (nav entry + edit/create deferred to P1d)
   - [ ] P1d. MAddEditMonitorForm (create/edit via MMainDialog) + pause/resume + delete
   - [ ] P1e. Playwright e2e for the core monitor flow
 - [ ] P2. MonitorDetail (charts, uptime cards, recent checks) + Incidents view + acknowledge
@@ -100,6 +100,14 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P1c-3 DONE. MonitorsView list page (grid of MMonitorCard scoped to active project,
+  loads on mount + on activeProject change, loading skeletons, empty state). Pause/resume + delete
+  wired with granular store updates from API responses. Localized routes registered in
+  libraries/router/routes.ts. MSW handlers for projects/monitors added. 4-case integration spec.
+  lint/type-check/unit(211) green. Commit 36db479. Decisions: (1) deferred 24h uptime % in the
+  list to avoid N+1 calls — needs a batch uptime endpoint or load-on-detail (P2); card shows — for
+  now. (2) edit/create dialog + a TheNavbar entry deferred to P1d (route reachable by URL; covered
+  by spec). Next: P1d (MAddEditMonitorForm + create/edit + nav).
 - 2026-06-15 — P1c-2 DONE. MMonitorCard molecule (name/target, status Tag via
   MONITOR_STATUS_SEVERITY, 24h uptime % prop, locale-aware lastChecked, copyable heartbeat URL;
   emits onEditRequest/onPauseRequest/onDeleteRequest/onCopyUrl). monitors.* i18n keys (en+pt-BR).
