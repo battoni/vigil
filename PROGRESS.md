@@ -7,7 +7,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Backlog status
 
-- [ ] 1. Schema + domain models (migrations, models, enums, factories)
+- [x] 1. Schema + domain models (migrations, models, enums, factories) — 8 tests green
 - [ ] 2. Project module (arcus CRUD + tests)
 - [ ] 3. Monitor module (arcus CRUD + tests)
 - [ ] 4. Check engine (probes, SsrfGuard, state machine, RunCheckJob, dispatch cmd)
@@ -20,11 +20,26 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 1 DONE. 13 migrations, 6 enums, 11 models, 8 factories for the full
+  Vigil schema. Schema smoke test (8 cases) + full suite (80) green on sqlite. Next: item 2
+  (Project module CRUD).
 - 2026-06-14 — Charter + branch set up. Verified bootstrap: Laravel 13.2, PHP ^8.3,
-  Pest 4, existing Auth module. Loop armed. Next: backlog item 1 (schema).
+  Pest 4, existing Auth module. Loop armed.
 
 ## Decisions taken autonomously
-(none yet)
+
+- **Partitioning is split across two migrations.** `check_results` base table is portable
+  (plain `id` PK, `monitor_id` indexed, NO FK); a separate migration
+  (`..._partition_check_results_table`) applies composite PK `(id, checked_at)` +
+  monthly `RANGE` partitions **only when `DB::getDriverName() === 'mysql'`**. Reason: the
+  test suite runs on SQLite `:memory:` (per phpunit.xml) and would choke on MySQL
+  partition DDL. Tests cover the portable shape; production gets partitions.
+- **Enum case naming = UPPER** (e.g. `MonitorType::HTTP`) to match existing
+  `StatusEnum`/`UserStatus`, even though Boost's generic guideline suggests TitleCase —
+  "follow existing conventions" wins.
+- **Result enum named `CheckOutcome`** (not `CheckResultEnum`) to avoid confusion with the
+  `CheckResult` model.
+- Added `leased_until` to `monitors` to support the dispatch-lease design (PLAN §5).
 
 ## BLOCKED / needs your review
 (none yet)
