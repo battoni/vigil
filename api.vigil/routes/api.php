@@ -4,11 +4,13 @@ use App\Modules\Auth\Controllers\AuthController;
 use App\Modules\Auth\Controllers\RoleController;
 use App\Modules\Auth\Controllers\UserController;
 use App\Modules\Incident\Controllers\IncidentController;
+use App\Modules\Monitor\Controllers\HeartbeatController;
 use App\Modules\Monitor\Controllers\MonitorController;
 use App\Modules\Notification\Controllers\ChannelController;
 use App\Modules\Project\Controllers\ProjectController;
 use App\Modules\StatusPage\Controllers\PublicStatusController;
 use App\Modules\StatusPage\Controllers\StatusPageController;
+use App\Modules\StatusPage\Controllers\TlsAllowedController;
 use Illuminate\Support\Facades\Route;
 
 // AUTH
@@ -42,6 +44,12 @@ Route::delete('monitors/{id}', [MonitorController::class, 'destroy'])->middlewar
 
 // PUBLIC STATUS PAGE (unauthenticated, rate-limited)
 Route::get('status/{slug}', [PublicStatusController::class, 'show'])->middleware('throttle:60,1');
+
+// HEARTBEAT PUSH INGRESS (unauthenticated, token-guarded, rate-limited)
+Route::post('heartbeats/{token}', [HeartbeatController::class, 'ping'])->middleware('throttle:120,1');
+
+// CADDY ON-DEMAND TLS ASK ENDPOINT (internal — only registered custom domains)
+Route::get('internal/tls-allowed', [TlsAllowedController::class, 'check'])->middleware('throttle:120,1');
 
 // STATUS PAGES (admin)
 Route::get('status-pages', [StatusPageController::class, 'index'])->middleware('auth');

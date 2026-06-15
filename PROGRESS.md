@@ -20,15 +20,22 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   - [x] 6b-i. Quiet-hours deferral (defer non-critical, bypass critical, never drop) + SendDeferredAlertJob — 4 tests green
   - [x] 6b-ii. Channel CRUD API + per-monitor routing (attach/detach) endpoints + secret masking — 10 tests green
 - [x] 7. Rollups + retention + scheduler wiring — 4 tests green
-- [~] 8. Status pages + heartbeat ingress + tls-allowed — IN PROGRESS
+- [x] 8. Status pages + heartbeat ingress + tls-allowed — DONE
   - [x] 8a. StatusPage admin CRUD + routing + UptimeQueryService (rollups only) + public status endpoint — 8 tests green
-  - [ ] 8b. Heartbeat ingress POST /api/heartbeats/{token}
-  - [ ] 8c. tls-allowed ask endpoint for Caddy on-demand TLS
+  - [x] 8b. Heartbeat ingress POST /api/heartbeats/{token} — 4 tests green
+  - [x] 8c. tls-allowed ask endpoint for Caddy on-demand TLS — 3 tests green
 - [ ] 9. Self-monitoring + dead-man heartbeat
 - [ ] (stretch) app.vigil monitor list + detail
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 8 COMPLETE. 8b: HeartbeatService + POST /api/heartbeats/{token}
+  (unauthenticated, throttle:120,1) records an up CheckResult, refreshes last_ping_at, and if the
+  monitor was DOWN flips it UP firing MonitorRecovered (resolves incident + recovery alert);
+  paused monitors only update last_ping_at; unknown token → 404. 8c: GET /api/internal/tls-allowed
+  ?domain= returns 200 only for a registered status_pages.custom_domain else 404 (Caddy on-demand
+  TLS ask gate). 7 tests. Full suite 220 green. Next: item 9 (self-monitoring / dead-man heartbeat
+  + Evolution-health seed) — the last backlog item.
 - 2026-06-14 — Item 8a DONE. StatusPage module: admin CRUD + attach/detach monitors with
   pivot (group_name, sort_order) + 7 auth routes. UptimeQueryService reads ONLY rollups (hourly
   for 24h, daily for 7/30/90d) → uptime %. PublicStatusController GET /api/status/{slug}

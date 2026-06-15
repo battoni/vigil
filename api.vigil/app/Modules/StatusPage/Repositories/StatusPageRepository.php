@@ -32,6 +32,11 @@ class StatusPageRepository
             ->first();
     }
 
+    public function existsByCustomDomain(string $domain): bool
+    {
+        return $this->model->where('custom_domain', $domain)->exists();
+    }
+
     public function createStatusPage(array $data): StatusPage
     {
         return $this->model->create($data);
