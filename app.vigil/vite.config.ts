@@ -153,30 +153,13 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      rollupOptions: {
-        output: {
-          manualChunks: (id) => {
-            // Vendor chunks for large dependencies
-            if (id.includes('node_modules')) {
-              // prettier-ignore
-              return id.includes('axios') ? 'vendor-axios'
-              : id.includes('vue') || id.includes('vue-router') || id.includes('pinia') ? 'vendor-vue'
-              : id.includes('primevue') || id.includes('@primeuix') ? 'vendor-primevue'
-              : 'vendor';
-            }
-
-            // Keep ApiProvider wrapper and axios wrapper in the same chunk to avoid circular dependency
-            // The axios npm package itself goes to vendor-axios above
-            if (
-              id.includes('/src/providers/ApiProvider/') ||
-              (id.includes('/src/libraries/axios/') && !id.includes('node_modules'))
-            ) {
-              return 'api-core';
-            }
-          },
-        },
-      },
-      chunkSizeWarningLimit: 600,
+      // No custom manualChunks: forcing app modules (the ApiProvider/axios
+      // wrapper and the module barrels) into separate chunks produced circular
+      // chunks with broken init order at runtime ("can't access lexical
+      // declaration ... before initialization"). Vite's default chunking keeps
+      // statically-imported modules with their importer and splits per
+      // dynamic-import (lazy routes), which avoids the cycle.
+      chunkSizeWarningLimit: 1200,
     },
   });
 });
