@@ -5,7 +5,14 @@ import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
 import type { StatusPage } from '../../interfaces';
-import { DeleteStatusPageService } from '../../services';
+import type { Monitor } from '@MonitorModule';
+import { GetMonitorsService } from '@MonitorModule';
+import {
+  AttachMonitorToStatusPageService,
+  DeleteStatusPageService,
+  DetachMonitorFromStatusPageService,
+  GetStatusPageService,
+} from '../../services';
 import { useStatusPageStore } from '../../store';
 
 const statusPageStore = useStatusPageStore();
@@ -16,8 +23,13 @@ const toast = useToast();
 
 const { loading, statusPages } = storeToRefs(statusPageStore);
 
+const attachedMonitorIds = ref<Set<string>>(new Set());
+
+const allMonitors = ref<Monitor[]>([]);
 const dialogVisible = ref(false);
 const editingStatusPage = ref<StatusPage | null>(null);
+const manageDialogVisible = ref(false);
+const managingStatusPage = ref<StatusPage | null>(null);
 
 onMounted(onComponentMount);
 
@@ -43,6 +55,48 @@ function onCreateRequest() {
 function onEditRequest(statusPage: StatusPage) {
   editingStatusPage.value = statusPage;
   dialogVisible.value = true;
+}
+
+function onManageRequest(statusPage: StatusPage) {
+  managingStatusPage.value = statusPage;
+  manageDialogVisible.value = true;
+  attachedMonitorIds.value = new Set();
+
+  GetStatusPageService(statusPage.id)
+    .then(({ data }) => (attachedMonitorIds.value = new Set((data.monitors ?? []).map((monitor) => monitor.id))))
+    .catch(() => notifyError());
+
+  GetMonitorsService()
+    .then(({ data }) => (allMonitors.value = data))
+    .catch(() => (allMonitors.value = []));
+}
+
+function onAttachMonitor(monitor: Monitor) {
+  if (!managingStatusPage.value) {
+    return;
+  }
+
+  AttachMonitorToStatusPageService(managingStatusPage.value.id, monitor.id)
+    .then(() => {
+      attachedMonitorIds.value = new Set(attachedMonitorIds.value).add(monitor.id);
+      toast.add({ severity: 'success', summary: t('statusPages.monitors.attached', { name: monitor.name }), life: 4000 });
+    })
+    .catch(() => notifyError());
+}
+
+function onDetachMonitor(monitor: Monitor) {
+  if (!managingStatusPage.value) {
+    return;
+  }
+
+  DetachMonitorFromStatusPageService(managingStatusPage.value.id, monitor.id)
+    .then(() => {
+      const next = new Set(attachedMonitorIds.value);
+      next.delete(monitor.id);
+      attachedMonitorIds.value = next;
+      toast.add({ severity: 'success', summary: t('statusPages.monitors.detached', { name: monitor.name }), life: 4000 });
+    })
+    .catch(() => notifyError());
 }
 
 function onDialogSuccess(statusPage: StatusPage) {
@@ -141,6 +195,16 @@ function onDeleteRequest(event: Event, statusPage: StatusPage) {
               </a>
 
               <Button
+                v-tooltip.top="$t('statusPages.monitors.manage')"
+                rounded
+                text
+                data-testid="manage-status-monitors"
+                icon="pi pi-sitemap"
+                severity="secondary"
+                @click="onManageRequest(data)"
+              />
+
+              <Button
                 rounded
                 text
                 icon="pi pi-pencil"
@@ -179,6 +243,47 @@ function onDeleteRequest(event: Event, statusPage: StatusPage) {
           @onClose="dialogVisible = false"
           @onSuccess="onDialogSuccess"
         />
+      </MMainDialog>
+
+      <MMainDialog
+        v-model:visible="manageDialogVisible"
+        isFooterless
+        title="statusPages.monitors.title"
+      >
+        <div
+          class="flex flex-col gap-2"
+          data-testid="manage-monitors"
+        >
+          <div
+            v-if="!allMonitors.length"
+            class="border-line bg-panel text-subtle rounded-lg border p-4 text-sm"
+          >
+            {{ $t('statusPages.monitors.empty') }}
+          </div>
+
+          <div
+            v-for="monitor in allMonitors"
+            class="border-line bg-panel flex items-center justify-between gap-3 rounded-lg border p-3"
+            :key="monitor.id"
+          >
+            <span class="text-body text-sm">{{ monitor.name }}</span>
+
+            <Button
+              v-if="attachedMonitorIds.has(monitor.id)"
+              severity="secondary"
+              size="small"
+              :label="$t('statusPages.monitors.detach')"
+              @click="onDetachMonitor(monitor)"
+            />
+
+            <Button
+              v-else
+              size="small"
+              :label="$t('statusPages.monitors.attach')"
+              @click="onAttachMonitor(monitor)"
+            />
+          </div>
+        </div>
       </MMainDialog>
     </aside>
   </TheLayout>

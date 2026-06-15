@@ -59,6 +59,15 @@
     "delete": "Excluir",
     "deleted": "Página de status \"{name}\" excluída",
     "deleteConfirm": "Excluir a página de status \"{name}\"?",
+    "monitors": {
+      "title": "Gerenciar monitores",
+      "manage": "Gerenciar monitores",
+      "empty": "Nenhum monitor disponível",
+      "attach": "Adicionar",
+      "detach": "Remover",
+      "attached": "{name} adicionado",
+      "detached": "{name} removido"
+    },
     "form": {
       "createHeader": "Nova página de status",
       "editHeader": "Editar página de status",

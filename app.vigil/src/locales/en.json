@@ -59,6 +59,15 @@
     "delete": "Delete",
     "deleted": "Status page \"{name}\" deleted",
     "deleteConfirm": "Delete status page \"{name}\"?",
+    "monitors": {
+      "title": "Manage monitors",
+      "manage": "Manage monitors",
+      "empty": "No monitors available",
+      "attach": "Add",
+      "detach": "Remove",
+      "attached": "{name} added",
+      "detached": "{name} removed"
+    },
     "form": {
       "createHeader": "New status page",
       "editHeader": "Edit status page",

@@ -13,9 +13,9 @@ vi.mock('primevue/useconfirm', () => ({
 
 const stubs = {
   DataTable: { props: ['value'], inheritAttrs: true, template: '<div class="dt-stub" :data-rows="value.length"><slot /><slot name="empty" /></div>' },
-  Column: { template: '<div><slot :data="{ id: \'1\', name: \'Public Status\', slug: \'public-status\', isPublic: true }" /></div>' },
+  Column: { template: '<div><slot name="body" :data="{ id: \'1\', name: \'Public Status\', slug: \'public-status\', isPublic: true }" /></div>' },
   Tag: { props: ['value'], template: '<span>{{ value }}</span>' },
-  Button: { props: ['label'], emits: ['click'], template: '<button class="btn-stub" @click="$emit(\'click\', $event)">{{ label }}</button>' },
+  Button: { props: ['label'], emits: ['click'], inheritAttrs: true, template: '<button class="btn-stub" @click="$emit(\'click\', $event)">{{ label }}</button>' },
   MMainDialog: { props: ['visible'], template: '<div v-if="visible" class="dialog-stub"><slot /></div>' },
   MAddEditStatusPageForm: {
     props: ['statusPage'],
@@ -55,5 +55,26 @@ describe('StatusPagesView — integration (MSW)', () => {
     (document.querySelector('.form-submit') as HTMLButtonElement).click();
 
     await waitFor(() => expect(document.querySelector('[data-testid="status-pages-table"]')?.getAttribute('data-rows')).toBe('2'));
+  });
+
+  it('opens manage monitors and attaches a monitor', async () => {
+    server.use(http.get('http://localhost/status-pages', () => HttpResponse.json({ data: [mockStatusPage] })));
+
+    renderWithPlugins(StatusPagesView, { pinia: setup(), global: { stubs } });
+
+    await waitFor(() => expect(document.querySelector('[data-testid="status-pages-table"]')).toBeInTheDocument());
+
+    (document.querySelector('[data-testid="manage-status-monitors"]') as HTMLButtonElement).click();
+
+    function manageButton(label: string): HTMLButtonElement | undefined {
+      return Array.from(document.querySelectorAll('[data-testid="manage-monitors"] .btn-stub')).find((button) =>
+        button.textContent?.includes(label)
+      ) as HTMLButtonElement | undefined;
+    }
+
+    await waitFor(() => expect(manageButton('Add')).toBeTruthy());
+    manageButton('Add')!.click();
+
+    await waitFor(() => expect(manageButton('Remove')).toBeTruthy());
   });
 });
