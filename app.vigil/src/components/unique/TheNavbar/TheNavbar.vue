@@ -29,6 +29,7 @@ const items = ref<NavItem[]>([
   { icon: 'pi pi-desktop', label: 'navigation.monitors', routeName: 'monitors' },
   { icon: 'pi pi-exclamation-triangle', label: 'navigation.incidents', routeName: 'incidents' },
   { icon: 'pi pi-bell', label: 'navigation.channels', routeName: 'channels' },
+  { icon: 'pi pi-megaphone', label: 'navigation.statusPages', routeName: 'status-pages' },
   { icon: 'pi pi-wallet', label: 'navigation.finances', routeName: 'finance' },
 ]);
 const settings = ref<NavItem[]>([
@@ -52,7 +53,7 @@ const itemsWithRoutes = computed(() => {
 });
 
 const mobileItems = computed(() => {
-  const routes = ['finance', 'home', 'monitors', 'incidents', 'channels', 'users', 'roles-and-permissions'];
+  const routes = ['finance', 'home', 'monitors', 'incidents', 'channels', 'status-pages', 'users', 'roles-and-permissions'];
 
   return itemsWithRoutes.value.filter((item) => routes.includes(item.routeName));
 });

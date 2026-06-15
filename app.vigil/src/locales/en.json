@@ -46,6 +46,36 @@
       "updated": "Channel \"{name}\" updated"
     }
   },
+  "statusPages": {
+    "title": "Status pages",
+    "add": "New status page",
+    "empty": "No status pages yet",
+    "name": "Name",
+    "slug": "Slug",
+    "visibility": "Visibility",
+    "public": "Public",
+    "private": "Private",
+    "actions": "Actions",
+    "delete": "Delete",
+    "deleted": "Status page \"{name}\" deleted",
+    "deleteConfirm": "Delete status page \"{name}\"?",
+    "form": {
+      "createHeader": "New status page",
+      "editHeader": "Edit status page",
+      "create": "Create",
+      "edit": "Save",
+      "cancel": "Cancel",
+      "name": "Name",
+      "namePlaceholder": "Public status",
+      "nameRequired": "Name is required",
+      "customDomain": "Custom domain",
+      "headline": "Headline",
+      "headlinePlaceholder": "All systems operational",
+      "isPublic": "Publicly visible",
+      "created": "Status page \"{name}\" created",
+      "updated": "Status page \"{name}\" updated"
+    }
+  },
   "incidents": {
     "title": "Incidents",
     "empty": "No incidents",
@@ -197,6 +227,7 @@
     "incidents": "Incidents",
     "logout": "Log out",
     "monitors": "Monitors",
+    "statusPages": "Status pages",
     "roles": "Roles",
     "settings": "Settings",
     "users": "Users"

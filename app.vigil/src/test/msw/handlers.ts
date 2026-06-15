@@ -57,6 +57,29 @@ export const mockMonitor = {
   lastCheckedAt: '2026-06-15T10:00:00+00:00',
 };
 
+export const mockStatusPage = {
+  id: '1',
+  name: 'Public Status',
+  slug: 'public-status',
+  customDomain: null,
+  branding: { headline: 'All systems operational' },
+  isPublic: true,
+  monitorsCount: 1,
+};
+
+export const mockPublicStatus = {
+  name: 'Public Status',
+  slug: 'public-status',
+  branding: { headline: 'All systems operational' },
+  overallStatus: 'operational',
+  groups: [
+    {
+      name: 'Core',
+      monitors: [{ name: 'Homepage', status: 'up', uptime: { '24h': 99.9, '7d': 99, '30d': 98, '90d': 97 } }],
+    },
+  ],
+};
+
 export const mockChannel = {
   id: '1',
   name: 'Ops Slack',
@@ -121,6 +144,39 @@ export const handlers = [
 
   http.delete(`${BASE}/monitors/:id`, ({ params }) =>
     HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
+  ),
+
+  // ---- Status pages ----
+  http.get(`${BASE}/status-pages`, () => HttpResponse.json({ data: [mockStatusPage] })),
+
+  http.get(`${BASE}/status-pages/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/status-pages`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockStatusPage, id: '99', slug: 'new-page', ...body } }, { status: 201 });
+  }),
+
+  http.patch(`${BASE}/status-pages/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id), ...body } });
+  }),
+
+  http.delete(`${BASE}/status-pages/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/status-pages/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.delete(`${BASE}/status-pages/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.get(`${BASE}/status/:slug`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockPublicStatus, slug: String(params.slug) } })
   ),
 
   // ---- Channels ----

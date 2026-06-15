@@ -46,6 +46,36 @@
       "updated": "Canal \"{name}\" atualizado"
     }
   },
+  "statusPages": {
+    "title": "Páginas de status",
+    "add": "Nova página de status",
+    "empty": "Nenhuma página de status ainda",
+    "name": "Nome",
+    "slug": "Slug",
+    "visibility": "Visibilidade",
+    "public": "Pública",
+    "private": "Privada",
+    "actions": "Ações",
+    "delete": "Excluir",
+    "deleted": "Página de status \"{name}\" excluída",
+    "deleteConfirm": "Excluir a página de status \"{name}\"?",
+    "form": {
+      "createHeader": "Nova página de status",
+      "editHeader": "Editar página de status",
+      "create": "Criar",
+      "edit": "Salvar",
+      "cancel": "Cancelar",
+      "name": "Nome",
+      "namePlaceholder": "Status público",
+      "nameRequired": "O nome é obrigatório",
+      "customDomain": "Domínio personalizado",
+      "headline": "Título",
+      "headlinePlaceholder": "Todos os sistemas operacionais",
+      "isPublic": "Visível publicamente",
+      "created": "Página de status \"{name}\" criada",
+      "updated": "Página de status \"{name}\" atualizada"
+    }
+  },
   "incidents": {
     "title": "Incidentes",
     "empty": "Nenhum incidente",
@@ -197,6 +227,7 @@
     "incidents": "Incidentes",
     "logout": "Sair",
     "monitors": "Monitores",
+    "statusPages": "Páginas de status",
     "roles": "Permissões",
     "settings": "Configurações",
     "users": "Usuários"

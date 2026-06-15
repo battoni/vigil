@@ -47,7 +47,9 @@
       "@IncidentModule": ["./src/modules/Incident"],
       "@IncidentModule/*": ["./src/modules/Incident/*"],
       "@ChannelModule": ["./src/modules/Channel"],
-      "@ChannelModule/*": ["./src/modules/Channel/*"]
+      "@ChannelModule/*": ["./src/modules/Channel/*"],
+      "@StatusPageModule": ["./src/modules/StatusPage"],
+      "@StatusPageModule/*": ["./src/modules/StatusPage/*"]
     }
   }
 }

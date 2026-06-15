@@ -148,6 +148,8 @@ export default defineConfig(({ mode }) => {
         '@IncidentModule/*': getPath('./src/modules/Incident/*'),
         '@ChannelModule': getPath('./src/modules/Channel'),
         '@ChannelModule/*': getPath('./src/modules/Channel/*'),
+        '@StatusPageModule': getPath('./src/modules/StatusPage'),
+        '@StatusPageModule/*': getPath('./src/modules/StatusPage/*'),
       },
     },
     build: {
