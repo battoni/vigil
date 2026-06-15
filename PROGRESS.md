@@ -82,7 +82,8 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   `/uptime-series`; UptimeQueryService moved to Monitor module; MonitorMetricsService + CheckResultResource — 5 tests green
 - [~] P1. Monitors dashboard — IN PROGRESS
   - [x] P1a. Project module (interfaces, CRUD services, store with persisted active project + granular ops) + @ProjectModule/@MonitorModule aliases (vite/tsconfig/vitest) — 7 tests green
-  - [ ] P1b. Project switcher in TheLayout + minimal Project CRUD view/dialog
+  - [x] P1b. Project switcher in TheLayout (MProjectSwitcher) — 5 tests green
+  - [ ] P1b-ii. Minimal Project create/rename/delete dialog (deferred; a seeded `system` project exists, so not blocking Monitors)
   - [ ] P1c. Monitor module (interfaces/enums/store/services) + MonitorsView list (OListCardGrid + MMonitorCard)
   - [ ] P1d. MAddEditMonitorForm (create/edit via MMainDialog) + pause/resume + delete
   - [ ] P1e. Playwright e2e for the core monitor flow
@@ -96,6 +97,13 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P1b DONE (switcher). MProjectSwitcher molecule (Select bound to active project,
+  fetchProjects on mount when empty, setActiveProject on change, hidden when no projects) placed
+  globally in TheLayout. projects.* i18n keys added to en + pt-BR. 5 component tests (mockable
+  store via vi.hoisted + Select stub). lint/type-check/unit(194) green. Commit 8cf27e8.
+  Decision: deferred the Project create/rename/delete dialog (P1b-ii) — the seeded `system`
+  project means Monitors aren't blocked; will fold a "+ New project" action in later. Next: P1c
+  (Monitor module + MonitorsView list).
 - 2026-06-15 — P1a DONE. Project module in app.vigil (interfaces, 5 CRUD services, Pinia store
   with localStorage-persisted active project + granular add/replace/remove + activeProject getter).
   Added @ProjectModule + @MonitorModule aliases to vite.config.ts, tsconfig.app.json AND
