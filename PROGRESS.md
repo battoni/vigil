@@ -15,7 +15,9 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   - [x] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface — 15 tests green
   - [x] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand + scheduler — 14 tests green
 - [x] 5. Incident module + event listeners — 9 tests green
-- [ ] 6. Notification module (fallback chain + dedup + quiet hours)
+- [~] 6. Notification module — IN PROGRESS
+  - [x] 6a. NotifierInterface + Slack/WhatsApp/Email channels (Resend→SMTP) + AlertDispatchService (fallback chain, dedup, severity, channel exclusion) + alert listeners — 8 tests green
+  - [ ] 6b. Channel CRUD API + per-monitor routing endpoints + quiet-hours deferral
 - [ ] 7. Rollups + retention + scheduler wiring
 - [ ] 8. Status pages + heartbeat ingress + tls-allowed ask endpoint
 - [ ] 9. Self-monitoring + dead-man heartbeat
@@ -23,6 +25,15 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 6a DONE. Delivery core: NotifierInterface + SlackChannel (webhook),
+  WhatsAppChannel (Evolution API), EmailChannel (Resend→SMTP sub-chain, overridable methods),
+  NotifierFactory, ChannelRepository + NotificationLogRepository. AlertDispatchService: fixed
+  WhatsApp→Slack→Email fallback (deliver-once, fall through on failure), dedup via
+  notification_logs.hasDelivered, severity routing (min_severity vs event), notify_on_recovery,
+  exclude_channels (Evolution-health routes around WhatsApp). Listeners SendAlertOnMonitorWentDown/
+  Recovered registered AFTER incident listeners (incident exists before alert lookup). 8 tests
+  incl. fallback, dedup, all-failed, email sub-chain, end-to-end via engine. Full suite 187 green.
+  Next: 6b (Channel CRUD API + routing endpoints + quiet-hours deferral).
 - 2026-06-14 — Item 5 DONE. Incident module: repository (open idempotent, resolve computes
   duration, acknowledge, filtered list), service, resource, controller + 3 auth routes
   (index/show/acknowledge). Listeners OpenIncidentOnMonitorWentDown / ResolveIncidentOnMonitor
@@ -100,6 +111,14 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   transition happens, `alertSuppressed=true`, so no event fires.
 - **Dispatch lease = 90s** (const in DispatchDueChecksCommand). A lost RunCheckJob makes the
   monitor due again after the lease instead of silently skipping a cycle.
+- **Fallback chain is deliver-once** (first successful channel wins, then stop) — per PLAN §6
+  "If a channel fails, fall through". Not broadcast-to-all. notification_logs records a FAILED row
+  per failed attempt and a SENT row for the delivering channel, so "which delivered" is auditable.
+- **Quiet-hours deferral deferred to 6b.** 6a sends immediately. Quiet-hours config will live in
+  monitor.config (e.g. {quiet_hours:{start,end,tz}}); non-critical deferred via a delayed job,
+  critical bypasses. NOT YET IMPLEMENTED — flagged so the "never drop" guarantee is finished in 6b.
+- **Evolution-health WhatsApp exclusion** implemented generically via monitor.config.exclude_channels
+  (e.g. ['whatsapp']); the seeded Evolution-health monitor (item 9) must set this.
 
 ## BLOCKED / needs your review
 (none yet)

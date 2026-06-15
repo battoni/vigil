@@ -64,6 +64,11 @@ class IncidentService
         return $this->incidentRepository->findIncidentById($id);
     }
 
+    public function latestForMonitor(int $monitorId): ?Incident
+    {
+        return $this->incidentRepository->findLatestForMonitor($monitorId);
+    }
+
     private function findOrFail(int $id): Incident
     {
         $incident = $this->incidentRepository->findIncidentById($id);

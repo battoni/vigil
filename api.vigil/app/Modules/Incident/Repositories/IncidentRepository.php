@@ -49,6 +49,14 @@ class IncidentRepository
         return $this->model->with('monitor')->find($id);
     }
 
+    public function findLatestForMonitor(int $monitorId): ?Incident
+    {
+        return $this->model
+            ->where('monitor_id', $monitorId)
+            ->latest('started_at')
+            ->first();
+    }
+
     /**
      * @return Incident[]
      */
