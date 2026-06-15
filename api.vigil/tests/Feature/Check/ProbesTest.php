@@ -102,6 +102,23 @@ it('follows redirects to a healthy final response', function () {
     expect($result->up)->toBeTrue();
 });
 
+it('rejects a redirect whose target resolves to a blocked address', function () {
+    // First hop resolves public; the redirect target resolves to a private IP
+    // and must be re-vetted and rejected per-hop.
+    $guard = new SsrfGuard(fn (string $host) => $host === 'internal.example.com' ? ['10.0.0.1'] : ['203.0.113.10']);
+    Http::fake([
+        'https://example.com/start' => Http::response('', 302, ['Location' => 'https://internal.example.com/x']),
+        '*' => Http::response('should not reach here', 200),
+    ]);
+
+    $result = (new HttpProbe($guard))->run(
+        makeMonitor(MonitorType::HTTP, 'https://example.com/start'),
+        10000
+    );
+
+    expect($result->up)->toBeFalse()->and($result->error)->toContain('ssrf_blocked');
+});
+
 it('reports down without calling http when the target is ssrf-blocked', function () {
     Http::fake(['*' => Http::response('should not be called', 200)]);
 

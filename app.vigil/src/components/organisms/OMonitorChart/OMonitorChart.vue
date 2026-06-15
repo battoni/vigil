@@ -33,12 +33,22 @@ function labels(): string[] {
   return props.series.map((point) => point.bucketStart);
 }
 
+// Canvas can't consume Tailwind classes, so read the design-system color tokens
+// at runtime (falling back to the token hex values when no DOM is present).
+function token(name: string, fallback: string): string {
+  if (typeof document === 'undefined') {
+    return fallback;
+  }
+
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+}
+
 function latencyData() {
   return {
     labels: labels(),
     datasets: [
-      { label: 'p50 (ms)', data: props.series.map((point) => point.p50Ms), borderColor: '#6366f1', tension: 0.3 },
-      { label: 'p95 (ms)', data: props.series.map((point) => point.p95Ms), borderColor: '#f59e0b', tension: 0.3 },
+      { label: 'p50 (ms)', data: props.series.map((point) => point.p50Ms), borderColor: token('--color-primary-500', '#6366f1'), tension: 0.3 },
+      { label: 'p95 (ms)', data: props.series.map((point) => point.p95Ms), borderColor: token('--color-warn-500', '#f59e0b'), tension: 0.3 },
     ],
   };
 }
@@ -50,8 +60,8 @@ function uptimeData() {
       {
         label: 'uptime %',
         data: props.series.map((point) => Number((point.uptimeRatio * 100).toFixed(2))),
-        borderColor: '#22c55e',
-        backgroundColor: 'rgba(34, 197, 94, 0.15)',
+        borderColor: token('--color-success-500', '#22c55e'),
+        backgroundColor: token('--color-success-100', 'rgba(34, 197, 94, 0.15)'),
         fill: true,
         tension: 0.3,
       },

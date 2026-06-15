@@ -16,6 +16,7 @@ interface Monitor {
   consecutiveSuccesses: number;
   heartbeatToken?: string;
   heartbeatUrl?: string;
+  channelIds?: string[];
   lastPingAt?: string | null;
   lastCheckedAt?: string | null;
   nextCheckAt?: string | null;

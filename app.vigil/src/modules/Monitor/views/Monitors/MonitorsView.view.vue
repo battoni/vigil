@@ -8,14 +8,12 @@ import { useRouter } from 'vue-router';
 import type { Monitor } from '../../interfaces';
 import { getI18nRouteName } from '@Helpers';
 import { useProjectStore } from '@ProjectModule';
-import { useUserStore } from '@UserModule';
 import { MONITOR_STATUS } from '../../enums';
 import { DeleteMonitorService, UpdateMonitorService } from '../../services';
 import { useMonitorStore } from '../../store';
 
 const monitorStore = useMonitorStore();
 const projectStore = useProjectStore();
-const userStore = useUserStore();
 
 const confirm = useConfirm();
 const router = useRouter();
@@ -28,8 +26,10 @@ const { activeProjectId } = storeToRefs(projectStore);
 const dialogVisible = ref(false);
 const editingMonitor = ref<Monitor | null>(null);
 
-const canManage = computed(() => userStore.permissions.length === 0 || userStore.hasPermission('monitors.update'));
-const canCreate = computed(() => canManage.value && !!activeProjectId.value);
+// Monitor management is available to any authenticated user — the backend
+// monitor routes are auth-only (no per-action permission). Creating still
+// requires an active project to scope the monitor to.
+const canCreate = computed(() => !!activeProjectId.value);
 
 watch(activeProjectId, onActiveProjectChange);
 
@@ -186,9 +186,6 @@ function onPauseRequest(monitor: Monitor) {
         <MMonitorCard
           v-for="monitor in monitors"
           :key="monitor.id"
-          :canDelete="canManage"
-          :canPause="canManage"
-          :canUpdate="canManage"
           :monitor
           @onCopyUrl="onCopyUrl"
           @onDeleteRequest="(event: Event) => onDeleteRequest(event, monitor)"

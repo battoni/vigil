@@ -6,6 +6,8 @@ import { GetPublicStatusService } from '../../services';
 
 const route = useRoute();
 
+const STATUS_SEVERITY: Record<string, string> = { up: 'success', down: 'danger' };
+
 const page = ref<PublicStatus | null>(null);
 const loading = ref(true);
 const notFound = ref(false);
@@ -18,7 +20,7 @@ onMounted(onComponentMount);
 
 // HELPERS
 function monitorSeverity(status: string): string {
-  return status === 'up' ? 'success' : status === 'down' ? 'danger' : 'secondary';
+  return STATUS_SEVERITY[status] ?? 'secondary';
 }
 
 function uptimeLabel(value: number | null | undefined): string {

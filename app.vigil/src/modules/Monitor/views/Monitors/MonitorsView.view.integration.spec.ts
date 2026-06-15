@@ -21,9 +21,9 @@ const stubs = {
     template: `<div class="monitor-card-stub" :data-id="monitor.id">
       <span>{{ monitor.name }}</span>
       <span class="status">{{ monitor.status }}</span>
-      <button v-if="canUpdate" class="edit-btn" @click="$emit('onEditRequest')">edit</button>
-      <button v-if="canPause" class="pause-btn" @click="$emit('onPauseRequest')">pause</button>
-      <button v-if="canDelete" class="delete-btn" @click="$emit('onDeleteRequest', $event)">delete</button>
+      <button class="edit-btn" @click="$emit('onEditRequest')">edit</button>
+      <button class="pause-btn" @click="$emit('onPauseRequest')">pause</button>
+      <button class="delete-btn" @click="$emit('onDeleteRequest', $event)">delete</button>
     </div>`,
   },
   MMainDialog: {

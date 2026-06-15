@@ -75,7 +75,7 @@ class MonitorRepository
 
     public function findMonitorById(int $id): ?Monitor
     {
-        return $this->model->find($id);
+        return $this->model->with('channels')->find($id);
     }
 
     public function findMonitorByHeartbeatToken(string $token): ?Monitor

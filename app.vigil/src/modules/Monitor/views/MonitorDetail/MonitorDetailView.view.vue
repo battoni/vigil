@@ -67,7 +67,10 @@ function onComponentMount() {
   loading.value = true;
 
   GetMonitorService(monitorId.value)
-    .then(({ data }) => (monitor.value = data))
+    .then(({ data }) => {
+      monitor.value = data;
+      attachedChannelIds.value = new Set(data.channelIds ?? []);
+    })
     .catch(() => (monitor.value = null))
     .finally(() => (loading.value = false));
 

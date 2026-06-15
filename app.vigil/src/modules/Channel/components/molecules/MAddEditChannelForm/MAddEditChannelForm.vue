@@ -27,9 +27,10 @@ const error = ref<string | null>(null);
 const loading = ref(false);
 const selectedType = ref<ChannelType>(props.channel?.type ?? CHANNEL_TYPE.SLACK);
 
+const emailRecipients = ref<string>(((props.channel?.config?.recipients as string[]) ?? []).join(', '));
 const fromEmail = ref<string>((props.channel?.config?.from as string) ?? '');
-const recipients = ref<string>(((props.channel?.config?.recipients as string[]) ?? []).join(', '));
 const resendApiKey = ref<string>((props.channel?.config?.resend_api_key as string) ?? '');
+const waRecipients = ref<string>(((props.channel?.config?.recipients as string[]) ?? []).join(', '));
 const waApiKey = ref<string>((props.channel?.config?.api_key as string) ?? '');
 const waBaseUrl = ref<string>((props.channel?.config?.base_url as string) ?? '');
 const waInstance = ref<string>((props.channel?.config?.instance as string) ?? '');
@@ -61,14 +62,14 @@ function buildConfig(): Record<string, unknown> {
   }
 
   if (isEmail.value) {
-    return { recipients: splitRecipients(recipients.value), resend_api_key: resendApiKey.value, from: fromEmail.value };
+    return { recipients: splitRecipients(emailRecipients.value), resend_api_key: resendApiKey.value, from: fromEmail.value };
   }
 
   return {
     base_url: waBaseUrl.value,
     instance: waInstance.value,
     api_key: waApiKey.value,
-    recipients: splitRecipients(recipients.value),
+    recipients: splitRecipients(waRecipients.value),
   };
 }
 
@@ -208,7 +209,7 @@ function onTypeChange(type: ChannelType) {
         </label>
 
         <InputText
-          v-model="recipients"
+          v-model="emailRecipients"
           fluid
           inputId="recipients"
           :placeholder="$t('channels.form.recipientsPlaceholder')"
@@ -305,7 +306,7 @@ function onTypeChange(type: ChannelType) {
         </label>
 
         <InputText
-          v-model="recipients"
+          v-model="waRecipients"
           fluid
           inputId="wa_recipients"
           :placeholder="$t('channels.form.recipientsPlaceholder')"

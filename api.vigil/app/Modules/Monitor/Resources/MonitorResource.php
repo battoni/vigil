@@ -34,6 +34,7 @@ class MonitorResource extends JsonResource
                 $isHeartbeat && $this->heartbeat_token,
                 fn () => url("/api/heartbeats/{$this->heartbeat_token}")
             ),
+            'channelIds' => $this->whenLoaded('channels', fn () => $this->channels->pluck('id')->map(fn ($id) => (string) $id)->values()),
             'lastPingAt' => $this->last_ping_at?->toIso8601String(),
             'lastCheckedAt' => $this->last_checked_at?->toIso8601String(),
             'nextCheckAt' => $this->next_check_at?->toIso8601String(),

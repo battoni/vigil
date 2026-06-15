@@ -79,6 +79,18 @@ describe('MonitorDetailView — integration (MSW)', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'Detach' })).toBeInTheDocument());
   });
 
+  it('hydrates attached channels from the monitor (shows Detach)', async () => {
+    server.use(
+      http.get('http://localhost/monitors/:id', ({ params }) =>
+        HttpResponse.json({ data: { ...mockMonitor, id: String(params.id), channelIds: ['1'] } })
+      )
+    );
+
+    await renderDetail('1');
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Detach' })).toBeInTheDocument());
+  });
+
   it('shows the heartbeat ping URL for heartbeat monitors', async () => {
     server.use(
       http.get('http://localhost/monitors/:id', () =>

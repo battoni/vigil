@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Modules\Monitor\Enums\MonitorStatus;
 use App\Modules\Monitor\Models\Monitor;
+use App\Modules\Notification\Models\NotificationChannel;
 use App\Modules\Project\Models\Project;
 
 function actingUser(): User
@@ -37,6 +38,16 @@ it('shows a single monitor', function () {
 
 it('returns 404 for an unknown monitor', function () {
     $this->actingAs(actingUser())->getJson('/api/monitors/999999')->assertNotFound();
+});
+
+it('exposes attached channel ids on show', function () {
+    $monitor = Monitor::factory()->create();
+    $channel = NotificationChannel::factory()->slack()->create();
+    $monitor->channels()->attach($channel->id, ['notify_on_recovery' => true]);
+
+    $response = $this->actingAs(actingUser())->getJson("/api/monitors/{$monitor->id}");
+
+    $response->assertOk()->assertJsonPath('data.channelIds', [(string) $channel->id]);
 });
 
 it('creates an http monitor and seeds next_check_at and pending status', function () {
