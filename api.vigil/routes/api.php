@@ -3,6 +3,7 @@
 use App\Modules\Auth\Controllers\AuthController;
 use App\Modules\Auth\Controllers\RoleController;
 use App\Modules\Auth\Controllers\UserController;
+use App\Modules\Project\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 // AUTH
@@ -19,6 +20,13 @@ Route::post('auth/roles', [RoleController::class, 'store'])->middleware('auth');
 Route::patch('auth/roles/{id}', [RoleController::class, 'update'])->middleware('auth');
 Route::patch('auth/roles/{id}/permissions', [RoleController::class, 'updatePermissions'])->middleware('auth');
 Route::delete('auth/roles/{id}', [RoleController::class, 'destroy'])->middleware('auth');
+
+// PROJECTS
+Route::get('projects', [ProjectController::class, 'index'])->middleware('auth');
+Route::get('projects/{id}', [ProjectController::class, 'show'])->middleware('auth');
+Route::post('projects', [ProjectController::class, 'store'])->middleware('auth');
+Route::patch('projects/{id}', [ProjectController::class, 'update'])->middleware('auth');
+Route::delete('projects/{id}', [ProjectController::class, 'destroy'])->middleware('auth');
 
 // USERS (permission-protected)
 Route::get('auth/users/check-username', [UserController::class, 'checkUsername'])->middleware('auth');

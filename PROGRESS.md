@@ -8,7 +8,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 ## Backlog status
 
 - [x] 1. Schema + domain models (migrations, models, enums, factories) — 8 tests green
-- [ ] 2. Project module (arcus CRUD + tests)
+- [x] 2. Project module (arcus CRUD + tests) — 12 tests green
 - [ ] 3. Monitor module (arcus CRUD + tests)
 - [ ] 4. Check engine (probes, SsrfGuard, state machine, RunCheckJob, dispatch cmd)
 - [ ] 5. Incident module
@@ -20,6 +20,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 2 DONE. Project module full arcus slice (Controller/Service/Repository/
+  DTOs/Requests/Resource) + 5 REST routes (auth-guarded) + 12 feature tests. Backend owns
+  slug with collision retry. destroy returns the deleted resource (granular update). Full
+  suite 92 green. Next: item 3 (Monitor module CRUD).
 - 2026-06-14 — Item 1 DONE. 13 migrations, 6 enums, 11 models, 8 factories for the full
   Vigil schema. Schema smoke test (8 cases) + full suite (80) green on sqlite. Next: item 2
   (Project module CRUD).
