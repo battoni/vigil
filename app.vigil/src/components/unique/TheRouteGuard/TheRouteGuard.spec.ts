@@ -43,6 +43,7 @@ function buildRouter() {
       { name: 'home', path: '/', component: blank },
       { name: 'login', path: '/entrar', component: blank, meta: { isPublic: true } },
       { name: 'protected', path: '/protected', component: blank },
+      { name: 'public-status', path: '/status/:slug', component: blank, meta: { allowAnonymous: true } },
     ],
   });
 }
@@ -76,6 +77,22 @@ describe('TheRouteGuard — boot session probe', () => {
     await flushPromises();
 
     expect(getMeService).not.toHaveBeenCalled();
+    expect(wrapper.find('.protected-content').exists()).toBe(true);
+  });
+
+  it('renders an allowAnonymous route for an unauthenticated user without probing or redirecting', async () => {
+    const router = buildRouter();
+    router.push('/status/acme');
+    await router.isReady();
+
+    const pinia = createPinia();
+    setActivePinia(pinia);
+
+    const wrapper = mountGuard(router, pinia);
+    await flushPromises();
+
+    expect(getMeService).not.toHaveBeenCalled();
+    expect(router.currentRoute.value.name).toBe('public-status');
     expect(wrapper.find('.protected-content').exists()).toBe(true);
   });
 

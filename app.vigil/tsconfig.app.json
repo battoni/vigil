@@ -40,6 +40,16 @@
       "@ShowcaseModule/*": ["./src/modules/Showcase/*"],
       "@UserModule": ["./src/modules/User"],
       "@UserModule/*": ["./src/modules/User/*"],
+      "@ProjectModule": ["./src/modules/Project"],
+      "@ProjectModule/*": ["./src/modules/Project/*"],
+      "@MonitorModule": ["./src/modules/Monitor"],
+      "@MonitorModule/*": ["./src/modules/Monitor/*"],
+      "@IncidentModule": ["./src/modules/Incident"],
+      "@IncidentModule/*": ["./src/modules/Incident/*"],
+      "@ChannelModule": ["./src/modules/Channel"],
+      "@ChannelModule/*": ["./src/modules/Channel/*"],
+      "@StatusPageModule": ["./src/modules/StatusPage"],
+      "@StatusPageModule/*": ["./src/modules/StatusPage/*"]
     }
   }
 }

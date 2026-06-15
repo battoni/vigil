@@ -1,7 +1,11 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { AuthRoutes } from '@AuthModule';
+import { ChannelsRoutes } from '@ChannelModule';
 import { FinanceRoutes, HomeRoutes } from '@HomeModule';
+import { IncidentsRoutes } from '@IncidentModule';
+import { MonitorDetailRoutes, MonitorsRoutes } from '@MonitorModule';
 import { BrandRoutes, ComponentsRoutes, ShowcaseRoutes } from '@ShowcaseModule';
+import { PublicStatusRoutes, StatusPagesRoutes } from '@StatusPageModule';
 import { UsersRoutes } from '@UserModule';
 
 export default <RouteRecordRaw[]>[
@@ -12,4 +16,10 @@ export default <RouteRecordRaw[]>[
   ...ComponentsRoutes,
   ...ShowcaseRoutes,
   ...UsersRoutes,
+  ...MonitorsRoutes,
+  ...MonitorDetailRoutes,
+  ...IncidentsRoutes,
+  ...ChannelsRoutes,
+  ...StatusPagesRoutes,
+  ...PublicStatusRoutes,
 ];

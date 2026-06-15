@@ -31,6 +31,13 @@ function onSessionResolved() {
 
 // EVENTS
 function onHardNavigation() {
+  // Fully public routes (e.g. the status page) render for anyone — authenticated
+  // or not — with no session probe and no redirect.
+  if (ROUTE.meta?.allowAnonymous) {
+    canRender.value = true;
+    return;
+  }
+
   if (isRedirecting.value) {
     if (isAuthenticated.value) onSessionResolved();
     return;

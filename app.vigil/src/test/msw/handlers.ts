@@ -33,7 +33,192 @@ export const mockRole = {
   ],
 };
 
+export const mockProject = {
+  id: '1',
+  name: 'System',
+  slug: 'system',
+  monitorsCount: 1,
+};
+
+export const mockMonitor = {
+  id: '1',
+  projectId: '1',
+  name: 'Homepage',
+  type: 'http',
+  target: 'https://example.com',
+  config: {},
+  intervalSeconds: 60,
+  timeoutMs: 10000,
+  confirmationThreshold: 2,
+  recoveryThreshold: 1,
+  status: 'up',
+  consecutiveFailures: 0,
+  consecutiveSuccesses: 5,
+  lastCheckedAt: '2026-06-15T10:00:00+00:00',
+};
+
+export const mockStatusPage = {
+  id: '1',
+  name: 'Public Status',
+  slug: 'public-status',
+  customDomain: null,
+  branding: { headline: 'All systems operational' },
+  isPublic: true,
+  monitorsCount: 1,
+};
+
+export const mockPublicStatus = {
+  name: 'Public Status',
+  slug: 'public-status',
+  branding: { headline: 'All systems operational' },
+  overallStatus: 'operational',
+  groups: [
+    {
+      name: 'Core',
+      monitors: [{ name: 'Homepage', status: 'up', uptime: { '24h': 99.9, '7d': 99, '30d': 98, '90d': 97 } }],
+    },
+  ],
+};
+
+export const mockChannel = {
+  id: '1',
+  name: 'Ops Slack',
+  type: 'slack',
+  config: { webhook_url: 'https://hooks.slack.com/services/x' },
+  isActive: true,
+};
+
+export const mockIncident = {
+  id: '1',
+  monitorId: '1',
+  monitorName: 'Homepage',
+  startedAt: '2026-06-15T09:00:00+00:00',
+  resolvedAt: null,
+  isOpen: true,
+  cause: 'unexpected_status: 500',
+  durationSeconds: null,
+  acknowledgedBy: null,
+  acknowledgedAt: null,
+};
+
 export const handlers = [
+  // ---- Projects ----
+  http.get(`${BASE}/projects`, () => HttpResponse.json({ data: [mockProject] })),
+
+  // ---- Monitors ----
+  http.get(`${BASE}/monitors`, () => HttpResponse.json({ data: [mockMonitor] })),
+
+  http.get(`${BASE}/monitors/:id/uptime`, () =>
+    HttpResponse.json({ data: { '24h': 99.9, '7d': 99, '30d': 98, '90d': 97 } })
+  ),
+
+  http.get(`${BASE}/monitors/:id/checks`, () =>
+    HttpResponse.json({
+      data: [
+        { id: '1', result: 'up', responseTimeMs: 120, statusCode: 200, error: null, region: 'local', checkedAt: '2026-06-15T10:00:00+00:00' },
+      ],
+    })
+  ),
+
+  http.get(`${BASE}/monitors/:id/uptime-series`, () =>
+    HttpResponse.json({
+      data: [
+        { bucketStart: '2026-06-15T09:00:00+00:00', uptimeRatio: 1, checksTotal: 60, p50Ms: 100, p95Ms: 180, maxMs: 200 },
+      ],
+    })
+  ),
+
+  http.get(`${BASE}/monitors/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/monitors`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockMonitor, id: '99', ...body } }, { status: 201 });
+  }),
+
+  http.patch(`${BASE}/monitors/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockMonitor, id: String(params.id), ...body } });
+  }),
+
+  http.delete(`${BASE}/monitors/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
+  ),
+
+  // ---- Status pages ----
+  http.get(`${BASE}/status-pages`, () => HttpResponse.json({ data: [mockStatusPage] })),
+
+  http.get(`${BASE}/status-pages/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/status-pages`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockStatusPage, id: '99', slug: 'new-page', ...body } }, { status: 201 });
+  }),
+
+  http.patch(`${BASE}/status-pages/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id), ...body } });
+  }),
+
+  http.delete(`${BASE}/status-pages/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/status-pages/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.delete(`${BASE}/status-pages/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockStatusPage, id: String(params.id) } })
+  ),
+
+  http.get(`${BASE}/status/:slug`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockPublicStatus, slug: String(params.slug) } })
+  ),
+
+  // ---- Channels ----
+  http.get(`${BASE}/channels`, () => HttpResponse.json({ data: [mockChannel] })),
+
+  http.get(`${BASE}/channels/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/channels`, async ({ request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockChannel, id: '99', ...body } }, { status: 201 });
+  }),
+
+  http.patch(`${BASE}/channels/:id`, async ({ params, request }) => {
+    const body = (await request.json()) as Record<string, unknown>;
+    return HttpResponse.json({ data: { ...mockChannel, id: String(params.id), ...body } });
+  }),
+
+  http.delete(`${BASE}/channels/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  http.post(`${BASE}/channels/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  http.delete(`${BASE}/channels/:id/monitors/:monitorId`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockChannel, id: String(params.id) } })
+  ),
+
+  // ---- Incidents ----
+  http.get(`${BASE}/incidents`, () => HttpResponse.json({ data: [mockIncident] })),
+
+  http.get(`${BASE}/incidents/:id`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockIncident, id: String(params.id) } })
+  ),
+
+  http.patch(`${BASE}/incidents/:id/acknowledge`, ({ params }) =>
+    HttpResponse.json({ data: { ...mockIncident, id: String(params.id), acknowledgedAt: '2026-06-15T11:00:00+00:00', acknowledgedBy: '1' } })
+  ),
+
   // ---- Auth ----
   http.post(`${BASE}/auth/login`, () => HttpResponse.json({ data: mockUser })),
 

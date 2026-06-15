@@ -14,6 +14,10 @@ useUiStore();
       <TheNavbar />
 
       <div class="mx-auto flex max-h-[calc(120vh-10rem)] min-h-0 w-full max-w-[1200px] flex-1 flex-col">
+        <div class="flex justify-end px-8 pt-6">
+          <MProjectSwitcher />
+        </div>
+
         <div
           v-if="$slots['pageHeader']"
           class="px-8 pt-8 pb-2"
