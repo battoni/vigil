@@ -140,6 +140,10 @@ export default defineConfig(({ mode }) => {
         '@ShowcaseModule/*': getPath('./src/modules/Showcase/*'),
         '@UserModule': getPath('./src/modules/User'),
         '@UserModule/*': getPath('./src/modules/User/*'),
+        '@ProjectModule': getPath('./src/modules/Project'),
+        '@ProjectModule/*': getPath('./src/modules/Project/*'),
+        '@MonitorModule': getPath('./src/modules/Monitor'),
+        '@MonitorModule/*': getPath('./src/modules/Monitor/*'),
       },
     },
     build: {

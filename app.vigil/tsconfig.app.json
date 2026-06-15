@@ -40,6 +40,10 @@
       "@ShowcaseModule/*": ["./src/modules/Showcase/*"],
       "@UserModule": ["./src/modules/User"],
       "@UserModule/*": ["./src/modules/User/*"],
+      "@ProjectModule": ["./src/modules/Project"],
+      "@ProjectModule/*": ["./src/modules/Project/*"],
+      "@MonitorModule": ["./src/modules/Monitor"],
+      "@MonitorModule/*": ["./src/modules/Monitor/*"]
     }
   }
 }

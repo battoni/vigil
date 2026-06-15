@@ -54,6 +54,8 @@ const moduleSubAliases = [
   { alias: 'HomeModule', path: './src/modules/Home' },
   { alias: 'ShowcaseModule', path: './src/modules/Showcase' },
   { alias: 'UserModule', path: './src/modules/User' },
+  { alias: 'ProjectModule', path: './src/modules/Project' },
+  { alias: 'MonitorModule', path: './src/modules/Monitor' },
 ];
 
 moduleSubAliases.forEach(({ alias, path }) => {
