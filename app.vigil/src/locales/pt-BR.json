@@ -1,4 +1,11 @@
 {
+  "projects": {
+    "switcher": {
+      "placeholder": "Selecione o projeto",
+      "label": "Projeto"
+    },
+    "empty": "Nenhum projeto ainda"
+  },
   "common": {
     "active": "Ativo",
     "cancel": "Cancelar",
