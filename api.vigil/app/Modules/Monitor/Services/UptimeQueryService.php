@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\StatusPage\Services;
+namespace App\Modules\Monitor\Services;
 
 use App\Modules\Monitor\Repositories\RollupRepository;
 

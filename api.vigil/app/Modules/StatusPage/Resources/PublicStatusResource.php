@@ -3,7 +3,7 @@
 namespace App\Modules\StatusPage\Resources;
 
 use App\Modules\Monitor\Enums\MonitorStatus;
-use App\Modules\StatusPage\Services\UptimeQueryService;
+use App\Modules\Monitor\Services\UptimeQueryService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;

@@ -46,6 +46,32 @@ class RollupRepository
     }
 
     /**
+     * @return MonitorUptimeHourly[]
+     */
+    public function hourlySeriesForMonitor(int $monitorId, Carbon $since): array
+    {
+        return MonitorUptimeHourly::query()
+            ->where('monitor_id', $monitorId)
+            ->where('bucket_start', '>=', $since)
+            ->orderBy('bucket_start')
+            ->get()
+            ->all();
+    }
+
+    /**
+     * @return MonitorUptimeDaily[]
+     */
+    public function dailySeriesForMonitor(int $monitorId, Carbon $since): array
+    {
+        return MonitorUptimeDaily::query()
+            ->where('monitor_id', $monitorId)
+            ->where('bucket_start', '>=', $since)
+            ->orderBy('bucket_start')
+            ->get()
+            ->all();
+    }
+
+    /**
      * @return array{total: int, up: int}
      */
     public function aggregateHourlySince(int $monitorId, Carbon $since): array

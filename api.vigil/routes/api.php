@@ -37,6 +37,9 @@ Route::delete('projects/{id}', [ProjectController::class, 'destroy'])->middlewar
 
 // MONITORS
 Route::get('monitors', [MonitorController::class, 'index'])->middleware('auth');
+Route::get('monitors/{id}/uptime', [MonitorController::class, 'uptime'])->middleware('auth');
+Route::get('monitors/{id}/checks', [MonitorController::class, 'checks'])->middleware('auth');
+Route::get('monitors/{id}/uptime-series', [MonitorController::class, 'series'])->middleware('auth');
 Route::get('monitors/{id}', [MonitorController::class, 'show'])->middleware('auth');
 Route::post('monitors', [MonitorController::class, 'store'])->middleware('auth');
 Route::patch('monitors/{id}', [MonitorController::class, 'update'])->middleware('auth');

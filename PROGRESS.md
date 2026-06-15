@@ -76,8 +76,27 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
 - [x] 9. Self-monitoring + dead-man heartbeat + Evolution-health seed — 5 tests green
 - [ ] (stretch) app.vigil monitor list + detail
 
+## Frontend backlog (app.vigil) — see APP_PLAN.md (authority)
+
+- [x] P0. Backend read endpoints for the dashboard — `GET monitors/{id}/uptime`, `/checks`,
+  `/uptime-series`; UptimeQueryService moved to Monitor module; MonitorMetricsService + CheckResultResource — 5 tests green
+- [ ] P1. Monitors dashboard (project switcher + Project CRUD, Monitor list, create/edit dialog, pause/delete)
+- [ ] P2. MonitorDetail (charts, uptime cards, recent checks) + Incidents view + acknowledge
+- [ ] P3. Channels CRUD + per-monitor routing UI
+- [ ] P4. Status-page builder + public status page
+
+Frontend conventions: celer-01..08; mirror `modules/User`; tests via celer-testing
+(Vitest/VTU, Testing Library + MSW, Playwright). Charts = PrimeVue Chart. Project switcher
+in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
+
 ## Journal (newest first)
 
+- 2026-06-15 — P0 DONE (frontend phase started). Added dashboard read endpoints:
+  GET monitors/{id}/uptime, /checks, /uptime-series. Moved UptimeQueryService from StatusPage to
+  Monitor module (uptime is monitor-domain; PublicStatusResource import updated). Added
+  MonitorMetricsService (uptime summary + recent raw checks + hourly/daily series), CheckResultResource,
+  RollupRepository series reads. 5 tests; full suite 230 green. APP_PLAN.md committed (20e3a77). Next:
+  P1 (Monitors dashboard in app.vigil) — first real frontend increment.
 - 2026-06-14 — Item 9 DONE → ALL BACKLOG COMPLETE. PingDeadManSwitchCommand
   (monitoring:deadman-ping, scheduled everyMinute) GETs config('vigil.deadman_url'), no-ops when
   unset, swallows ping errors so the tick never breaks. config/vigil.php added. VigilSeeder seeds
