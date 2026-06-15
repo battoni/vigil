@@ -98,7 +98,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
 - [x] P3. Channels — DONE
   - [x] P3a. Channel module + ChannelsView CRUD (type-driven form) + nav — 10 tests green
   - [x] P3b. Per-monitor channel routing (Notifications section on MonitorDetail: attach/detach) — detail spec extended
-- [ ] P4. Status-page builder + public status page
+- [~] P4. Status pages — IN PROGRESS
+  - [x] P4a. StatusPage module + StatusPagesView admin CRUD + nav — 10 tests green
+  - [ ] P4b. Attach monitors to a status page
+  - [ ] P4c. Public unauthenticated status page (/status/:slug) + guard allowAnonymous
 
 Frontend conventions: celer-01..08; mirror `modules/User`; tests via celer-testing
 (Vitest/VTU, Testing Library + MSW, Playwright). Charts = PrimeVue Chart. Project switcher
@@ -106,6 +109,12 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P4a DONE. StatusPage module (interfaces incl PublicStatus, services[CRUD +
+  attach/detach + public], store + @StatusPageModule alias x3). StatusPagesView at /status-pages
+  (nav, DataTable) with create/edit via MAddEditStatusPageForm (name/customDomain/isPublic/headline)
+  + delete + public-page link. statusPages.*/navigation.statusPages i18n + MSW status-page & public
+  handlers. 10 tests. lint/type-check/unit(253) green. Commit 4de2f40. Next: P4b (attach monitors)
+  then P4c (public status page + guard allowAnonymous) → then STOP + morning report.
 - 2026-06-15 — P3b DONE → P3 COMPLETE. MonitorDetail Notifications section: lists all channels
   with attach/detach (AttachChannelToMonitorService/DetachChannelFromMonitorService),
   monitors.detail.notifications.* i18n. lint/type-check/unit(243) green. Commit 5236bfe.
