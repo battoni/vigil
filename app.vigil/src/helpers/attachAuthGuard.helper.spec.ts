@@ -75,6 +75,27 @@ describe('attachAuthGuard', () => {
     expect(next).toHaveBeenCalledWith({ name: 'home' });
   });
 
+  it('lets an anonymous user through an allowAnonymous route without a session probe', () => {
+    userStoreState.user = null;
+    const guard = makeRouterCapture();
+    const next = vi.fn();
+
+    guard({ name: 'public-status', meta: { allowAnonymous: true } }, { name: 'home' }, next);
+
+    expect(next).toHaveBeenCalledWith();
+    expect(fetchMe).not.toHaveBeenCalled();
+  });
+
+  it('lets an authenticated user through an allowAnonymous route without redirecting home', () => {
+    userStoreState.user = { id: 1 };
+    const guard = makeRouterCapture();
+    const next = vi.fn();
+
+    guard({ name: 'public-status', meta: { allowAnonymous: true } }, { name: 'home' }, next);
+
+    expect(next).toHaveBeenCalledWith();
+  });
+
   it('allows a protected route when a user is already loaded', () => {
     userStoreState.user = { id: 1 };
     const guard = makeRouterCapture();

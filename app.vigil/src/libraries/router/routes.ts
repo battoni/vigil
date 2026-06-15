@@ -5,7 +5,7 @@ import { FinanceRoutes, HomeRoutes } from '@HomeModule';
 import { IncidentsRoutes } from '@IncidentModule';
 import { MonitorDetailRoutes, MonitorsRoutes } from '@MonitorModule';
 import { BrandRoutes, ComponentsRoutes, ShowcaseRoutes } from '@ShowcaseModule';
-import { StatusPagesRoutes } from '@StatusPageModule';
+import { PublicStatusRoutes, StatusPagesRoutes } from '@StatusPageModule';
 import { UsersRoutes } from '@UserModule';
 
 export default <RouteRecordRaw[]>[
@@ -21,4 +21,5 @@ export default <RouteRecordRaw[]>[
   ...IncidentsRoutes,
   ...ChannelsRoutes,
   ...StatusPagesRoutes,
+  ...PublicStatusRoutes,
 ];

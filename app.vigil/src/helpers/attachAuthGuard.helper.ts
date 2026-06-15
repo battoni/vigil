@@ -20,6 +20,13 @@ export default function attachAuthGuard(router: Router): void {
       createNewController();
     }
 
+    // Fully public routes (e.g. the status page) are reachable by anyone — no
+    // session probe, no redirect — for both anonymous and authenticated users.
+    if ((to.meta as { allowAnonymous?: boolean }).allowAnonymous) {
+      next();
+      return;
+    }
+
     const userStore = useUserStore();
 
     if (isPublicRoute(to)) {

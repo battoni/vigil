@@ -46,6 +46,11 @@
       "updated": "Canal \"{name}\" atualizado"
     }
   },
+  "public": {
+    "operational": "Todos os sistemas operacionais",
+    "degraded": "Alguns sistemas estão degradados",
+    "notFound": "Página de status não encontrada"
+  },
   "statusPages": {
     "title": "Páginas de status",
     "add": "Nova página de status",

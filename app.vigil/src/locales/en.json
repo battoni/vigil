@@ -46,6 +46,11 @@
       "updated": "Channel \"{name}\" updated"
     }
   },
+  "public": {
+    "operational": "All systems operational",
+    "degraded": "Some systems are degraded",
+    "notFound": "Status page not found"
+  },
   "statusPages": {
     "title": "Status pages",
     "add": "New status page",
