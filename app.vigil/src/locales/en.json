@@ -12,6 +12,11 @@
     "lastChecked": "Last checked",
     "never": "Never",
     "uptime24h": "Uptime (24h)",
+    "paused": "Monitor paused",
+    "resumed": "Monitor resumed",
+    "deleted": "Monitor \"{name}\" deleted",
+    "urlCopied": "Ping URL copied",
+    "deleteConfirm": "Delete monitor \"{name}\"? This cannot be undone.",
     "type": {
       "http": "HTTP",
       "tcp": "TCP",

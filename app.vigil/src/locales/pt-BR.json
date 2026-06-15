@@ -12,6 +12,11 @@
     "lastChecked": "Última verificação",
     "never": "Nunca",
     "uptime24h": "Disponibilidade (24h)",
+    "paused": "Monitor pausado",
+    "resumed": "Monitor retomado",
+    "deleted": "Monitor \"{name}\" excluído",
+    "urlCopied": "URL de ping copiada",
+    "deleteConfirm": "Excluir o monitor \"{name}\"? Esta ação não pode ser desfeita.",
     "type": {
       "http": "HTTP",
       "tcp": "TCP",
