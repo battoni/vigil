@@ -91,10 +91,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [x] P1d. MAddEditMonitorForm + create/edit dialog + edit wiring + TheNavbar Monitors entry — form 4 + view create/edit tests green
   - [x] P1e. Playwright e2e — critical path (auth → /monitors → project-scoped load), 3 tests green
   - [ ] P1e. Playwright e2e for the core monitor flow
-- [~] P2. MonitorDetail + Incidents — IN PROGRESS
+- [x] P2. MonitorDetail + Incidents — DONE
   - [x] P2a. MonitorDetail view (header + uptime cards + route + card view-nav) — 4 tests green
   - [x] P2b. OMonitorChart (latency/uptime via PrimeVue Chart) + range selector + recent-checks table — 5 tests green; installed chart.js
-  - [ ] P2c. Incident module + incident history on detail + Incidents list view/route/nav
+  - [x] P2c. Incident module + incident history on detail + Incidents list view/route/nav — 5 tests green
 - [ ] P3. Channels CRUD + per-monitor routing UI
 - [ ] P4. Status-page builder + public status page
 
@@ -104,6 +104,12 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P2c DONE → P2 COMPLETE. Incident module (interfaces/services[list+ack]/store +
+  @IncidentModule alias in all 3 configs). MonitorDetail incident-history table w/ inline
+  acknowledge (granular). Incidents list view at /incidents (open/all filter, acknowledge) + nav
+  entry + incidents.*/navigation.incidents i18n. MSW incident handlers. Incident store spec +
+  Incidents view integration spec. lint/type-check/unit(232) green. Commit 7e2de46. Fixed a
+  duplicated P3/P4 line in this file. Next: P3 (Channels module + CRUD + per-monitor routing).
 - 2026-06-15 — P2b DONE. Installed chart.js (4.5.1, peer dep of PrimeVue Chart — added to
   package.json deps). OMonitorChart organism (line chart, latency p50/p95 + uptime variants).
   MonitorDetail gained a range selector (24h/7d/30d/90d refetching series), both charts, and a
