@@ -28,4 +28,18 @@ class CheckResultRepository
             ->get()
             ->all();
     }
+
+    /**
+     * Raw results in the half-open interval [from, to). Used by the hourly rollup.
+     *
+     * @return CheckResult[]
+     */
+    public function findBetween(Carbon $from, Carbon $to): array
+    {
+        return $this->model
+            ->where('checked_at', '>=', $from)
+            ->where('checked_at', '<', $to)
+            ->get()
+            ->all();
+    }
 }

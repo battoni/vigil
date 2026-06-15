@@ -19,13 +19,20 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   - [x] 6a. NotifierInterface + Slack/WhatsApp/Email channels (Resend→SMTP) + AlertDispatchService (fallback chain, dedup, severity, channel exclusion) + alert listeners — 8 tests green
   - [x] 6b-i. Quiet-hours deferral (defer non-critical, bypass critical, never drop) + SendDeferredAlertJob — 4 tests green
   - [x] 6b-ii. Channel CRUD API + per-monitor routing (attach/detach) endpoints + secret masking — 10 tests green
-- [ ] 7. Rollups + retention + scheduler wiring
+- [x] 7. Rollups + retention + scheduler wiring — 4 tests green
 - [ ] 8. Status pages + heartbeat ingress + tls-allowed ask endpoint
 - [ ] 9. Self-monitoring + dead-man heartbeat
 - [ ] (stretch) app.vigil monitor list + detail
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 7 DONE. RollupService: hourly aggregation from raw check_results
+  (checks_total/up, uptime_ratio, p50/p95/max via nearest-rank percentile in PHP — portable to
+  sqlite), daily aggregation from hourly (checks-weighted mean for percentiles, documented
+  approximation). RollupRepository upserts idempotently on (monitor_id,bucket_start). Commands
+  rollup:hourly (hourlyAt 5), rollup:daily (dailyAt 00:30), checks:partition-maintenance (monthly,
+  MySQL-only REORGANIZE pmax → next month, no-op on sqlite). Registered + scheduled (verified). 4
+  tests. Full suite 205 green. Next: item 8 (status pages + heartbeat ingress + tls-allowed).
 - 2026-06-14 — Item 6 COMPLETE. 6b-i: quiet-hours deferral (QuietHoursWindow parses
   monitor.config.quiet_hours incl. overnight; non-critical deferred via delayed
   SendDeferredAlertJob fired at window end, critical bypasses — never dropped). 6b-ii: Channel

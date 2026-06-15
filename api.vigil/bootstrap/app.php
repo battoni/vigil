@@ -3,6 +3,9 @@
 use App\Http\Middleware\EnsureUserPermission;
 use App\Modules\Check\Console\Commands\DispatchDueChecksCommand;
 use App\Modules\Check\Console\Commands\SweepHeartbeatsCommand;
+use App\Modules\Monitor\Console\Commands\MaintainCheckPartitionsCommand;
+use App\Modules\Monitor\Console\Commands\RollupDailyCommand;
+use App\Modules\Monitor\Console\Commands\RollupHourlyCommand;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         DispatchDueChecksCommand::class,
         SweepHeartbeatsCommand::class,
+        RollupHourlyCommand::class,
+        RollupDailyCommand::class,
+        MaintainCheckPartitionsCommand::class,
     ])
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [
