@@ -80,7 +80,12 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
 
 - [x] P0. Backend read endpoints for the dashboard — `GET monitors/{id}/uptime`, `/checks`,
   `/uptime-series`; UptimeQueryService moved to Monitor module; MonitorMetricsService + CheckResultResource — 5 tests green
-- [ ] P1. Monitors dashboard (project switcher + Project CRUD, Monitor list, create/edit dialog, pause/delete)
+- [~] P1. Monitors dashboard — IN PROGRESS
+  - [x] P1a. Project module (interfaces, CRUD services, store with persisted active project + granular ops) + @ProjectModule/@MonitorModule aliases (vite/tsconfig/vitest) — 7 tests green
+  - [ ] P1b. Project switcher in TheLayout + minimal Project CRUD view/dialog
+  - [ ] P1c. Monitor module (interfaces/enums/store/services) + MonitorsView list (OListCardGrid + MMonitorCard)
+  - [ ] P1d. MAddEditMonitorForm (create/edit via MMainDialog) + pause/resume + delete
+  - [ ] P1e. Playwright e2e for the core monitor flow
 - [ ] P2. MonitorDetail (charts, uptime cards, recent checks) + Incidents view + acknowledge
 - [ ] P3. Channels CRUD + per-monitor routing UI
 - [ ] P4. Status-page builder + public status page
@@ -91,6 +96,13 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P1a DONE. Project module in app.vigil (interfaces, 5 CRUD services, Pinia store
+  with localStorage-persisted active project + granular add/replace/remove + activeProject getter).
+  Added @ProjectModule + @MonitorModule aliases to vite.config.ts, tsconfig.app.json AND
+  vitest.config.ts (three places). 7 store tests; eslint --fix clean, vue-tsc clean, full unit
+  suite 189 green. Decision: frontend interfaces use `id: string` to match the API resources
+  (backend returns ids as strings), unlike the older User module's `id: number`. Commit ac42538.
+  Next: P1b (project switcher in TheLayout).
 - 2026-06-15 — P0 DONE (frontend phase started). Added dashboard read endpoints:
   GET monitors/{id}/uptime, /checks, /uptime-series. Moved UptimeQueryService from StatusPage to
   Monitor module (uptime is monitor-domain; PublicStatusResource import updated). Added
