@@ -13,7 +13,7 @@
 
 | Decision | Choice |
 | --- | --- |
-| Stack | **Laravel (PHP 8.4) API + Vue 3.5 SPA** (arcus + celer conventions) — pin to whatever major the api.vigil bootstrap currently ships; do not pin ahead of it (see §16.6) |
+| Stack | **Laravel 13 (PHP 8.3+) API + Vue 3.5 SPA** (arcus + celer conventions) — verified against the api.vigil bootstrap (Laravel 13.2, PHP `^8.3`, Pest 4) |
 | WhatsApp | **Evolution API**, self-hosted (Baileys / WhatsApp multi-device) |
 | Slack | Incoming webhook |
 | Email | **Dedicated Resend account → SMTP fallback** (own sending subdomain, e.g. `alerts.battoni.dev`) |
@@ -575,4 +575,4 @@ external service pages you. One small external dependency, on purpose.
 3. **App-server perf** — FrankenPHP/Octane (recommended) vs php-fpm+nginx.
 4. **Status-page subscriptions** — in v1 or later? (currently later)
 5. **Final name** — Vigil placeholder.
-6. **Laravel major version** — pin to whatever the `api.vigil` bootstrap currently ships (likely 12). Don't pin ahead of the bootstrap; bump both together when the bootstrap upgrades. ⚠️ confirm before scaffolding.
+6. **Laravel major version** — ✅ confirmed: api.vigil bootstrap ships **Laravel 13.2** (PHP `^8.3`, Pest 4). Build Vigil on the bootstrap as-is; bump in lockstep with it.
