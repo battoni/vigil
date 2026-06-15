@@ -46,7 +46,17 @@
       "back": "Back to monitors",
       "uptime": "Uptime",
       "notFound": "Monitor not found",
-      "pingUrl": "Heartbeat ping URL"
+      "pingUrl": "Heartbeat ping URL",
+      "charts": "Trends",
+      "latency": "Response time",
+      "uptimeTrend": "Uptime",
+      "recentChecks": "Recent checks",
+      "noChecks": "No checks recorded yet",
+      "checkedAt": "Time",
+      "result": "Result",
+      "responseTime": "Response (ms)",
+      "statusCode": "Status",
+      "error": "Error"
     },
     "form": {
       "createHeader": "New monitor",

@@ -11,6 +11,10 @@ const stubs = {
   Tag: { props: ['severity', 'value'], template: '<span class="tag-stub">{{ value }}</span>' },
   Button: { props: ['label'], template: '<button>{{ label }}</button>' },
   Skeleton: true,
+  OMonitorChart: { props: ['series', 'variant'], template: '<div class="chart-stub" :data-points="series.length" />' },
+  DataTable: { props: ['value'], inheritAttrs: true, template: '<div class="dt-stub" :data-rows="value.length"><slot /></div>' },
+  Column: true,
+  SelectButton: true,
 };
 
 async function renderDetail(id = '1') {
@@ -43,6 +47,16 @@ describe('MonitorDetailView — integration (MSW)', () => {
 
     await waitFor(() => expect(screen.getByText('99.9%')).toBeInTheDocument());
     expect(document.querySelector('[data-testid="uptime-cards"]')?.children.length).toBe(4);
+  });
+
+  it('renders the latency/uptime charts and the recent checks table', async () => {
+    await renderDetail('1');
+
+    await waitFor(() => expect(screen.getByText('Homepage')).toBeInTheDocument());
+    await waitFor(() => {
+      expect(document.querySelectorAll('.chart-stub').length).toBe(2);
+      expect(document.querySelector('[data-testid="recent-checks"]')?.getAttribute('data-rows')).toBe('1');
+    });
   });
 
   it('shows a not-found message when the monitor is missing', async () => {

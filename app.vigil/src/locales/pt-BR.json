@@ -46,7 +46,17 @@
       "back": "Voltar aos monitores",
       "uptime": "Disponibilidade",
       "notFound": "Monitor não encontrado",
-      "pingUrl": "URL de ping do heartbeat"
+      "pingUrl": "URL de ping do heartbeat",
+      "charts": "Tendências",
+      "latency": "Tempo de resposta",
+      "uptimeTrend": "Disponibilidade",
+      "recentChecks": "Verificações recentes",
+      "noChecks": "Nenhuma verificação registrada ainda",
+      "checkedAt": "Horário",
+      "result": "Resultado",
+      "responseTime": "Resposta (ms)",
+      "statusCode": "Status",
+      "error": "Erro"
     },
     "form": {
       "createHeader": "Novo monitor",

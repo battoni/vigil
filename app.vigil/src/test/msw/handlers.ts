@@ -68,6 +68,22 @@ export const handlers = [
     HttpResponse.json({ data: { '24h': 99.9, '7d': 99, '30d': 98, '90d': 97 } })
   ),
 
+  http.get(`${BASE}/monitors/:id/checks`, () =>
+    HttpResponse.json({
+      data: [
+        { id: '1', result: 'up', responseTimeMs: 120, statusCode: 200, error: null, region: 'local', checkedAt: '2026-06-15T10:00:00+00:00' },
+      ],
+    })
+  ),
+
+  http.get(`${BASE}/monitors/:id/uptime-series`, () =>
+    HttpResponse.json({
+      data: [
+        { bucketStart: '2026-06-15T09:00:00+00:00', uptimeRatio: 1, checksTotal: 60, p50Ms: 100, p95Ms: 180, maxMs: 200 },
+      ],
+    })
+  ),
+
   http.get(`${BASE}/monitors/:id`, ({ params }) =>
     HttpResponse.json({ data: { ...mockMonitor, id: String(params.id) } })
   ),
