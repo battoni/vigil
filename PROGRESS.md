@@ -88,7 +88,8 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
     - [x] P1c-1. Monitor data layer (interfaces/enums/types/constants/services/store) — 5 tests green
     - [x] P1c-2. MMonitorCard molecule (status badge, 24h uptime %, last-checked, heartbeat URL) — 8 tests green
     - [x] P1c-3. MonitorsView (list/empty/loading) + pause/delete + routes + monitors.* i18n + MSW view spec — 4 tests green (nav entry + edit/create deferred to P1d)
-  - [ ] P1d. MAddEditMonitorForm (create/edit via MMainDialog) + pause/resume + delete
+  - [x] P1d. MAddEditMonitorForm + create/edit dialog + edit wiring + TheNavbar Monitors entry — form 4 + view create/edit tests green
+  - [ ] P1e. Playwright e2e (create → grid → pause)
   - [ ] P1e. Playwright e2e for the core monitor flow
 - [ ] P2. MonitorDetail (charts, uptime cards, recent checks) + Incidents view + acknowledge
 - [ ] P3. Channels CRUD + per-monitor routing UI
@@ -100,6 +101,13 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P1d DONE. MAddEditMonitorForm (PrimeVue Form+Yup; name/type[locked on edit]/target/
+  interval + type-driven config; snake_case payloads). Wired into MonitorsView: create CTA, edit
+  buttons (canManage), footerless MMainDialog keyed by editing id, granular prepend/replace on
+  success. Monitors nav entry added to TheNavbar (items + mobileItems) + navigation.monitors and
+  monitors.form.* i18n. 4 form unit tests + 2 view integration cases (create prepends, edit
+  replaces). lint/type-check/unit(217) green. Commit 0de46a6. The Monitors dashboard CRUD is now
+  fully usable. Next: P1e (Playwright e2e — may BLOCK if no running backend) then P2.
 - 2026-06-15 — P1c-3 DONE. MonitorsView list page (grid of MMonitorCard scoped to active project,
   loads on mount + on activeProject change, loading skeletons, empty state). Pause/resume + delete
   wired with granular store updates from API responses. Localized routes registered in
