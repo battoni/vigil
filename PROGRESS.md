@@ -15,9 +15,10 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
   - [x] 4b. Probes (Http/Tcp/Ssl) + ProbeFactory + ProbeInterface — 15 tests green
   - [x] 4c. StateMachineService + RunCheckJob + DispatchDueChecksCommand (lease) + SweepHeartbeatsCommand + scheduler — 14 tests green
 - [x] 5. Incident module + event listeners — 9 tests green
-- [~] 6. Notification module — IN PROGRESS
+- [x] 6. Notification module — DONE
   - [x] 6a. NotifierInterface + Slack/WhatsApp/Email channels (Resend→SMTP) + AlertDispatchService (fallback chain, dedup, severity, channel exclusion) + alert listeners — 8 tests green
-  - [ ] 6b. Channel CRUD API + per-monitor routing endpoints + quiet-hours deferral
+  - [x] 6b-i. Quiet-hours deferral (defer non-critical, bypass critical, never drop) + SendDeferredAlertJob — 4 tests green
+  - [x] 6b-ii. Channel CRUD API + per-monitor routing (attach/detach) endpoints + secret masking — 10 tests green
 - [ ] 7. Rollups + retention + scheduler wiring
 - [ ] 8. Status pages + heartbeat ingress + tls-allowed ask endpoint
 - [ ] 9. Self-monitoring + dead-man heartbeat
@@ -25,6 +26,13 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight)
 
 ## Journal (newest first)
 
+- 2026-06-14 — Item 6 COMPLETE. 6b-i: quiet-hours deferral (QuietHoursWindow parses
+  monitor.config.quiet_hours incl. overnight; non-critical deferred via delayed
+  SendDeferredAlertJob fired at window end, critical bypasses — never dropped). 6b-ii: Channel
+  CRUD (controller/service/repository/DTOs/requests/resource) + 7 auth routes incl. per-monitor
+  routing attach/detach with pivot (min_severity, notify_on_recovery); secret config keys
+  (api_key, resend_api_key) masked in responses. 14 tests. Full suite 201 green. Next: item 7
+  (rollups + retention + partition maintenance).
 - 2026-06-14 — Item 6a DONE. Delivery core: NotifierInterface + SlackChannel (webhook),
   WhatsAppChannel (Evolution API), EmailChannel (Resend→SMTP sub-chain, overridable methods),
   NotifierFactory, ChannelRepository + NotificationLogRepository. AlertDispatchService: fixed

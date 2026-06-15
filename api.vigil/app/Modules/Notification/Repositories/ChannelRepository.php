@@ -38,6 +38,20 @@ class ChannelRepository
         return $this->model->where('id', $id)->delete();
     }
 
+    public function attachToMonitor(int $channelId, int $monitorId, array $pivot): void
+    {
+        $channel = $this->model->find($channelId);
+
+        $channel?->monitors()->syncWithoutDetaching([$monitorId => $pivot]);
+    }
+
+    public function detachFromMonitor(int $channelId, int $monitorId): void
+    {
+        $channel = $this->model->find($channelId);
+
+        $channel?->monitors()->detach($monitorId);
+    }
+
     /**
      * Active channels routed to a monitor, with pivot routing settings.
      *

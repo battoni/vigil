@@ -5,6 +5,7 @@ use App\Modules\Auth\Controllers\RoleController;
 use App\Modules\Auth\Controllers\UserController;
 use App\Modules\Incident\Controllers\IncidentController;
 use App\Modules\Monitor\Controllers\MonitorController;
+use App\Modules\Notification\Controllers\ChannelController;
 use App\Modules\Project\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +37,15 @@ Route::get('monitors/{id}', [MonitorController::class, 'show'])->middleware('aut
 Route::post('monitors', [MonitorController::class, 'store'])->middleware('auth');
 Route::patch('monitors/{id}', [MonitorController::class, 'update'])->middleware('auth');
 Route::delete('monitors/{id}', [MonitorController::class, 'destroy'])->middleware('auth');
+
+// NOTIFICATION CHANNELS
+Route::get('channels', [ChannelController::class, 'index'])->middleware('auth');
+Route::get('channels/{id}', [ChannelController::class, 'show'])->middleware('auth');
+Route::post('channels', [ChannelController::class, 'store'])->middleware('auth');
+Route::patch('channels/{id}', [ChannelController::class, 'update'])->middleware('auth');
+Route::delete('channels/{id}', [ChannelController::class, 'destroy'])->middleware('auth');
+Route::post('channels/{id}/monitors/{monitorId}', [ChannelController::class, 'attachMonitor'])->middleware('auth');
+Route::delete('channels/{id}/monitors/{monitorId}', [ChannelController::class, 'detachMonitor'])->middleware('auth');
 
 // INCIDENTS
 Route::get('incidents', [IncidentController::class, 'index'])->middleware('auth');
