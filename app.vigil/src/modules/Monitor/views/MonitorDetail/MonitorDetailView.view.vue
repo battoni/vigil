@@ -5,8 +5,10 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import type { Monitor, MonitorCheck, MonitorSeriesPoint, MonitorUptime } from '../../interfaces';
 import type { UptimeRange } from '../../types';
+import type { Channel } from '@ChannelModule';
 import type { Incident } from '@IncidentModule';
 import { getI18nRouteName } from '@Helpers';
+import { AttachChannelToMonitorService, DetachChannelFromMonitorService, GetChannelsService } from '@ChannelModule';
 import { AcknowledgeIncidentService, GetIncidentsService } from '@IncidentModule';
 import { MONITOR_STATUS_SEVERITY } from '../../constants';
 import { MONITOR_TYPE } from '../../enums';
@@ -24,6 +26,9 @@ const toast = useToast();
 
 const range = ref<UptimeRange>('7d');
 
+const attachedChannelIds = ref<Set<string>>(new Set());
+
+const channels = ref<Channel[]>([]);
 const checks = ref<MonitorCheck[]>([]);
 const incidents = ref<Incident[]>([]);
 const monitor = ref<Monitor | null>(null);
@@ -78,7 +83,31 @@ function onComponentMount() {
     .then(({ data }) => (incidents.value = data))
     .catch(() => (incidents.value = []));
 
+  GetChannelsService()
+    .then(({ data }) => (channels.value = data))
+    .catch(() => (channels.value = []));
+
   loadSeries();
+}
+
+function onAttachChannel(channel: Channel) {
+  AttachChannelToMonitorService(channel.id, monitorId.value)
+    .then(() => {
+      attachedChannelIds.value = new Set(attachedChannelIds.value).add(channel.id);
+      toast.add({ severity: 'success', summary: t('monitors.detail.notifications.attached', { name: channel.name }), life: 4000 });
+    })
+    .catch(() => toast.add({ severity: 'error', summary: t('errors.somethingWentWrong'), life: 5000 }));
+}
+
+function onDetachChannel(channel: Channel) {
+  DetachChannelFromMonitorService(channel.id, monitorId.value)
+    .then(() => {
+      const next = new Set(attachedChannelIds.value);
+      next.delete(channel.id);
+      attachedChannelIds.value = next;
+      toast.add({ severity: 'success', summary: t('monitors.detail.notifications.detached', { name: channel.name }), life: 4000 });
+    })
+    .catch(() => toast.add({ severity: 'error', summary: t('errors.somethingWentWrong'), life: 5000 }));
 }
 
 function onAcknowledgeIncident(incident: Incident) {
@@ -332,6 +361,50 @@ function onCopyUrl() {
               </template>
             </Column>
           </DataTable>
+        </section>
+
+        <section
+          class="flex flex-col gap-2"
+          data-testid="notifications"
+        >
+          <h3 class="text-heading text-lg font-semibold">{{ $t('monitors.detail.notifications.title') }}</h3>
+
+          <p class="text-subtle text-xs">{{ $t('monitors.detail.notifications.hint') }}</p>
+
+          <div
+            v-if="!channels.length"
+            class="border-line bg-panel text-subtle rounded-lg border p-4 text-sm"
+          >
+            {{ $t('monitors.detail.notifications.noChannels') }}
+          </div>
+
+          <div
+            v-else
+            class="flex flex-col gap-2"
+          >
+            <div
+              v-for="channel in channels"
+              class="border-line bg-panel flex items-center justify-between gap-3 rounded-lg border p-3"
+              :key="channel.id"
+            >
+              <span class="text-body text-sm">{{ channel.name }} · {{ $t(`channels.type.${channel.type}`) }}</span>
+
+              <Button
+                v-if="attachedChannelIds.has(channel.id)"
+                severity="secondary"
+                size="small"
+                :label="$t('monitors.detail.notifications.detach')"
+                @click="onDetachChannel(channel)"
+              />
+
+              <Button
+                v-else
+                size="small"
+                :label="$t('monitors.detail.notifications.attach')"
+                @click="onAttachChannel(channel)"
+              />
+            </div>
+          </div>
         </section>
       </template>
     </main>

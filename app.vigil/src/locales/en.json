@@ -113,7 +113,16 @@
       "result": "Result",
       "responseTime": "Response (ms)",
       "statusCode": "Status",
-      "error": "Error"
+      "error": "Error",
+      "notifications": {
+        "title": "Notifications",
+        "hint": "Attach channels to alert when this monitor changes state.",
+        "noChannels": "No channels configured yet",
+        "attach": "Attach",
+        "detach": "Detach",
+        "attached": "{name} attached",
+        "detached": "{name} detached"
+      }
     },
     "form": {
       "createHeader": "New monitor",

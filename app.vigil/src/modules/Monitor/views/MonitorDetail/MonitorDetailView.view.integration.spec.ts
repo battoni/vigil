@@ -9,7 +9,7 @@ import MonitorDetailView from './MonitorDetailView.view.vue';
 
 const stubs = {
   Tag: { props: ['severity', 'value'], template: '<span class="tag-stub">{{ value }}</span>' },
-  Button: { props: ['label'], template: '<button>{{ label }}</button>' },
+  Button: { props: ['label'], emits: ['click'], template: '<button class="btn-stub" @click="$emit(\'click\', $event)">{{ label }}</button>' },
   Skeleton: true,
   OMonitorChart: { props: ['series', 'variant'], template: '<div class="chart-stub" :data-points="series.length" />' },
   DataTable: { props: ['value'], inheritAttrs: true, template: '<div class="dt-stub" :data-rows="value.length"><slot /></div>' },
@@ -65,6 +65,18 @@ describe('MonitorDetailView — integration (MSW)', () => {
     await renderDetail('999');
 
     await waitFor(() => expect(screen.getByText(/not found/i)).toBeInTheDocument());
+  });
+
+  it('lists channels in the notifications section and attaches one', async () => {
+    await renderDetail('1');
+
+    await waitFor(() => expect(document.querySelector('[data-testid="notifications"]')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/Ops Slack/)).toBeInTheDocument());
+
+    const attachButton = screen.getByRole('button', { name: 'Attach' });
+    attachButton.click();
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Detach' })).toBeInTheDocument());
   });
 
   it('shows the heartbeat ping URL for heartbeat monitors', async () => {
