@@ -86,7 +86,7 @@ Branch: `feature/vigil-mvp` · Started: 2026-06-14 (overnight) · **Status: COMP
   - [ ] P1b-ii. Minimal Project create/rename/delete dialog (deferred; a seeded `system` project exists, so not blocking Monitors)
   - [~] P1c. Monitor module + MonitorsView list — IN PROGRESS
     - [x] P1c-1. Monitor data layer (interfaces/enums/types/constants/services/store) — 5 tests green
-    - [ ] P1c-2. MMonitorCard molecule (status badge, 24h uptime %, last-checked)
+    - [x] P1c-2. MMonitorCard molecule (status badge, 24h uptime %, last-checked, heartbeat URL) — 8 tests green
     - [ ] P1c-3. MonitorsView (list/empty/loading) + routes + nav + monitors.* i18n + MSW view spec
   - [ ] P1d. MAddEditMonitorForm (create/edit via MMainDialog) + pause/resume + delete
   - [ ] P1e. Playwright e2e for the core monitor flow
@@ -100,6 +100,11 @@ in TheLayout. Run `npm run lint` + `npm run test` in app.vigil.
 
 ## Journal (newest first)
 
+- 2026-06-15 — P1c-2 DONE. MMonitorCard molecule (name/target, status Tag via
+  MONITOR_STATUS_SEVERITY, 24h uptime % prop, locale-aware lastChecked, copyable heartbeat URL;
+  emits onEditRequest/onPauseRequest/onDeleteRequest/onCopyUrl). monitors.* i18n keys (en+pt-BR).
+  8 component tests; lint/type-check/unit(207) green. Commit a4bef69. Next: P1c-3 (MonitorsView +
+  routes + nav + MSW integration spec).
 - 2026-06-15 — P1c-1 DONE. Monitor module data layer (interfaces with camelCase resources +
   snake_case payloads, MONITOR_TYPE/MONITOR_STATUS enums, constants incl status→severity map,
   8 services, useMonitorStore with fetchForProject + granular ops). 5 store tests; lint/type-check/
